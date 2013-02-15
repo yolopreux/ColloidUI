@@ -32,7 +32,7 @@ public class App extends Application {
 
         Group root = (Group) scene.getRoot();
         root.getChildren().add(createLogPathPane());
-        scene.getStylesheets().add("uicontrol/winglass.css");
+        scene.getStylesheets().add("uicontrol/greeg-theme/win7glass.css");
 
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
