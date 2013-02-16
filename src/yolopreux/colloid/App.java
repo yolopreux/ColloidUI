@@ -1,6 +1,11 @@
 package yolopreux.colloid;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Properties;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -21,19 +26,21 @@ import javafx.stage.Stage;
 
 public class App extends Application {
 
-    TextField logPathField;
+    TextField logPathField = new TextField("");
     TableView recountView;
     Button logPathButton;
+    Button parseActButton;
     Recount recount = Recount.getInstance();
 
     @Override
     public void start(Stage primaryStage) {
+        loadParams();
         System.out.println(System.getProperty("javafx.version"));
 
         recountView = new TableView();
         primaryStage.setTitle("Colloid");
 
-        Scene scene = new Scene(new Group(), 500, 500);
+        Scene scene = new Scene(new Group(), 560, 460);
         scene.setFill(Color.GHOSTWHITE);
 
         Group root = (Group) scene.getRoot();
@@ -59,31 +66,41 @@ public class App extends Application {
         TitledPane gridTitlePane = new TitledPane();
 
         Label logPathLabel = new Label("Log path: ");
-        logPathField = new TextField("");
+
         logPathField.setEditable(false);
         logPathField.setMinWidth(400);
+
         logPathButton = new Button("...");
+        parseActButton = new Button("Start");
+
         logPathButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (!logPathField.getText().isEmpty() && !recount.isRunning()) {
-                    recount.run();
-                    return;
-                }
                 if (!recount.isRunning()) {
                     DirectoryChooser directoryChooser = new DirectoryChooser();
-                    directoryChooser
-                            .setTitle("Choose combat log file path ...");
+                    directoryChooser.setTitle("Choose combat log file path ...");
                     File file = directoryChooser.showDialog(null);
                     if (file != null) {
                         logPathField.setText(file.getPath());
                         recount.setCombatDirPath(file.getPath());
-                        logPathButton.setText("Stop");
                         recount.run();
+                        saveParams();
                     }
                 } else {
                     recount.stop();
-                    logPathButton.setText("Start");
+                }
+            }
+        });
+
+        parseActButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (!logPathField.getText().isEmpty() && !recount.isRunning()) {
+                    recount.setCombatDirPath(logPathField.getText()).run();
+                    parseActButton.setText("Stop");
+                } else {
+                    recount.stop();
+                    parseActButton.setText("Start");
                 }
             }
         });
@@ -98,18 +115,54 @@ public class App extends Application {
 
         gridTitlePane.autosize();
         GridPane grid = new GridPane();
-        grid.setMinWidth(400);
+        grid.setMinWidth(460);
         grid.setVgap(10);
         grid.setHgap(10);
         grid.setPadding(new Insets(5, 5, 5, 5));
         grid.add(logPathLabel, 0, 0);
         grid.add(logPathField, 1, 0);
         grid.add(logPathButton, 2, 0);
+        grid.add(parseActButton, 3, 0);
         grid.add(recountView, 1, 1);
 
         gridTitlePane.setText("Combat log path:");
         gridTitlePane.setContent(grid);
 
         return gridTitlePane;
+    }
+
+    public void loadParams() {
+        Properties props = new Properties();
+        InputStream inputStream = null;
+
+        try {
+            File file = new File("app.properties");
+            inputStream = new FileInputStream(file);
+        } catch (Exception e) {
+            inputStream = null;
+        }
+
+        try {
+            if (inputStream == null) {
+                inputStream = getClass().getResourceAsStream("app.properties");
+            }
+            props.load(inputStream);
+        } catch (Exception e) {
+            //
+        }
+
+        logPathField.setText(props.getProperty("combatLogPath", ""));
+    }
+
+    public void saveParams() {
+        try {
+            Properties props = new Properties();
+            props.setProperty("combatLogPath", logPathField.getText());
+            File file = new File("app.properties");
+            OutputStream out = new FileOutputStream(file);
+            props.store(out, "Colloid app properties");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
