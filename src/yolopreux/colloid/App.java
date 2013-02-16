@@ -17,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
@@ -31,26 +32,33 @@ public class App extends Application {
     Button logPathButton;
     Button parseActButton;
     Recount recount = Recount.getInstance();
+    TextArea textLog;
 
     @Override
     public void start(Stage primaryStage) {
+        primaryStage.setTitle("Colloid");
+        primaryStage.setScene(createScene());
+        primaryStage.setResizable(false);
+        primaryStage.show();
+    }
+
+    public Scene createScene() {
         loadParams();
+
         System.out.println(System.getProperty("javafx.version"));
 
         recountView = new TableView();
-        primaryStage.setTitle("Colloid");
 
-        Scene scene = new Scene(new Group(), 560, 460);
+        Scene scene = new Scene(new Group(), 1100, 360);
         scene.setFill(Color.GHOSTWHITE);
 
         Group root = (Group) scene.getRoot();
         root.getChildren().add(createLogPathPane());
         scene.getStylesheets().add("uicontrol/greeg-theme/win7glass.css");
 
-        primaryStage.setScene(scene);
-        primaryStage.setResizable(false);
-        primaryStage.show();
+        return scene;
     }
+
 
     public static void main(String[] args) {
         launch(args);
@@ -68,10 +76,13 @@ public class App extends Application {
         Label logPathLabel = new Label("Log path: ");
 
         logPathField.setEditable(false);
-        logPathField.setMinWidth(400);
+        logPathField.setMinWidth(900);
 
         logPathButton = new Button("...");
         parseActButton = new Button("Start");
+
+        textLog = new TextArea("Combat" + "\n");
+        textLog.setMinHeight(500);
 
         logPathButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -98,6 +109,7 @@ public class App extends Application {
                 if (!logPathField.getText().isEmpty() && !recount.isRunning()) {
                     recount.setCombatDirPath(logPathField.getText()).run();
                     parseActButton.setText("Stop");
+                    recount.setTextLog(textLog);
                 } else {
                     recount.stop();
                     parseActButton.setText("Start");
@@ -116,6 +128,7 @@ public class App extends Application {
         gridTitlePane.autosize();
         GridPane grid = new GridPane();
         grid.setMinWidth(460);
+        grid.setMinHeight(530);
         grid.setVgap(10);
         grid.setHgap(10);
         grid.setPadding(new Insets(5, 5, 5, 5));
@@ -123,7 +136,7 @@ public class App extends Application {
         grid.add(logPathField, 1, 0);
         grid.add(logPathButton, 2, 0);
         grid.add(parseActButton, 3, 0);
-        grid.add(recountView, 1, 1);
+        grid.add(textLog, 1, 1);
 
         gridTitlePane.setText("Combat log path:");
         gridTitlePane.setContent(grid);
@@ -148,7 +161,7 @@ public class App extends Application {
             }
             props.load(inputStream);
         } catch (Exception e) {
-            //
+            e.printStackTrace();
         }
 
         logPathField.setText(props.getProperty("combatLogPath", ""));

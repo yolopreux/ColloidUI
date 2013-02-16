@@ -1,6 +1,9 @@
 package yolopreux.colloid;
 
 import java.io.File;
+import java.util.ArrayList;
+
+import javafx.scene.control.TextArea;
 
 public class Recount {
 
@@ -8,6 +11,9 @@ public class Recount {
     protected File[] logs;
     private static Recount instance;
     private boolean isRunning;
+    String lastLine = null;
+    ArrayList<String> data = new ArrayList<String>();
+    TextArea textLog;
 
     protected Recount() {
     }
@@ -26,7 +32,6 @@ public class Recount {
             @Override
             public void run() {
                 while (isRunning) {
-                    System.out.println(isRunning);
                     parse();
                 }
             }
@@ -61,7 +66,29 @@ public class Recount {
          * @TODO
          */
         if (log.isFile()) {
-            System.out.print(LogUtil.tail(log));
+            String line = LogUtil.tail(log);
+            if (lastLine == null || !line.equals(lastLine)) {
+                System.out.print(LogUtil.tail(log));
+                lastLine = line;
+                if (textLog != null) {
+                    synchronized (textLog) {
+                        
+                        textLog.insertText(0, line + "\n");
+                    }
+                }
+            }
         }
+    }
+
+    public ArrayList<String> getData() {
+        return data;
+    }
+
+    public String getLastLine() {
+        return lastLine;
+    }
+
+    public void setTextLog(final TextArea textLog) {
+        this.textLog = textLog;
     }
 }

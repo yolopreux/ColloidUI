@@ -1,14 +1,18 @@
 package yolopreux.colloid;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.RandomAccessFile;
 
 public class LogUtil {
 
+    @SuppressWarnings("null")
     public static String tail(File file) {
+
+        @SuppressWarnings("resource")
+        RandomAccessFile fileHandler = null;
         try {
-            @SuppressWarnings("resource")
-            RandomAccessFile fileHandler = new RandomAccessFile(file, "r");
+            fileHandler = new java.io.RandomAccessFile(file, "r");
             long fileLength = file.length() - 1;
             StringBuilder sb = new StringBuilder();
 
@@ -34,6 +38,7 @@ public class LogUtil {
             }
 
             String lastLine = sb.reverse().toString();
+            fileHandler.close();
             return lastLine;
         } catch (java.io.FileNotFoundException e) {
             e.printStackTrace();
@@ -42,15 +47,22 @@ public class LogUtil {
             e.printStackTrace();
             return null;
         } finally {
-            // fileHandler.close();
+            try {
+                if (fileHandler != null) {
+                    fileHandler.close();
+                }
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
 
     public static String tail(File file, int lines) {
+        @SuppressWarnings("resource")
+        RandomAccessFile fileHandler = null;
         try {
-            @SuppressWarnings("resource")
-            java.io.RandomAccessFile fileHandler = new java.io.RandomAccessFile(
-                    file, "r");
+            fileHandler = new java.io.RandomAccessFile(file, "r");
             long fileLength = file.length() - 1;
             StringBuilder sb = new StringBuilder();
             int line = 0;
@@ -90,7 +102,14 @@ public class LogUtil {
             e.printStackTrace();
             return null;
         } finally {
-            // fileHandler.close();
+            try {
+                if (fileHandler != null) {
+                    fileHandler.close();
+                }
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
 }
