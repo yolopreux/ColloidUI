@@ -49,7 +49,7 @@ public class App extends Application {
 
         recountView = new TableView();
 
-        Scene scene = new Scene(new Group(), 1100, 360);
+        Scene scene = new Scene(new Group(), 1450, 360);
         scene.setFill(Color.GHOSTWHITE);
 
         Group root = (Group) scene.getRoot();
@@ -61,7 +61,7 @@ public class App extends Application {
 
 
     public static void main(String[] args) {
-        launch(args);
+        SwingMain.main(args);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class App extends Application {
         Label logPathLabel = new Label("Log path: ");
 
         logPathField.setEditable(false);
-        logPathField.setMinWidth(900);
+        logPathField.setMinWidth(1300);
 
         logPathButton = new Button("...");
         parseActButton = new Button("Start");
@@ -94,7 +94,6 @@ public class App extends Application {
                     if (file != null) {
                         logPathField.setText(file.getPath());
                         recount.setCombatDirPath(file.getPath());
-                        recount.run();
                         saveParams();
                     }
                 } else {

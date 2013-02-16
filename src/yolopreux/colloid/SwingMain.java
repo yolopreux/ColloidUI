@@ -16,7 +16,8 @@ public class SwingMain {
         final JFXPanel fxPanel = new JFXPanel();
         frame.add(fxPanel);
         frame.setAlwaysOnTop(true);
-        frame.setMinimumSize(new Dimension(1100, 200));
+        frame.setSize(new Dimension(1500, 200));
+        frame.setMinimumSize(new Dimension(1500, 200));
         frame.setVisible(true);
 
         Platform.runLater(new Runnable() {

@@ -1,7 +1,11 @@
 package yolopreux.colloid;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import javafx.scene.control.TextArea;
 
@@ -66,18 +70,45 @@ public class Recount {
          * @TODO
          */
         if (log.isFile()) {
-            String line = LogUtil.tail(log);
-            if (lastLine == null || !line.equals(lastLine)) {
-                System.out.print(LogUtil.tail(log));
-                lastLine = line;
-                if (textLog != null) {
-                    synchronized (textLog) {
-                        
-                        textLog.insertText(0, line + "\n");
+            String tailLines = LogUtil.tail(log, 10);
+            String[] lines = tailLines.split("\n");
+            for (String line : lines) {
+                Date logTime = parseDate(line);
+                if (logTime == null) {
+                    continue;
+                }
+                if (lastLine == null || !isLogged(logTime)) {
+                    lastLine = line;
+                    if (textLog != null) {
+                        synchronized (textLog) {
+                            textLog.insertText(0, line + "\n");
+                        }
                     }
                 }
             }
         }
+    }
+
+    private Date parseDate(String line) {
+        final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss.S",
+                Locale.getDefault());
+        Date logTime;
+        try {
+            logTime = timeFormat.parse(line.substring(1, 13));
+            return logTime;
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return null;
+    }
+
+    private boolean isLogged(Date logtime) {
+        if (logtime.getTime() > parseDate(lastLine).getTime()) {
+            return false;
+        }
+
+        return true;
     }
 
     public ArrayList<String> getData() {
