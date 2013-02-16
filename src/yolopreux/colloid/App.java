@@ -56,6 +56,7 @@ public class App extends Application {
 
     public static void main(String[] args) {
         SwingMain.main(args);
+        //launch(args);
     }
 
     @Override
@@ -160,6 +161,7 @@ public class App extends Application {
         grid.setPadding(new Insets(5, 5, 5, 5));
         grid.add(logPathLabel, 0, 0);
         grid.add(recountText, 1, 0);
+        recount.setRecountLog(recountText);
 
         gridTitlePane.setText("Recount combat log:");
         gridTitlePane.setContent(grid);

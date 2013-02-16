@@ -5,7 +5,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javafx.scene.control.TextArea;
 
@@ -18,8 +21,11 @@ public class Recount {
     String lastLine = null;
     ArrayList<String> data = new ArrayList<String>();
     TextArea textLog;
+    TextArea recountLog;
+    Combat combat;
 
     protected Recount() {
+        combat = new Combat();
     }
 
     public static Recount getInstance() {
@@ -79,7 +85,8 @@ public class Recount {
                 }
                 if (lastLine == null || !isLogged(logTime)) {
                     lastLine = line;
-                    if (textLog != null) {
+                    countCombat(line);
+                    if (textLog != null && line != null) {
                         synchronized (textLog) {
                             textLog.insertText(0, line + "\n");
                         }
@@ -98,6 +105,8 @@ public class Recount {
             return logTime;
         } catch (ParseException e) {
             System.out.println(e.getMessage());
+        } catch (StringIndexOutOfBoundsException e) {
+            System.out.println(e);
         }
 
         return null;
@@ -121,5 +130,177 @@ public class Recount {
 
     public void setTextLog(final TextArea textLog) {
         this.textLog = textLog;
+    }
+
+    public void setRecountLog(final TextArea recountLog) {
+        this.recountLog = recountLog;
+    }
+
+    protected void countCombat(String event) {
+        combat.add(event).recount();
+    }
+
+    abstract class CombatEntity {
+
+        String logData;
+        String name;
+        String type;
+        float threat;
+        float value;
+
+        public CombatEntity(String log) {
+
+            logData = log;
+            parse();
+        }
+        abstract void parse();
+
+        @Override
+        public String toString() {
+            return "CombatEntity [logData=" + logData + ", name=" + name
+                    + ", type=" + type + ", threat=" + threat + ", value="
+                    + value + "]";
+        }
+    }
+
+    abstract class EffectCombatEntity extends CombatEntity {
+
+        public EffectCombatEntity(String log) {
+            super(log);
+        }
+        abstract boolean isEnterCombat();
+        abstract boolean isExitCombat();
+        abstract boolean isDamage();
+        abstract boolean isHeal();
+
+        double getValue() {
+            double result = 0;
+            Matcher matcher = Pattern.compile("\\((\\d+)(.*)\\)").matcher(logData);
+            if (matcher.find()) {
+                try {
+                    result = Double.parseDouble(matcher.group(1));
+                } catch (NumberFormatException ex) {
+                    result = 0;
+                }
+            }
+
+            return result;
+        }
+    }
+
+    class CombatEvent {
+
+        CombatEntity actor;
+        CombatEntity target;
+        CombatEntity ability;
+        EffectCombatEntity effect;
+
+        CombatEvent(final String[] data) {
+            actor = new CombatEntity(data[1]) {
+                @Override
+                void parse() {
+                    name = logData;
+                }
+            };
+            target = new CombatEntity(data[2]) {
+                @Override
+                void parse() {
+                    name = logData;
+                }
+            };
+            ability = new CombatEntity(data[3]) {
+                @Override
+                void parse() {
+                }
+            };
+            try {
+                effect = new EffectCombatEntity(data[4]) {
+                    @Override
+                    void parse() {
+                    }
+    
+                    @Override
+                    boolean isEnterCombat() {
+                        return logData.contains("EnterCombat");
+                    }
+    
+                    @Override
+                    boolean isExitCombat() {
+                        return logData.contains("ExitCombat");
+                    }
+    
+                    @Override
+                    boolean isDamage() {
+                        return logData.contains("Damage");
+                    }
+    
+                    @Override
+                    boolean isHeal() {
+                        return logData.contains("Heal");
+                    }
+                };
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println(e);
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "CombatEvent [actor=" + actor + ", target=" + target
+                    + ", ability=" + ability + ", effect=" + effect + "]";
+        }
+    }
+
+    class Combat {
+
+        CombatEvent event;
+
+        HashMap<String, HashMap<String, Double>> data;
+
+        Combat() {
+            data = new HashMap<String, HashMap<String, Double>>();
+        }
+
+        Combat add(String newEvent) {
+            String[] items = newEvent.substring(1).split("\\]\\s\\[");
+            if (items != null) {
+                event = new CombatEvent(items);
+            }
+
+            return this;
+        }
+
+        Combat recount() {
+            if (event.effect.isEnterCombat()) {
+                if (!data.containsKey(event.actor.name)) {
+                    data.put(event.actor.name, new HashMap<String, Double>());
+                }
+            }
+            if (event.effect.isDamage()) {
+                if (!data.containsKey(event.actor.name)) {
+                    data.put(event.actor.name, new HashMap<String, Double>());
+                }
+                if (!data.get(event.actor.name).containsKey("damage")) {
+                    data.get(event.actor.name).put("damage",
+                            event.effect.getValue());
+                } else {
+                    double damage = data.get(event.actor.name).get("damage")
+                            + event.effect.getValue();
+                    data.get(event.actor.name).put("damage", damage);
+                }
+            }
+
+            synchronized (recountLog) {
+                String text = "Damage:" + "\n";
+                for (String key: data.keySet()) {
+                    text = text + "Actor: " + key + "\n";
+                    if (data.get(key).containsKey("damage")) {
+                        text = text + "Damage: " + Double.toString(data.get(key).get("damage")) + "\n"; 
+                    }
+                }
+                recountLog.setText(text);
+            }
+            return this;
+        }
     }
 }
