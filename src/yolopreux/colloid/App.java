@@ -15,8 +15,6 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
@@ -28,7 +26,6 @@ import javafx.stage.Stage;
 public class App extends Application {
 
     TextField logPathField = new TextField("");
-    TableView recountView;
     Button logPathButton;
     Button parseActButton;
     Recount recount = Recount.getInstance();
@@ -45,15 +42,12 @@ public class App extends Application {
     public Scene createScene() {
         loadParams();
 
-        System.out.println(System.getProperty("javafx.version"));
-
-        recountView = new TableView();
-
         Scene scene = new Scene(new Group(), 1450, 360);
         scene.setFill(Color.GHOSTWHITE);
 
         Group root = (Group) scene.getRoot();
         root.getChildren().add(createLogPathPane());
+        root.getChildren().add(createRecount());
         scene.getStylesheets().add("uicontrol/greeg-theme/win7glass.css");
 
         return scene;
@@ -82,6 +76,7 @@ public class App extends Application {
         parseActButton = new Button("Start");
 
         textLog = new TextArea("Combat" + "\n");
+        textLog.setEditable(false);
         textLog.setMinHeight(500);
 
         logPathButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -116,14 +111,6 @@ public class App extends Application {
             }
         });
 
-        @SuppressWarnings("rawtypes")
-        TableColumn abilityCol = new TableColumn("Ability");
-        @SuppressWarnings("rawtypes")
-        TableColumn valueCol = new TableColumn("Value");
-        recountView.getColumns().add(abilityCol);
-        recountView.getColumns().add(valueCol);
-        recountView.setEditable(false);
-
         gridTitlePane.autosize();
         GridPane grid = new GridPane();
         grid.setMinWidth(460);
@@ -139,6 +126,44 @@ public class App extends Application {
 
         gridTitlePane.setText("Combat log path:");
         gridTitlePane.setContent(grid);
+        gridTitlePane.setExpanded(true);
+        gridTitlePane.setCollapsible(false);
+
+        return gridTitlePane;
+    }
+
+    protected TitledPane createRecount() {
+        TitledPane gridTitlePane = new TitledPane();
+
+        Label logPathLabel = new Label("Recount: ");
+
+        final TextArea recountText = new TextArea();
+        recountText.setEditable(false);
+        recountText.setMinWidth(1300);
+        recountText.setMinHeight(500);
+
+        Button resetActButton = new Button("Reset");
+
+        resetActButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                recountText.clear();
+            }
+        });
+
+        gridTitlePane.autosize();
+        GridPane grid = new GridPane();
+        grid.setMinWidth(460);
+        grid.setMinHeight(530);
+        grid.setVgap(10);
+        grid.setHgap(10);
+        grid.setPadding(new Insets(5, 5, 5, 5));
+        grid.add(logPathLabel, 0, 0);
+        grid.add(recountText, 1, 0);
+
+        gridTitlePane.setText("Recount combat log:");
+        gridTitlePane.setContent(grid);
+        gridTitlePane.setExpanded(false);
 
         return gridTitlePane;
     }
