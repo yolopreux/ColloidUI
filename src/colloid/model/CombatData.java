@@ -1,4 +1,4 @@
-package yolopreux.colloid;
+package colloid.model;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleLongProperty;

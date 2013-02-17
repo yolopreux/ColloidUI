@@ -1,4 +1,4 @@
-package yolopreux.colloid;
+package colloid;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,10 +6,17 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import colloid.model.Recount;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.fxml.JavaFXBuilderFactory;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -18,10 +25,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+
 
 public class App extends Application {
 
@@ -31,14 +41,27 @@ public class App extends Application {
     Recount recount = Recount.getInstance();
     TextArea textLog;
 
+    private Stage stage;
+    private final double MINIMUM_WINDOW_WIDTH = 390.0;
+    private final double MINIMUM_WINDOW_HEIGHT = 500.0;
+
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Colloid");
-        primaryStage.setScene(createScene());
-        primaryStage.setResizable(false);
+        stage = primaryStage;
+        stage.setTitle("Colloid");
+        stage.setScene(createScene());
+        stage.setMinWidth(MINIMUM_WINDOW_WIDTH);
+        stage.setMinHeight(MINIMUM_WINDOW_HEIGHT);
+        stage.setResizable(false);
+        //showMain();
+
         primaryStage.show();
     }
 
+    /**
+     * Create scene
+     * @deprecated
+     */
     public Scene createScene() {
         loadParams();
 
@@ -55,8 +78,8 @@ public class App extends Application {
 
 
     public static void main(String[] args) {
-        SwingMain.main(args);
-        //launch(args);
+        //SwingMain.main(args);
+        launch(args);
     }
 
     @Override
@@ -204,4 +227,51 @@ public class App extends Application {
             e.printStackTrace();
         }
     }
+
+    private Initializable replaceSceneContent(String fxml) throws Exception {
+        FXMLLoader loader = new FXMLLoader();
+        InputStream in = App.class.getResourceAsStream(fxml);
+        loader.setBuilderFactory(new JavaFXBuilderFactory());
+        loader.setLocation(App.class.getResource(fxml));
+        AnchorPane page;
+        try {
+            page = (AnchorPane) loader.load(in);
+        } finally {
+            in.close();
+        }
+        // store the stage height in case the user has resized the window
+        double stageWidth = stage.getWidth();
+        if (!Double.isNaN(stageWidth)) {
+            stageWidth -= (stage.getWidth() - stage.getScene().getWidth());
+        }
+        double stageHeight = stage.getHeight();
+        if (!Double.isNaN(stageHeight)) {
+            stageHeight -= (stage.getHeight() - stage.getScene().getHeight());
+        }
+//        Scene scene = stage.getScene();
+//        if (scene == null) {
+        Scene scene = new Scene(page);
+        if (!Double.isNaN(stageWidth)) {
+            page.setPrefWidth(stageWidth);
+        }
+        if (!Double.isNaN(stageHeight)) {
+            page.setPrefHeight(stageHeight);
+        }
+        stage.setScene(scene);
+//        } else {
+//            stage.getScene().setRoot(page);
+//        }
+        stage.sizeToScene();
+        return (Initializable) loader.getController();
+    }
+
+    private void showMain() {
+        try {
+            MainController controller = (MainController) replaceSceneContent("main.fxml");
+            controller.setApplication(this);
+        } catch (Exception ex) {
+            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }

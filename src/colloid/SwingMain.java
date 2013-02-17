@@ -1,4 +1,4 @@
-package yolopreux.colloid;
+package colloid;
 
 import java.awt.Dimension;
 
@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+
 public class SwingMain {
 
     private static void initAndShowGUI() {
@@ -16,8 +17,8 @@ public class SwingMain {
         final JFXPanel fxPanel = new JFXPanel();
         frame.add(fxPanel);
         frame.setAlwaysOnTop(true);
-        frame.setSize(new Dimension(1500, 200));
-        frame.setMinimumSize(new Dimension(1500, 200));
+        frame.setSize(new Dimension(800, 200));
+//        frame.setMinimumSize(new Dimension(800, 200));
         frame.setVisible(true);
 
         Platform.runLater(new Runnable() {

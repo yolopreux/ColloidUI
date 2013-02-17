@@ -1,4 +1,4 @@
-package yolopreux.colloid;
+package colloid.model;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,5 +1,7 @@
-package yolopreux.colloid;
+package colloid;
 
+import colloid.model.CombatData;
+import colloid.model.Recount;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
