@@ -196,23 +196,35 @@ public class Recount {
         EffectCombatEntity effect;
 
         CombatEvent(final String[] data) {
-            actor = new CombatEntity(data[1]) {
-                @Override
-                void parse() {
-                    name = logData;
-                }
-            };
-            target = new CombatEntity(data[2]) {
-                @Override
-                void parse() {
-                    name = logData;
-                }
-            };
-            ability = new CombatEntity(data[3]) {
-                @Override
-                void parse() {
-                }
-            };
+            try {
+                actor = new CombatEntity(data[1]) {
+                    @Override
+                    void parse() {
+                        name = logData;
+                    }
+                };
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println(e);
+            }
+            try {
+                target = new CombatEntity(data[2]) {
+                    @Override
+                    void parse() {
+                        name = logData;
+                    }
+                };
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println(e);
+            }
+            try {
+                ability = new CombatEntity(data[3]) {
+                    @Override
+                    void parse() {
+                    }
+                };
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println(e);
+            }
             try {
                 effect = new EffectCombatEntity(data[4]) {
                     @Override
@@ -271,6 +283,9 @@ public class Recount {
         }
 
         Combat recount() {
+            if (event.effect == null) {
+                return this;
+            }
             if (event.effect.isEnterCombat()) {
                 if (!data.containsKey(event.actor.name)) {
                     data.put(event.actor.name, new HashMap<String, Double>());

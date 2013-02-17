@@ -9,8 +9,6 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import colloid.model.Recount;
-
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -27,14 +25,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import colloid.model.Recount;
 
 
 public class App extends Application {
 
+    Properties props;
     TextField logPathField = new TextField("");
     Button logPathButton;
     Button parseActButton;
@@ -43,10 +42,11 @@ public class App extends Application {
 
     private Stage stage;
     private final double MINIMUM_WINDOW_WIDTH = 390.0;
-    private final double MINIMUM_WINDOW_HEIGHT = 400.0;
+    private final double MINIMUM_WINDOW_HEIGHT = 500.0;
 
     @Override
     public void start(Stage primaryStage) {
+        loadParams();
         stage = primaryStage;
         stage.setTitle("Colloid");
         //stage.setScene(createScene());
@@ -87,6 +87,7 @@ public class App extends Application {
         recount.stop();
     }
 
+    @Deprecated
     @SuppressWarnings("unchecked")
     protected TitledPane createLogPathPane() {
         TitledPane gridTitlePane = new TitledPane();
@@ -156,6 +157,7 @@ public class App extends Application {
         return gridTitlePane;
     }
 
+    @Deprecated
     protected TitledPane createRecount() {
         TitledPane gridTitlePane = new TitledPane();
 
@@ -213,13 +215,15 @@ public class App extends Application {
             e.printStackTrace();
         }
 
-        logPathField.setText(props.getProperty("combatLogPath", ""));
+        this.props = props;
     }
 
     public void saveParams() {
         try {
-            Properties props = new Properties();
-            props.setProperty("combatLogPath", logPathField.getText());
+            if (props == null) {
+                props = new Properties();
+            }
+//            props.setProperty("combatLogPath", logPathField.getText());
             File file = new File("app.properties");
             OutputStream out = new FileOutputStream(file);
             props.store(out, "Colloid app properties");
@@ -257,6 +261,7 @@ public class App extends Application {
         if (!Double.isNaN(stageHeight)) {
             page.setPrefHeight(stageHeight);
         }
+        scene.getStylesheets().add("uicontrol/greeg-theme/win7glass.css");
         stage.setScene(scene);
 //        } else {
 //            stage.getScene().setRoot(page);
@@ -268,7 +273,7 @@ public class App extends Application {
     private void showMain() {
         try {
             MainController controller = (MainController) replaceSceneContent("main.fxml");
-            controller.setApplication(this);
+            controller.init(this);
         } catch (Exception ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }

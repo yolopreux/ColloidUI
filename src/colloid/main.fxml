@@ -9,7 +9,7 @@
 
 <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="colloid.MainController">
   <children>
-    <TitledPane fx:id="recountLog" collapsible="false" maxHeight="1.7976931348623157E308" prefHeight="418.0" prefWidth="600.0" text="Combat recount log" AnchorPane.topAnchor="20.0">
+    <TitledPane fx:id="recountLogPane" collapsible="false" maxHeight="1.7976931348623157E308" prefHeight="418.0" prefWidth="600.0" text="Combat recount log" AnchorPane.topAnchor="20.0">
       <content>
         <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
           <children>
@@ -19,8 +19,8 @@
                   <content>
                     <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                       <children>
-                        <TextArea layoutX="14.0" layoutY="14.0" prefHeight="262.0" prefWidth="550.0" promptText="..." wrapText="true" />
-                        <Button fx:id="resetButton" layoutX="507.0" layoutY="272.0" mnemonicParsing="false" text="Reset" />
+                        <TextArea fx:id="recountLog" layoutX="14.0" layoutY="14.0" prefHeight="262.0" prefWidth="550.0" promptText="..." wrapText="true" />
+                        <Button fx:id="resetCombatButton" layoutX="507.0" layoutY="272.0" mnemonicParsing="false" text="Reset" onAction="#resetCombat" />
                       </children>
                     </AnchorPane>
                   </content>
@@ -43,9 +43,9 @@
             <GridPane layoutX="14.0" layoutY="7.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="46.0" prefWidth="581.0">
               <children>
                 <Label fx:id="logPathLabel" text="Log path:" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-                <TextField prefWidth="266.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                <Button mnemonicParsing="false" text="..." GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                <Button fx:id="logPathButton" disable="true" mnemonicParsing="false" prefWidth="70.0" text="Start" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                <TextField fx:id="logPathField" prefWidth="266.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <Button fx:id="logPathButton" mnemonicParsing="false" text="..." GridPane.columnIndex="2" GridPane.rowIndex="0" onAction="#chooseCombatDirPathAction"/>
+                <Button fx:id="parseActButton" disable="true" mnemonicParsing="false" prefWidth="70.0" text="Start" GridPane.columnIndex="3" GridPane.rowIndex="0" onAction="#toggleRecountAction"/>
               </children>
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" prefWidth="100.0" />
@@ -62,7 +62,7 @@
             </GridPane>
             <GridPane layoutX="25.0" layoutY="43.0" prefHeight="300.0" prefWidth="550.0">
               <children>
-                <TextArea fx:id="recountLogText" depthTest="ENABLE" prefHeight="280.0" prefWidth="550.0" promptText="..." text="&#10;" wrapText="true" />
+                <TextArea fx:id="textLog" depthTest="ENABLE" prefHeight="280.0" prefWidth="550.0" promptText="..." text="&#10;" wrapText="true" />
               </children>
             </GridPane>
           </children>
