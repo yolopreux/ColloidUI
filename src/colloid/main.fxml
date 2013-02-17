@@ -9,14 +9,64 @@
 
 <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="colloid.MainController">
   <children>
-    <TitledPane fx:id="recountLog" maxHeight="1.7976931348623157E308" prefHeight="418.0" prefWidth="600.0" text="Combat recount log" AnchorPane.topAnchor="20.0">
+    <TitledPane fx:id="recountLog" collapsible="false" maxHeight="1.7976931348623157E308" prefHeight="418.0" prefWidth="600.0" text="Combat recount log" AnchorPane.topAnchor="20.0">
       <content>
-        <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+        <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+          <children>
+            <TabPane layoutX="12.0" layoutY="18.0" prefHeight="332.0" prefWidth="573.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab fx:id="combatTab" text="Combat">
+                  <content>
+                    <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                      <children>
+                        <TextArea layoutX="14.0" layoutY="14.0" prefHeight="262.0" prefWidth="550.0" promptText="..." wrapText="true" />
+                        <Button fx:id="resetButton" layoutX="507.0" layoutY="272.0" mnemonicParsing="false" text="Reset" />
+                      </children>
+                    </AnchorPane>
+                  </content>
+                </Tab>
+                <Tab fx:id="historyTab" text="History">
+                  <content>
+                    <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+          </children>
+        </AnchorPane>
       </content>
     </TitledPane>
-    <TitledPane fx:id="logPath" alignment="TOP_LEFT" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0" text="Combat log path" textOverrun="CLIP" AnchorPane.topAnchor="41.0">
+    <TitledPane fx:id="logPath" alignment="TOP_LEFT" contentDisplay="TOP" expanded="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0" text="Combat log path" textOverrun="CLIP" AnchorPane.topAnchor="40.0">
       <content>
-        <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+        <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+          <children>
+            <GridPane layoutX="14.0" layoutY="7.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="46.0" prefWidth="581.0">
+              <children>
+                <Label fx:id="logPathLabel" text="Log path:" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+                <TextField prefWidth="266.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <Button mnemonicParsing="false" text="..." GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                <Button fx:id="logPathButton" disable="true" mnemonicParsing="false" prefWidth="70.0" text="Start" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+              </children>
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="383.0" minWidth="10.0" prefWidth="370.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="184.0" minWidth="0.0" prefWidth="39.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="109.0" minWidth="10.0" prefWidth="72.0" />
+              </columnConstraints>
+              <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+              </padding>
+              <rowConstraints>
+                <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+              </rowConstraints>
+            </GridPane>
+            <GridPane layoutX="25.0" layoutY="43.0" prefHeight="300.0" prefWidth="550.0">
+              <children>
+                <TextArea fx:id="recountLogText" depthTest="ENABLE" prefHeight="280.0" prefWidth="550.0" promptText="..." text="&#10;" wrapText="true" />
+              </children>
+            </GridPane>
+          </children>
+        </AnchorPane>
       </content>
     </TitledPane>
     <MenuBar fx:id="menu" focusTraversable="true" opacity="0.55" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -28,7 +78,7 @@
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">
           <items>
-            <MenuItem mnemonicParsing="false" text="Delete" />
+            <MenuItem mnemonicParsing="false" text="Reset" fx:id="resetMenuItem" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
