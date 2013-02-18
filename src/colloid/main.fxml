@@ -9,7 +9,7 @@
 
 <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml" fx:controller="colloid.MainController">
   <children>
-    <TitledPane fx:id="recountLogPane" collapsible="false" maxHeight="1.7976931348623157E308" prefHeight="418.0" prefWidth="600.0" text="Combat recount log" AnchorPane.topAnchor="20.0">
+    <TitledPane fx:id="recountLogPane" collapsible="true" maxHeight="1.7976931348623157E308" prefHeight="418.0" prefWidth="600.0" text="Combat recount log" AnchorPane.topAnchor="20.0">
       <content>
         <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
           <children>
