@@ -10,22 +10,32 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import colloid.model.combat.Combat;
+import colloid.model.combat.ICombat;
+
 import javafx.scene.control.TextArea;
 
 public class Recount {
 
     private String path;
-    protected File[] logs;
     private static Recount instance;
     private boolean isRunning;
+    private long fileTimeStamp;
+
+    protected File[] logs;
     String lastLine = null;
     ArrayList<String> data = new ArrayList<String>();
     TextArea textLog;
     TextArea recountLog;
-    Combat combat;
+    ICombat combat;
+
 
     protected Recount() {
-        combat = new Combat();
+        combat = new Combat(this);
+    }
+    
+    public TextArea getRecountLog() {
+        return recountLog;
     }
 
     public static Recount getInstance() {
@@ -85,15 +95,27 @@ public class Recount {
                 }
                 if (lastLine == null || !isLogged(logTime)) {
                     lastLine = line;
-                    countCombat(line);
                     if (textLog != null && line != null) {
+                        countCombat(line);
                         synchronized (textLog) {
-                            textLog.insertText(0, line + "\n");
+                            if (line != null) { 
+                                textLog.insertText(0, line + "\n");
+                            }
                         }
                     }
                 }
             }
         }
+    }
+
+    private boolean isFileModified(File file) {
+        if (fileTimeStamp != file.length()) {
+            fileTimeStamp = file.length();
+
+            return true;
+        }
+
+        return false;
     }
 
     private Date parseDate(String line) {
@@ -136,186 +158,15 @@ public class Recount {
         this.recountLog = recountLog;
     }
 
-    protected void countCombat(String event) {
+    public void countCombat(String event) {
         combat.add(event).recount();
     }
 
-    abstract class CombatEntity {
-
-        String logData;
-        String name;
-        String type;
-        float threat;
-        float value;
-
-        public CombatEntity(String log) {
-
-            logData = log;
-            parse();
-        }
-        abstract void parse();
-
-        @Override
-        public String toString() {
-            return "CombatEntity [logData=" + logData + ", name=" + name
-                    + ", type=" + type + ", threat=" + threat + ", value="
-                    + value + "]";
-        }
+    public ICombat getCombat() {
+        return combat;
     }
 
-    abstract class EffectCombatEntity extends CombatEntity {
-
-        public EffectCombatEntity(String log) {
-            super(log);
-        }
-        abstract boolean isEnterCombat();
-        abstract boolean isExitCombat();
-        abstract boolean isDamage();
-        abstract boolean isHeal();
-
-        double getValue() {
-            double result = 0;
-            Matcher matcher = Pattern.compile("\\((\\d+)(.*)\\)").matcher(logData);
-            if (matcher.find()) {
-                try {
-                    result = Double.parseDouble(matcher.group(1));
-                } catch (NumberFormatException ex) {
-                    result = 0;
-                }
-            }
-
-            return result;
-        }
-    }
-
-    class CombatEvent {
-
-        CombatEntity actor;
-        CombatEntity target;
-        CombatEntity ability;
-        EffectCombatEntity effect;
-
-        CombatEvent(final String[] data) {
-            try {
-                actor = new CombatEntity(data[1]) {
-                    @Override
-                    void parse() {
-                        name = logData;
-                    }
-                };
-            } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println(e);
-            }
-            try {
-                target = new CombatEntity(data[2]) {
-                    @Override
-                    void parse() {
-                        name = logData;
-                    }
-                };
-            } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println(e);
-            }
-            try {
-                ability = new CombatEntity(data[3]) {
-                    @Override
-                    void parse() {
-                    }
-                };
-            } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println(e);
-            }
-            try {
-                effect = new EffectCombatEntity(data[4]) {
-                    @Override
-                    void parse() {
-                    }
-    
-                    @Override
-                    boolean isEnterCombat() {
-                        return logData.contains("EnterCombat");
-                    }
-    
-                    @Override
-                    boolean isExitCombat() {
-                        return logData.contains("ExitCombat");
-                    }
-    
-                    @Override
-                    boolean isDamage() {
-                        return logData.contains("Damage");
-                    }
-    
-                    @Override
-                    boolean isHeal() {
-                        return logData.contains("Heal");
-                    }
-                };
-            } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println(e);
-            }
-        }
-
-        @Override
-        public String toString() {
-            return "CombatEvent [actor=" + actor + ", target=" + target
-                    + ", ability=" + ability + ", effect=" + effect + "]";
-        }
-    }
-
-    class Combat {
-
-        CombatEvent event;
-
-        HashMap<String, HashMap<String, Double>> data;
-
-        Combat() {
-            data = new HashMap<String, HashMap<String, Double>>();
-        }
-
-        Combat add(String newEvent) {
-            String[] items = newEvent.substring(1).split("\\]\\s\\[");
-            if (items != null) {
-                event = new CombatEvent(items);
-            }
-
-            return this;
-        }
-
-        Combat recount() {
-            if (event.effect == null) {
-                return this;
-            }
-            if (event.effect.isEnterCombat()) {
-                if (!data.containsKey(event.actor.name)) {
-                    data.put(event.actor.name, new HashMap<String, Double>());
-                }
-            }
-            if (event.effect.isDamage()) {
-                if (!data.containsKey(event.actor.name)) {
-                    data.put(event.actor.name, new HashMap<String, Double>());
-                }
-                if (!data.get(event.actor.name).containsKey("damage")) {
-                    data.get(event.actor.name).put("damage",
-                            event.effect.getValue());
-                } else {
-                    double damage = data.get(event.actor.name).get("damage")
-                            + event.effect.getValue();
-                    data.get(event.actor.name).put("damage", damage);
-                }
-            }
-
-            synchronized (recountLog) {
-                String text = "Damage:" + "\n";
-                for (String key: data.keySet()) {
-                    text = text + "Actor: " + key + "\n";
-                    if (data.get(key).containsKey("damage")) {
-                        text = text + "Damage: " + Double.toString(data.get(key).get("damage")) + "\n"; 
-                    }
-                }
-                recountLog.setText(text);
-            }
-            return this;
-        }
+    public void setCombat(ICombat combat) {
+        this.combat = combat;
     }
 }
