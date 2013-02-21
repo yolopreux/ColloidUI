@@ -73,7 +73,7 @@ public class Combat implements ICombat {
         }
     }
 
-    CombatEvent getEvent() {
+    public CombatEvent getCombatEvent() {
         return event; 
     }
 }

@@ -24,6 +24,7 @@ public abstract class Effect extends CombatEntity {
 
     public void parseValue() {
         double result = 0;
+
         Matcher matcher = Pattern.compile("\\(([0-9]{0,})(.*)\\)").matcher(logData);
         try {
             result = Double.parseDouble(matcher.group(1));

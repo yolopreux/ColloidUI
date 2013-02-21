@@ -10,7 +10,9 @@ public class CombatEvent {
     CombatEntity ability;
     Effect effect;
 
-
+    public CombatEvent() {
+    }
+    
     public CombatEvent(final String[] data) {
         try {
             actor = new CombatEntity(data[1]) {
@@ -77,5 +79,37 @@ public class CombatEvent {
     public String toString() {
         return "CombatEvent [actor=" + actor + ", target=" + target
                 + ", ability=" + ability + ", effect=" + effect + "]";
+    }
+
+    public CombatEntity getActor() {
+        return actor;
+    }
+
+    public void setActor(CombatEntity actor) {
+        this.actor = actor;
+    }
+
+    public CombatEntity getTarget() {
+        return target;
+    }
+
+    public void setTarget(CombatEntity target) {
+        this.target = target;
+    }
+
+    public CombatEntity getAbility() {
+        return ability;
+    }
+
+    public void setAbility(CombatEntity ability) {
+        this.ability = ability;
+    }
+
+    public Effect getEffect() {
+        return effect;
+    }
+
+    public void setEffect(ICombatEntity effect2) {
+        this.effect = (Effect) effect2;
     }
 }
