@@ -1,6 +1,6 @@
 package colloid.model.combat;
 
-public abstract class CombatEntity {
+public abstract class CombatEntity implements ICombatEntity {
 
     String logData;
     String name;
@@ -11,7 +11,6 @@ public abstract class CombatEntity {
     public CombatEntity(String log) {
         logData = log;
     }
-    abstract void parse();
 
     @Override
     public String toString() {

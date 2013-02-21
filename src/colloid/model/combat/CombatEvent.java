@@ -1,21 +1,21 @@
 package colloid.model.combat;
 
 import colloid.model.combat.CombatEntity;
-import colloid.model.combat.EffectCombatEntity;
+import colloid.model.combat.Effect;
 
 public class CombatEvent {
 
     CombatEntity actor;
     CombatEntity target;
     CombatEntity ability;
-    EffectCombatEntity effect;
+    Effect effect;
 
 
     public CombatEvent(final String[] data) {
         try {
             actor = new CombatEntity(data[1]) {
                 @Override
-                void parse() {
+                public void parse() {
                     name = logData;
                 }
             };
@@ -25,7 +25,7 @@ public class CombatEvent {
         try {
             target = new CombatEntity(data[2]) {
                 @Override
-                void parse() {
+                public void parse() {
                     name = logData;
                 }
             };
@@ -35,36 +35,36 @@ public class CombatEvent {
         try {
             ability = new CombatEntity(data[3]) {
                 @Override
-                void parse() {
+                public void parse() {
                 }
             };
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println(e);
         }
         try {
-            effect = new EffectCombatEntity(data[4]) {
+            effect = new Effect(data[4]) {
                 @Override
-                void parse() {
+                public void parse() {
                     parseValue();
                 }
 
                 @Override
-                boolean isEnterCombat() {
+                public boolean isEnterCombat() {
                     return logData.contains("EnterCombat");
                 }
 
                 @Override
-                boolean isExitCombat() {
+                public boolean isExitCombat() {
                     return logData.contains("ExitCombat");
                 }
 
                 @Override
-                boolean isDamage() {
+                public boolean isDamage() {
                     return logData.contains("Damage");
                 }
 
                 @Override
-                boolean isHeal() {
+                public boolean isHeal() {
                     return logData.contains("Heal");
                 }
             };

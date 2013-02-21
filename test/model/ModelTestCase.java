@@ -7,6 +7,7 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import colloid.model.Recount;
 import colloid.model.combat.ICombat;
+import static org.junit.Assert.*;
 
 
 public class ModelTestCase {
@@ -28,5 +29,10 @@ public class ModelTestCase {
 
         // execute
         Recount.getInstance().countCombat(event);
+    }
+
+    @Test
+    public void EventValue() {
+        fail("Not implemented");
     }
 }
