@@ -15,19 +15,17 @@ public abstract class Effect extends CombatEntity {
     public abstract boolean isExitCombat();
     public abstract boolean isDamage();
     public abstract boolean isHeal();
+    static final Pattern pattern = Pattern.compile(".*\\((\\d+)(.*)");
 
     public double getValue() {
-        value = parseValue(logData);
-
-        return value;
+        return parseValue(logData);
     }
 
     public static double parseValue(String data) {
         double result = 0;
 
         try {
-            Pattern pattern = Pattern.compile(".*\\((\\d+)(.*)");
-            Matcher matcher = pattern.matcher(data);
+            Matcher matcher = pattern.matcher(data.trim());
             if (matcher.matches()) {
                 String firstGroup = matcher.group(1);
                 result = Double.parseDouble(firstGroup);
