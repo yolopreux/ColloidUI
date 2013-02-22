@@ -47,7 +47,7 @@ public class CombatEvent {
             effect = new Effect(data[4]) {
                 @Override
                 public void parse() {
-                    parseValue();
+                    parseValue(logData);
                 }
 
                 @Override
@@ -109,7 +109,7 @@ public class CombatEvent {
         return effect;
     }
 
-    public void setEffect(ICombatEntity effect2) {
-        this.effect = (Effect) effect2;
+    public void setEffect(ICombatEntity effect) {
+        this.effect = (Effect) effect;
     }
 }

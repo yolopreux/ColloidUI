@@ -60,6 +60,22 @@ public class Combat implements ICombat {
                 data.get(event.actor.name).put("damage", damage);
             }
         }
+        if (event.effect.isHeal()) {
+            if (!data.containsKey(event.actor.name)) {
+                data.put(event.actor.name, new HashMap<String, Double>());
+            }
+            if (!data.get(event.actor.name).containsKey("heal")) {
+                data.get(event.actor.name).put("heal", event.effect.getValue());
+            } else {
+                double heal = data.get(event.actor.name).get("heal")
+                        + event.effect.getValue();
+                data.get(event.actor.name).put("heal", heal);
+            }
+        }
+
+        if (recount.getRecountLog() == null) {
+            return;
+        }
 
         synchronized (recount.getRecountLog()) {
             String text = "Damage:" + "\n";
@@ -69,6 +85,14 @@ public class Combat implements ICombat {
                     text = text + "Damage: " + Double.toString(data.get(key).get("damage")) + "\n"; 
                 }
             }
+            text = text + "Damage:" + "\n";
+            for (String key: data.keySet()) {
+                text = text + "Actor: " + key + "\n";
+                if (data.get(key).containsKey("heal")) {
+                    text = text + "Heal: " + Double.toString(data.get(key).get("heal")) + "\n"; 
+                }
+            }
+
             recount.getRecountLog().setText(text);
         }
     }

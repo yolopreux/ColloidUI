@@ -17,24 +17,28 @@ public abstract class Effect extends CombatEntity {
     public abstract boolean isHeal();
 
     public double getValue() {
-        parseValue();
+        value = parseValue(logData);
 
-        return this.value;
+        return value;
     }
 
-    public void parseValue() {
+    public static double parseValue(String data) {
         double result = 0;
 
-        Matcher matcher = Pattern.compile("\\(([0-9]{0,})(.*)\\)").matcher(logData);
         try {
-            result = Double.parseDouble(matcher.group(1));
+            Pattern pattern = Pattern.compile(".*\\((\\d+)(.*)");
+            Matcher matcher = pattern.matcher(data);
+            if (matcher.matches()) {
+                String firstGroup = matcher.group(1);
+                result = Double.parseDouble(firstGroup);
+            }
         } catch (NumberFormatException ex) {
             System.out.println(ex);
         } catch (IllegalStateException ex) {
             System.out.println(ex);
         }
 
-        this.value = result;
+        return result;
     }
 
 }
