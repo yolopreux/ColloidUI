@@ -30,7 +30,7 @@
     </MenuBar>
     <Accordion id="accordion" layoutY="25.0" prefWidth="600.0">
       <expandedPane>
-        <TitledPane fx:id="logPath" alignment="TOP_LEFT" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#switchPaneAction" prefHeight="400.0" prefWidth="600.0" text="Combat log path" textOverrun="CLIP">
+        <TitledPane fx:id="logPath" alignment="TOP_LEFT" collapsible="false" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#switchPaneAction" prefHeight="400.0" prefWidth="600.0" text="Combat log" textOverrun="CLIP">
           <content>
             <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
               <children>
@@ -65,7 +65,7 @@
         </TitledPane>
       </expandedPane>
       <panes>
-        <TitledPane fx:id="recountLogPane" expanded="false" maxHeight="1.7976931348623157E308" onMouseClicked="#switchPaneAction" prefHeight="418.0" prefWidth="600.0" text="Combat recount log">
+        <TitledPane fx:id="recountLogPane" expanded="false" maxHeight="1.7976931348623157E308" onMouseClicked="#switchPaneAction" prefHeight="418.0" prefWidth="600.0" text="Combat recount">
           <content>
             <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
               <children>
