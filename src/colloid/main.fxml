@@ -2,6 +2,7 @@
 
 <?import java.lang.*?>
 <?import java.util.*?>
+<?import javafx.collections.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -28,13 +29,13 @@
         </Menu>
       </menus>
     </MenuBar>
-    <Accordion id="accordion" layoutY="25.0" prefWidth="600.0">
-      <expandedPane>
-        <TitledPane fx:id="logPath" alignment="TOP_LEFT" collapsible="false" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#switchPaneAction" prefHeight="400.0" prefWidth="600.0" text="Combat log" textOverrun="CLIP">
+    <Accordion id="accordion" prefHeight="465.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0">
+      <panes>
+        <TitledPane fx:id="logPath" alignment="TOP_LEFT" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#switchPaneAction" prefHeight="400.0" prefWidth="600.0" text="Combat log" textOverrun="CLIP">
           <content>
             <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
               <children>
-                <GridPane layoutX="14.0" layoutY="7.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="46.0" prefWidth="581.0">
+                <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="397.0" prefWidth="596.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                   <children>
                     <Label fx:id="logPathLabel" text="Log path:" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
                     <TextField fx:id="logPathField" prefWidth="266.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
@@ -54,28 +55,30 @@
                     <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
                   </rowConstraints>
                 </GridPane>
-                <GridPane layoutX="25.0" layoutY="43.0" prefHeight="300.0" prefWidth="550.0">
+                <GridPane prefHeight="397.0" prefWidth="596.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
                   <children>
-                    <TextArea fx:id="textLog" depthTest="ENABLE" disable="false" prefHeight="280.0" prefWidth="550.0" promptText="..." text="&#10;" wrapText="true" />
+                    <TextArea fx:id="textLog" depthTest="ENABLE" prefHeight="357.0" prefWidth="596.0" promptText="..." text="&#10;" wrapText="true">
+                      <GridPane.margin>
+                        <Insets />
+                      </GridPane.margin>
+                    </TextArea>
                   </children>
                 </GridPane>
               </children>
             </AnchorPane>
           </content>
         </TitledPane>
-      </expandedPane>
-      <panes>
         <TitledPane fx:id="recountLogPane" expanded="false" maxHeight="1.7976931348623157E308" onMouseClicked="#switchPaneAction" prefHeight="418.0" prefWidth="600.0" text="Combat recount">
           <content>
             <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
               <children>
-                <TabPane layoutX="12.0" layoutY="18.0" prefHeight="332.0" prefWidth="573.0" tabClosingPolicy="UNAVAILABLE">
+                <TabPane prefHeight="397.0" prefWidth="596.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                   <tabs>
                     <Tab fx:id="combatTab" text="Combat">
                       <content>
                         <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                           <children>
-                            <TextArea fx:id="recountLog" disable="false" layoutX="14.0" layoutY="14.0" prefHeight="262.0" prefWidth="550.0" promptText="..." wrapText="true" />
+                            <TextArea fx:id="recountLog" layoutX="14.0" layoutY="14.0" prefHeight="262.0" prefWidth="550.0" promptText="..." wrapText="true" />
                             <Button fx:id="resetCombatButton" layoutX="507.0" layoutY="272.0" mnemonicParsing="false" onAction="#resetCombat" text="Reset" />
                           </children>
                         </AnchorPane>
@@ -83,7 +86,41 @@
                     </Tab>
                     <Tab fx:id="historyTab" text="History">
                       <content>
-                        <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                        <AnchorPane id="Content" minHeight="0.0" minWidth="0.0">
+                          <children>
+                            <SplitMenuButton mnemonicParsing="false" text="Choose fight" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <items>
+                                <MenuItem mnemonicParsing="false" text="Fight 1" />
+                                <MenuItem mnemonicParsing="false" text="Fight 2" />
+                              </items>
+                            </SplitMenuButton>
+                            <TableView prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0">
+                              <columns>
+                                <TableColumn prefWidth="75.0" text="Lp" />
+                                <TableColumn prefWidth="250.0" text="col 2" />
+                                <TableColumn prefWidth="250.0" text="Column X" />
+                              </columns>
+                            </TableView>
+                          </children>
+                        </AnchorPane>
+                      </content>
+                    </Tab>
+                    <Tab text="tab 3">
+                      <content>
+                        <AnchorPane id="Content" minHeight="0.0" minWidth="0.0">
+                          <children>
+                            <ListView prefHeight="296.0" prefWidth="573.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="33.0" />
+                            <ComboBox prefHeight="33.0" promptText="Choose ..." AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                  <String fx:value="Item 1" />
+                                  <String fx:value="Item 2" />
+                                  <String fx:value="Item 3" />
+                                </FXCollections>
+                              </items>
+                            </ComboBox>
+                          </children>
+                        </AnchorPane>
                       </content>
                     </Tab>
                   </tabs>
@@ -92,7 +129,6 @@
             </AnchorPane>
           </content>
         </TitledPane>
-        <fx:reference source="logPath" />
       </panes>
     </Accordion>
   </children>
