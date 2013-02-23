@@ -6,10 +6,8 @@ import java.io.RandomAccessFile;
 
 public class LogUtil {
 
-    @SuppressWarnings("null")
     public static String tail(File file) {
 
-        @SuppressWarnings("resource")
         RandomAccessFile fileHandler = null;
         try {
             fileHandler = new java.io.RandomAccessFile(file, "r");
@@ -59,7 +57,7 @@ public class LogUtil {
     }
 
     public static String tail(File file, int lines) {
-        @SuppressWarnings("resource")
+
         RandomAccessFile fileHandler = null;
         try {
             fileHandler = new java.io.RandomAccessFile(file, "r");

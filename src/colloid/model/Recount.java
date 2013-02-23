@@ -11,17 +11,13 @@ import java.util.logging.Logger;
 
 import colloid.model.combat.Combat;
 import colloid.model.combat.ICombat;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.concurrent.Task;
 
 public class Recount implements IRecount {
 
-    private String path;
     private static Recount instance;
     private boolean isRunning;
-    private long fileTimeStamp;
-
     protected File[] logs;
     String lastLine = null;
     ArrayList<String> data = new ArrayList<String>();
@@ -128,7 +124,6 @@ public class Recount implements IRecount {
     }
 
     private void init(String path) {
-        this.path = path;
         File dir = new File(path);
         logs = dir.listFiles();
     }
@@ -158,16 +153,6 @@ public class Recount implements IRecount {
                 }
             }
         }
-    }
-
-    private boolean isFileModified(File file) {
-        if (fileTimeStamp != file.length()) {
-            fileTimeStamp = file.length();
-
-            return true;
-        }
-
-        return false;
     }
 
     private Date parseDate(String line) {

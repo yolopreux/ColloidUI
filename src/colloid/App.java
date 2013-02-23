@@ -89,7 +89,6 @@ public class App extends Application {
     }
 
     @Deprecated
-    @SuppressWarnings("unchecked")
     protected TitledPane createLogPathPane() {
         TitledPane gridTitlePane = new TitledPane();
 

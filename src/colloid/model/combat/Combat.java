@@ -1,9 +1,6 @@
 package colloid.model.combat;
 
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import colloid.model.Recount;
 import colloid.model.combat.CombatEvent;
 
