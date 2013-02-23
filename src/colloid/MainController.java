@@ -66,11 +66,10 @@ public class MainController extends AnchorPane implements Initializable {
         ObservableList<String> items = FXCollections.observableArrayList();
         combatListView.setItems(items);
         recount.setCombatItems(items);
-        
+
         ObservableList<String> logItems = FXCollections.observableArrayList();
         textLog.setItems(logItems);
         recount.setCombatItems(items);
-
     }
 
     public App getApplication() {
@@ -82,13 +81,13 @@ public class MainController extends AnchorPane implements Initializable {
     }
 
     public void resetCombat(ActionEvent event) {
+        
     }
 
     public void closeAction(ActionEvent event) {
         try {
             application.stop();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -110,7 +109,7 @@ public class MainController extends AnchorPane implements Initializable {
             recount.stop();
         }
     }
-    
+
     public void toggleRecountAction(ActionEvent event) {
         if (!logPathField.getText().isEmpty() && !recount.isRunning()) {
             recount.setTextLog(textLog.getItems());

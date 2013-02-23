@@ -56,13 +56,16 @@ public class App extends Application {
     public Scene createScene() {
         loadParams();
 
-        Scene scene = new Scene(new Group(), 1450, 360);
-        scene.setFill(Color.GHOSTWHITE);
+        stage = new Stage(); 
+//        Scene scene = new Scene(new Group(), 1450, 360);
+//        scene.setFill(Color.GHOSTWHITE);
 
-        Group root = (Group) scene.getRoot();
-        scene.getStylesheets().add("uicontrol/greeg-theme/win7glass.css");
+//        Group root = (Group) scene.getRoot();
+        showMain();
+        
+        stage.getScene().getStylesheets().add("uicontrol/greeg-theme/win7glass.css");
 
-        return scene;
+        return stage.getScene();
     }
 
 

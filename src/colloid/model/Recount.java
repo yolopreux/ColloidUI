@@ -71,14 +71,13 @@ public class Recount implements IRecount {
     public void run() {
         isRunning = true;
         Task<String> task = new Task<String>() {
-            public void addItem(final String item) {
+            public void addFight(final String item) {
                 if (Platform.isFxApplicationThread()) {
                     combatItems.add(0, item);
                 } else {
                     Platform.runLater(new Runnable() {
                         @Override public void run() {
-                            addItem(item);
-//                            combatItems.add(item);
+                            addFight(item);
                         }
                     });
                 }
@@ -96,14 +95,13 @@ public class Recount implements IRecount {
                 }
             }
 
-
             @Override 
             public String call() {
                 while (isRunning) {
                     parse(new UpdateTextLog() {
                         @Override
                         public void update(String text) {
-                            addItem(text);
+                            addTextLog(text);
                         }
                         @Override
                         public void insert(String text) {
@@ -116,7 +114,7 @@ public class Recount implements IRecount {
                     new UpdateRecountLog() {
                         @Override
                         public void update(String text) {
-                            updateTitle(text);
+                            updateMessage(text);
                         }
                     });
                 }
@@ -124,8 +122,8 @@ public class Recount implements IRecount {
                 return null;
             } 
         };
-//        textLog.textProperty().bind(task.messageProperty());
-        recountLog.textProperty().bind(task.titleProperty());
+
+        recountLog.textProperty().bind(task.messageProperty());
         new RecountThread(task).start();
     }
 
@@ -164,7 +162,7 @@ public class Recount implements IRecount {
          * @TODO
          */
         if (log.isFile()) {
-            String tailLines = LogUtil.tail(log, 1000);
+            String tailLines = LogUtil.tail(log, 10);
             String[] lines = tailLines.split("\n");
             for (String line : lines) {
                 Date logTime = parseDate(line);
@@ -175,7 +173,6 @@ public class Recount implements IRecount {
                     lastLine = line;
                     if (textLog != null && line != null) {
                         updatetextLog.insert(line);
-                        updatetextLog.update(line);
                         countCombat(line, updateRecountLog);
                     }
                 }
