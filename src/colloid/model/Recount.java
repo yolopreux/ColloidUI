@@ -9,10 +9,12 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.scene.control.TextArea;
 import colloid.model.combat.Combat;
 import colloid.model.combat.ICombat;
-import javafx.scene.control.TextArea;
-import javafx.concurrent.Task;
 
 public class Recount implements IRecount {
 
@@ -21,10 +23,11 @@ public class Recount implements IRecount {
     protected File[] logs;
     String lastLine = null;
     ArrayList<String> data = new ArrayList<String>();
-    TextArea textLog;
+    ObservableList<String> textLog;
     TextArea recountLog;
     ICombat combat;
     boolean done = false;
+    ObservableList<String> combatItems;
 
     protected Recount() {
         combat = new Combat(this);
@@ -58,7 +61,6 @@ public class Recount implements IRecount {
                 Logger.getLogger(Recount.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
                 if (!done) {
-                    System.out.println("not done lol");
                     interrupt();
                     restart();
                 }
@@ -69,18 +71,43 @@ public class Recount implements IRecount {
     public void run() {
         isRunning = true;
         Task<String> task = new Task<String>() {
+            public void addItem(final String item) {
+                if (Platform.isFxApplicationThread()) {
+                    combatItems.add(0, item);
+                } else {
+                    Platform.runLater(new Runnable() {
+                        @Override public void run() {
+                            addItem(item);
+//                            combatItems.add(item);
+                        }
+                    });
+                }
+            }
+
+            public void addTextLog(final String text) {
+                if (Platform.isFxApplicationThread()) {
+                    textLog.add(0, text);
+                } else {
+                    Platform.runLater(new Runnable() {
+                        @Override public void run() {
+                            addTextLog(text);
+                        }
+                    });
+                }
+            }
+
+
             @Override 
             public String call() {
                 while (isRunning) {
                     parse(new UpdateTextLog() {
                         @Override
                         public void update(String text) {
-                            updateMessage(text);
+                            addItem(text);
                         }
                         @Override
                         public void insert(String text) {
-                            String message = getMessage();
-                            update(text + message);
+                            addTextLog(text);
                         }
                     }, 
                     /**
@@ -95,9 +122,9 @@ public class Recount implements IRecount {
                 }
 
                 return null;
-            }
+            } 
         };
-        textLog.textProperty().bind(task.messageProperty());
+//        textLog.textProperty().bind(task.messageProperty());
         recountLog.textProperty().bind(task.titleProperty());
         new RecountThread(task).start();
     }
@@ -137,7 +164,7 @@ public class Recount implements IRecount {
          * @TODO
          */
         if (log.isFile()) {
-            String tailLines = LogUtil.tail(log, 10);
+            String tailLines = LogUtil.tail(log, 1000);
             String[] lines = tailLines.split("\n");
             for (String line : lines) {
                 Date logTime = parseDate(line);
@@ -148,6 +175,7 @@ public class Recount implements IRecount {
                     lastLine = line;
                     if (textLog != null && line != null) {
                         updatetextLog.insert(line);
+                        updatetextLog.update(line);
                         countCombat(line, updateRecountLog);
                     }
                 }
@@ -187,7 +215,7 @@ public class Recount implements IRecount {
         return lastLine;
     }
 
-    public void setTextLog(final TextArea textLog) {
+    public void setTextLog(final ObservableList<String> textLog) {
         this.textLog = textLog;
     }
 
@@ -205,5 +233,13 @@ public class Recount implements IRecount {
 
     public void setCombat(ICombat combat) {
         this.combat = combat;
+    }
+
+    public ObservableList<String> getCombatItems() {
+        return combatItems;
+    }
+
+    public void setCombatItems(ObservableList<String> combatItems) {
+        this.combatItems = combatItems;
     }
 }

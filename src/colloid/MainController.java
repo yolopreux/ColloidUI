@@ -33,7 +33,7 @@ public class MainController extends AnchorPane implements Initializable {
     @FXML
     Button parseActButton;
     @FXML
-    TextArea textLog;
+    ListView<String> textLog;
     @FXML
     TextArea recountLog;
     @FXML
@@ -65,7 +65,12 @@ public class MainController extends AnchorPane implements Initializable {
 
         ObservableList<String> items = FXCollections.observableArrayList();
         combatListView.setItems(items);
-//        combatListView.itemsProperty().bind();
+        recount.setCombatItems(items);
+        
+        ObservableList<String> logItems = FXCollections.observableArrayList();
+        textLog.setItems(logItems);
+        recount.setCombatItems(items);
+
     }
 
     public App getApplication() {
@@ -108,11 +113,10 @@ public class MainController extends AnchorPane implements Initializable {
     
     public void toggleRecountAction(ActionEvent event) {
         if (!logPathField.getText().isEmpty() && !recount.isRunning()) {
-            recount.setTextLog(textLog);
+            recount.setTextLog(textLog.getItems());
             recount.setRecountLog(recountLog);
             recount.setCombatDirPath(logPathField.getText()).run();
             parseActButton.setText("Stop");
-            recount.setTextLog(textLog);
         } else {
             recount.stop();
             parseActButton.setText("Start");

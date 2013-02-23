@@ -35,7 +35,7 @@
           <content>
             <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
               <children>
-                <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="397.0" prefWidth="596.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="392.0" prefWidth="596.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                   <children>
                     <Label fx:id="logPathLabel" text="Log path:" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
                     <TextField fx:id="logPathField" prefWidth="266.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
@@ -57,12 +57,24 @@
                 </GridPane>
                 <GridPane prefHeight="397.0" prefWidth="596.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
                   <children>
-                    <TextArea fx:id="textLog" depthTest="ENABLE" prefHeight="357.0" prefWidth="596.0" promptText="..." text="&#10;" wrapText="true">
-                      <GridPane.margin>
-                        <Insets />
-                      </GridPane.margin>
-                    </TextArea>
+                    <GridPane id="GridPane" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                      <children>
+                        <ListView id="textLog" fx:id="textLog" cache="false" cacheHint="DEFAULT" depthTest="ENABLE" orientation="VERTICAL" prefHeight="296.0" prefWidth="573.0" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                      </children>
+                      <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                      </columnConstraints>
+                      <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                      </rowConstraints>
+                    </GridPane>
                   </children>
+                  <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                  </columnConstraints>
+                  <rowConstraints>
+                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                  </rowConstraints>
                 </GridPane>
               </children>
             </AnchorPane>
@@ -88,7 +100,7 @@
                       <content>
                         <AnchorPane id="Content" minHeight="0.0" minWidth="0.0">
                           <children>
-                            <ListView fx:id="combatListView" prefHeight="296.0" prefWidth="573.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="33.0" />
+                            <ListView fx:id="combatListView" cache="false" cacheHint="DEFAULT" depthTest="ENABLE" orientation="VERTICAL" prefHeight="296.0" prefWidth="573.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="33.0" />
                             <ComboBox prefHeight="33.0" promptText="Choose ..." AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                               <items>
                                 <FXCollections fx:factory="observableArrayList">
