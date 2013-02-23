@@ -1,6 +1,8 @@
 package colloid.model.combat;
 
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import colloid.model.Recount;
 import colloid.model.combat.CombatEvent;
@@ -38,7 +40,8 @@ public class Combat implements ICombat {
         return this;
     }
 
-    public void recount() {
+    @Override
+    public void recount(Recount.UpdateRecountLog updateRecountLog) {
         if (event.effect == null) {
             return;
         }
@@ -72,29 +75,25 @@ public class Combat implements ICombat {
                 data.get(event.actor.name).put("heal", heal);
             }
         }
-
         if (recount.getRecountLog() == null) {
             return;
         }
 
-        synchronized (recount.getRecountLog()) {
-            String text = "Damage:" + "\n";
-            for (String key: data.keySet()) {
-                text = text + "Actor: " + key + "\n";
-                if (data.get(key).containsKey("damage")) {
-                    text = text + "Damage: " + Double.toString(data.get(key).get("damage")) + "\n"; 
-                }
+        String text = "Damage:" + "\n";
+        for (String key: data.keySet()) {
+            text = text + "Actor: " + key + "\n";
+            if (data.get(key).containsKey("damage")) {
+                text = text + "Damage: " + Double.toString(data.get(key).get("damage")) + "\n"; 
             }
-            text = text + "Damage:" + "\n";
-            for (String key: data.keySet()) {
-                text = text + "Actor: " + key + "\n";
-                if (data.get(key).containsKey("heal")) {
-                    text = text + "Heal: " + Double.toString(data.get(key).get("heal")) + "\n"; 
-                }
-            }
-
-            recount.getRecountLog().setText(text);
         }
+        text = text + "Damage:" + "\n";
+        for (String key: data.keySet()) {
+            text = text + "Actor: " + key + "\n";
+            if (data.get(key).containsKey("heal")) {
+                text = text + "Heal: " + Double.toString(data.get(key).get("heal")) + "\n"; 
+            }
+        }
+        updateRecountLog.update(text);
     }
 
     public CombatEvent getCombatEvent() {

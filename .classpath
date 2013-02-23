@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="lib/jfxrt.jar"/>
+	<classpathentry kind="lib" path="lib/jfxrt.jar" sourcepath="G:/Users/lui/java7/rt-e71070b0e0c0.zip"/>
 	<classpathentry kind="lib" path="lib/jmock-2.6.0.jar"/>
 	<classpathentry kind="lib" path="lib/jmock-junit4-2.6.0.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.11.jar" sourcepath="lib/junit-4.11-sources.jar"/>

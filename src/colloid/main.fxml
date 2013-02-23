@@ -56,7 +56,7 @@
                 </GridPane>
                 <GridPane layoutX="25.0" layoutY="43.0" prefHeight="300.0" prefWidth="550.0">
                   <children>
-                    <TextArea fx:id="textLog" depthTest="ENABLE" disable="true" prefHeight="280.0" prefWidth="550.0" promptText="..." text="&#10;" wrapText="true" />
+                    <TextArea fx:id="textLog" depthTest="ENABLE" disable="false" prefHeight="280.0" prefWidth="550.0" promptText="..." text="&#10;" wrapText="true" />
                   </children>
                 </GridPane>
               </children>
@@ -75,7 +75,7 @@
                       <content>
                         <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                           <children>
-                            <TextArea fx:id="recountLog" disable="true" layoutX="14.0" layoutY="14.0" prefHeight="262.0" prefWidth="550.0" promptText="..." wrapText="true" />
+                            <TextArea fx:id="recountLog" disable="false" layoutX="14.0" layoutY="14.0" prefHeight="262.0" prefWidth="550.0" promptText="..." wrapText="true" />
                             <Button fx:id="resetCombatButton" layoutX="507.0" layoutY="272.0" mnemonicParsing="false" onAction="#resetCombat" text="Reset" />
                           </children>
                         </AnchorPane>

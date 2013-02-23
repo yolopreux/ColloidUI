@@ -55,6 +55,8 @@ public class MainController extends AnchorPane implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        textLog.setEditable(false);
+        recountLog.setEditable(false);
     }
 
     public App getApplication() {

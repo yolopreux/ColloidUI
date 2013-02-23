@@ -1,13 +1,8 @@
 package model;
 
-import java.nio.channels.SeekableByteChannel;
-
-import org.hamcrest.Matcher;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 
-import org.hamcrest.core.IsSame;
-import org.hamcrest.core.StringContains;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -16,6 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 //import static org.junit.Assert.*;
 
+import colloid.model.IRecount;
 import colloid.model.Recount;
 import colloid.model.combat.Combat;
 import colloid.model.combat.CombatEvent;
@@ -46,13 +42,22 @@ public class CombatEffect {
         CombatEvent event = new CombatEvent();
         effect.fromString(combatStr);
         event.setEffect(effect);
-        Recount.getInstance().countCombat(combatStr);
+        Recount recount = Recount.getInstance();
+        recount.countCombat(combatStr, new IRecount.UpdateRecountLog() {
+            @Override
+            public void update(String text) {
+            }
+        });
     }
 
     @Test
     public void countHealValue() {
         Recount recount = Recount.getInstance();
-        recount.countCombat(combatStr);
+        recount.countCombat(combatStr, new IRecount.UpdateRecountLog() {
+            @Override
+            public void update(String text) {
+            }
+        });
         Combat combat = (Combat) recount.getCombat();
         Effect effect = combat.getCombatEvent().getEffect();
         assertThat(effect.getLogData(), containsString("Heal"));
@@ -63,7 +68,11 @@ public class CombatEffect {
     @Test
     public void countDamagevalue() {
         Recount recount = Recount.getInstance();
-        recount.countCombat(damagCombatStr);
+        recount.countCombat(damagCombatStr, new IRecount.UpdateRecountLog() {
+            @Override
+            public void update(String text) {
+            }
+        });
         Combat combat = (Combat) recount.getCombat();
         Effect effect = combat.getCombatEvent().getEffect();
         assertThat(effect.getLogData(), containsString("Damage"));
