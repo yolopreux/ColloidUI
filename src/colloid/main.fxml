@@ -29,7 +29,7 @@
         </Menu>
       </menus>
     </MenuBar>
-    <Accordion id="accordion" prefHeight="465.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0">
+    <Accordion id="accordion" prefHeight="465.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
       <panes>
         <TitledPane fx:id="logPath" alignment="TOP_LEFT" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#switchPaneAction" prefHeight="400.0" prefWidth="600.0" text="Combat log" textOverrun="CLIP">
           <content>
@@ -68,7 +68,7 @@
             </AnchorPane>
           </content>
         </TitledPane>
-        <TitledPane fx:id="recountLogPane" expanded="false" maxHeight="1.7976931348623157E308" onMouseClicked="#switchPaneAction" prefHeight="418.0" prefWidth="600.0" text="Combat recount">
+        <TitledPane fx:id="recountLogPane" maxHeight="1.7976931348623157E308" onMouseClicked="#switchPaneAction" prefHeight="418.0" prefWidth="600.0" text="Combat recount">
           <content>
             <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
               <children>
@@ -78,38 +78,17 @@
                       <content>
                         <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                           <children>
-                            <TextArea fx:id="recountLog" layoutX="14.0" layoutY="14.0" prefHeight="262.0" prefWidth="550.0" promptText="..." wrapText="true" />
-                            <Button fx:id="resetCombatButton" layoutX="507.0" layoutY="272.0" mnemonicParsing="false" onAction="#resetCombat" text="Reset" />
+                            <TextArea fx:id="recountLog" prefHeight="361.0" prefWidth="596.0" promptText="..." wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                            <Button fx:id="resetCombatButton" mnemonicParsing="false" onAction="#resetCombat" text="Reset" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" />
                           </children>
                         </AnchorPane>
                       </content>
                     </Tab>
-                    <Tab fx:id="historyTab" text="History">
+                    <Tab text="History">
                       <content>
                         <AnchorPane id="Content" minHeight="0.0" minWidth="0.0">
                           <children>
-                            <SplitMenuButton mnemonicParsing="false" text="Choose fight" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                              <items>
-                                <MenuItem mnemonicParsing="false" text="Fight 1" />
-                                <MenuItem mnemonicParsing="false" text="Fight 2" />
-                              </items>
-                            </SplitMenuButton>
-                            <TableView prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0">
-                              <columns>
-                                <TableColumn prefWidth="75.0" text="Lp" />
-                                <TableColumn prefWidth="250.0" text="col 2" />
-                                <TableColumn prefWidth="250.0" text="Column X" />
-                              </columns>
-                            </TableView>
-                          </children>
-                        </AnchorPane>
-                      </content>
-                    </Tab>
-                    <Tab text="tab 3">
-                      <content>
-                        <AnchorPane id="Content" minHeight="0.0" minWidth="0.0">
-                          <children>
-                            <ListView prefHeight="296.0" prefWidth="573.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="33.0" />
+                            <ListView fx:id="combatListView" prefHeight="296.0" prefWidth="573.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="33.0" />
                             <ComboBox prefHeight="33.0" promptText="Choose ..." AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                               <items>
                                 <FXCollections fx:factory="observableArrayList">
