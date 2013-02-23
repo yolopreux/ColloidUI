@@ -85,6 +85,7 @@ public class App extends Application {
     @Override
     public void stop() throws Exception {
         recount.stop();
+        stage.close();
     }
 
     @Deprecated
