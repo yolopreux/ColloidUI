@@ -18,6 +18,7 @@ import colloid.model.combat.ICombat;
 
 public class Recount implements IRecount {
 
+    private final static int DEFAULT_LINE_TAIL_SIZE = 10; 
     private static Recount instance;
     private boolean isRunning;
     protected File[] logs;
@@ -28,6 +29,7 @@ public class Recount implements IRecount {
     ICombat combat;
     boolean done = false;
     ObservableList<String> combatItems;
+    protected int tailSize = DEFAULT_LINE_TAIL_SIZE;
 
     protected Recount() {
         combat = new Combat(this);
@@ -162,7 +164,7 @@ public class Recount implements IRecount {
          * @TODO
          */
         if (log.isFile()) {
-            String tailLines = LogUtil.tail(log, 10);
+            String tailLines = LogUtil.tail(log, tailSize);
             String[] lines = tailLines.split("\n");
             for (String line : lines) {
                 Date logTime = parseDate(line);
@@ -177,6 +179,7 @@ public class Recount implements IRecount {
                     }
                 }
             }
+            tailSize = DEFAULT_LINE_TAIL_SIZE;
         }
     }
 
@@ -242,5 +245,15 @@ public class Recount implements IRecount {
 
     public void setCombatItems(ObservableList<String> combatItems) {
         this.combatItems = combatItems;
+    }
+
+    public int getLineTail() {
+        return tailSize;
+    }
+
+    public Recount withTail(int tail) {
+        this.tailSize = tail;
+
+        return this;
     }
 }

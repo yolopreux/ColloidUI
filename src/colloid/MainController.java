@@ -24,6 +24,7 @@ import colloid.model.Recount;
 
 public class MainController extends AnchorPane implements Initializable {
 
+    private final int START_TAIL_SIZE = 3000;
     @FXML
     TextField combatLogPath;
     @FXML
@@ -114,7 +115,7 @@ public class MainController extends AnchorPane implements Initializable {
         if (!logPathField.getText().isEmpty() && !recount.isRunning()) {
             recount.setTextLog(textLog.getItems());
             recount.setRecountLog(recountLog);
-            recount.setCombatDirPath(logPathField.getText()).run();
+            recount.setCombatDirPath(logPathField.getText()).withTail(START_TAIL_SIZE).run();
             parseActButton.setText("Stop");
         } else {
             recount.stop();

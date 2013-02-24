@@ -173,6 +173,7 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
             @Override public void run() {
                 frame.dispose();
                 resource.getApp().getStage().setOpacity(1f);
+                resource.getApp().getStage().close();
                 resource.getApp().showMain();
             }
         });
