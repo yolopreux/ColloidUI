@@ -1,5 +1,6 @@
 package colloid;
 
+import java.awt.GraphicsEnvironment;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowListener;
@@ -15,14 +16,11 @@ import colloid.model.Recount;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.WindowEvent;
 import javafx.scene.input.MouseEvent;
@@ -30,7 +28,7 @@ import javafx.scene.input.DragEvent;
 
 public class PopupTextLogController extends AnchorPane implements Initializable {
     static AppResource resource;
-    static JFrame frame = new JFrame("Colloid Combat Log");
+    JFrame frame;
     @FXML
     ListView<String> popupTextLog;
     @FXML
@@ -45,11 +43,13 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
 
         resource = (AppResource) bundleResource;
         popupTextLog.setItems(Recount.getInstance().getTextLog());
-        resource.getApp().getStage().setOpacity(0.0f);
+
         resource.getApp().getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                frame.dispose();
+                if (frame != null) {
+                    frame.dispose();
+                }
                 resource.getApp().getStage().setOpacity(1f);
                 resource.getApp().showMain();
             }
@@ -58,6 +58,9 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
         moveMe.setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                if (frame == null) {
+                    return;
+                }
                 java.awt.Point location = frame.getLocationOnScreen();
                 location.setLocation(event.getScreenX(), event.getScreenY());
                 frame.setLocation(location);
@@ -75,6 +78,9 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
 
             @Override
             public void handle(MouseEvent event) {
+                if (frame == null) {
+                    return;
+                }
 
                 java.awt.Dimension size = frame.getSize();
                 java.awt.Point location = frame.getLocationOnScreen();
@@ -87,11 +93,14 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
                 frame.setSize(size);
             }
         });
-        showSwing();
+        if (!GraphicsEnvironment.isHeadless()) {
+            resource.getApp().getStage().setOpacity(0.0f);
+            showSwing();
+        }
     }
 
-    private static void initAndShowGUI() {
-
+    private void initAndShowGUI() {
+        frame = new JFrame("Colloid Combat Log");
         final JFXPanel fxPanel = new JFXPanel();
         frame.add(fxPanel);
         frame.setAlwaysOnTop(true);
@@ -160,20 +169,26 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
     }
 
     public void showSwing() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                initAndShowGUI();
-            }
-        });
+        if (SwingUtilities.isEventDispatchThread()) {
+            initAndShowGUI();
+        } else {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    showSwing();
+                }
+            });
+        }
     }
 
     public void closeAction(ActionEvent event) {
         Platform.runLater(new Runnable() {
             @Override public void run() {
-                frame.dispose();
+                if (frame != null) {
+                    frame.dispose();
+                    resource.getApp().getStage().close();
+                }
                 resource.getApp().getStage().setOpacity(1f);
-                resource.getApp().getStage().close();
                 resource.getApp().showMain();
             }
         });
