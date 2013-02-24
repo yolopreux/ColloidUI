@@ -20,6 +20,7 @@
         <Menu mnemonicParsing="false" text="Edit">
           <items>
             <MenuItem mnemonicParsing="false" text="Reset" fx:id="resetMenuItem" />
+            <MenuItem mnemonicParsing="false" text="Popup" fx:id="textLogPopup" onAction="#openTextLogPopupAction" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">

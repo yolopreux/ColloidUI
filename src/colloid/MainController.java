@@ -124,4 +124,8 @@ public class MainController extends AnchorPane implements Initializable {
 
     public void switchPaneAction(MouseEvent event) {
     }
+
+    public void openTextLogPopupAction(ActionEvent event) {
+        application.showPopupTextLog();
+    }
 }

@@ -18,6 +18,8 @@ public class SwingMain {
         frame.add(fxPanel);
         frame.setAlwaysOnTop(true);
         frame.setSize(new Dimension(800, 200));
+        frame.setUndecorated(true);
+        frame.setOpacity(0.95f);
 //        frame.setMinimumSize(new Dimension(800, 200));
         frame.setVisible(true);
 

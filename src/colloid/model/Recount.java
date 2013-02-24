@@ -107,7 +107,7 @@ public class Recount implements IRecount {
                         public void insert(String text) {
                             addTextLog(text);
                         }
-                    }, 
+                    },
                     /**
                      * @TODO move into service class
                      */
@@ -214,6 +214,10 @@ public class Recount implements IRecount {
 
     public void setTextLog(final ObservableList<String> textLog) {
         this.textLog = textLog;
+    }
+
+    public ObservableList<String> getTextLog() {
+        return textLog;
     }
 
     public void setRecountLog(final TextArea recountLog) {

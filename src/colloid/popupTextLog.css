@@ -1,0 +1,8 @@
+.list-view {
+    -fx-alignment: baseline-left;
+}
+.list-cell {
+    -fx-font: 10pt "Arial";
+    -fx-border-color: tan;
+    -fx-background-size: contain;
+}
