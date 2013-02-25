@@ -52,7 +52,7 @@ public class App extends Application {
     public Scene createScene() {
         loadParams();
 
-        stage = new Stage(); 
+        stage = new Stage();
         showMain();
 
         stage.getScene().getStylesheets().add("uicontrol/greeg-theme/win7glass.css");

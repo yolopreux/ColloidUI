@@ -18,7 +18,7 @@ import colloid.model.combat.ICombat;
 
 public class Recount implements IRecount {
 
-    private final static int DEFAULT_LINE_TAIL_SIZE = 10; 
+    private final static int DEFAULT_LINE_TAIL_SIZE = 10;
     private static Recount instance;
     private boolean isRunning;
     protected File[] logs;
@@ -34,7 +34,7 @@ public class Recount implements IRecount {
     protected Recount() {
         combat = new Combat(this);
     }
-    
+
     public TextArea getRecountLog() {
         return recountLog;
     }
@@ -72,6 +72,7 @@ public class Recount implements IRecount {
 
     public void run() {
         isRunning = true;
+
         Task<String> task = new Task<String>() {
             public void addFight(final String item) {
                 if (Platform.isFxApplicationThread()) {
@@ -97,7 +98,7 @@ public class Recount implements IRecount {
                 }
             }
 
-            @Override 
+            @Override
             public String call() {
                 while (isRunning) {
                     parse(new UpdateTextLog() {
@@ -122,7 +123,7 @@ public class Recount implements IRecount {
                 }
 
                 return null;
-            } 
+            }
         };
 
         recountLog.textProperty().bind(task.messageProperty());

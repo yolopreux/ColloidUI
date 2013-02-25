@@ -40,6 +40,7 @@ public class MainController extends AnchorPane implements Initializable {
     @FXML
     Button resetCombatButton;
     Recount recount = Recount.getInstance();
+    protected RecountApp recountApp = RecountApp.getInstance();
     @FXML
     TitledPane logPath;
     @FXML
@@ -82,7 +83,7 @@ public class MainController extends AnchorPane implements Initializable {
     }
 
     public void resetCombat(ActionEvent event) {
-        
+
     }
 
     public void closeAction(ActionEvent event) {
@@ -112,6 +113,12 @@ public class MainController extends AnchorPane implements Initializable {
     }
 
     public void toggleRecountAction(ActionEvent event) {
+        if (!recountApp.isRunning()) {
+            recountApp.setTextLog(textLog.getItems());
+            recountApp.run();
+        } else {
+            recountApp.stop();
+        }
         if (!logPathField.getText().isEmpty() && !recount.isRunning()) {
             recount.setTextLog(textLog.getItems());
             recount.setRecountLog(recountLog);

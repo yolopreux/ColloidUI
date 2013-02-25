@@ -1,11 +1,18 @@
 package colloid.model.event;
 
+import colloid.model.event.RecountLoop.InterruptLoopException;
+
 public interface Combat {
 
     public Combat add(Actor actor, Target target, Effect<Ability> effect);
-
     public Combat compile();
 
+    public interface Recount {
+        public void onStart();
+        public void onUpdate();
+        public void onStop();
+        public void init();
+    }
 
     public interface Entity {
         public void compile();
@@ -29,7 +36,6 @@ public interface Combat {
         public void setOnCombatEnter(CombatEnterEvent event);
         public void setOnCombatExit(CombatExitEvent event);
     }
-
 
     public interface Ability extends Entity {
         public String name();

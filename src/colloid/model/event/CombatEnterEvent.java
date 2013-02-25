@@ -1,22 +1,12 @@
 package colloid.model.event;
 
-import colloid.model.event.Combat.Ability;
-import colloid.model.event.Combat.Actor;
-import colloid.model.event.Combat.Effect;
-import colloid.model.event.Combat.Target;
+public class CombatEnterEvent extends CombatEvent implements Combat.Event {
 
-public class CombatEnterEvent implements Combat.Event {
+    private static final long serialVersionUID = 9172175510901559820L;
 
-    @Override
-    public void add(Actor actor, Target target, Effect<Ability> effect) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void add(Actor actor, Effect<Ability> effect) {
-        // TODO Auto-generated method stub
-
+    public CombatEnterEvent(Object source) {
+        super(source);
+        // TODO Auto-generated constructor stub
     }
 
 }
