@@ -12,8 +12,12 @@ import javax.swing.SwingUtilities;
 
 import colloid.App.AppResource;
 import colloid.model.Recount;
+import colloid.model.event.Combat;
 
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
+import javafx.collections.ObservableSet;
 import javafx.embed.swing.JFXPanel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -42,7 +46,19 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
     public void initialize(URL url, ResourceBundle bundleResource) {
 
         resource = (AppResource) bundleResource;
-        popupTextLog.setItems(Recount.getInstance().getTextLog());
+        RecountApp.getInstance().setObservable(new Combat.ObservableListString() {
+            @Override  public ObservableSet<String> getSet() {
+                return null;
+            }
+
+            @Override public ObservableMap<String, String> getMap() {
+                return null;
+            }
+
+            @Override public ObservableList<String> getList() {
+                return popupTextLog.getItems();
+            }
+        });
 
         resource.getApp().getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
@@ -155,7 +171,7 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
             }
         });
     }
-    
+
     public void close() {
         Platform.runLater(new Runnable() {
             @Override public void run() {

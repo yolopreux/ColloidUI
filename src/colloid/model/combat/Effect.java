@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import colloid.model.combat.CombatEntity;
-
+@Deprecated
 public abstract class Effect extends CombatEntity {
 
     public Effect(String log) {
@@ -17,6 +17,7 @@ public abstract class Effect extends CombatEntity {
     public abstract boolean isHeal();
     static final Pattern pattern = Pattern.compile(".*\\((\\d+)(.*)");
 
+    @Override
     public double getValue() {
         return parseValue(logData);
     }

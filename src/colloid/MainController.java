@@ -7,6 +7,8 @@ import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
+import javafx.collections.ObservableSet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,6 +22,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import colloid.model.Recount;
+import colloid.model.event.Combat;
 
 
 public class MainController extends AnchorPane implements Initializable {
@@ -114,18 +117,25 @@ public class MainController extends AnchorPane implements Initializable {
 
     public void toggleRecountAction(ActionEvent event) {
         if (!recountApp.isRunning()) {
-            recountApp.setTextLog(textLog.getItems());
+            recountApp.setCombatDirPath(logPathField.getText());
+            recountApp.setObservable(new Combat.ObservableListString() {
+                @Override
+                public ObservableList<String> getList() {
+                    return textLog.getItems();
+                }
+                @Override
+                public ObservableSet<String> getSet() {
+                    return null;
+                }
+                @Override
+                public ObservableMap<String, String> getMap() {
+                    return null;
+                }
+            });
             recountApp.run();
-        } else {
-            recountApp.stop();
-        }
-        if (!logPathField.getText().isEmpty() && !recount.isRunning()) {
-            recount.setTextLog(textLog.getItems());
-            recount.setRecountLog(recountLog);
-            recount.setCombatDirPath(logPathField.getText()).withTail(START_TAIL_SIZE).run();
             parseActButton.setText("Stop");
         } else {
-            recount.stop();
+            recountApp.stop();
             parseActButton.setText("Start");
         }
     }

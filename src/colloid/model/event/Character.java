@@ -15,7 +15,7 @@ public class Character implements Combat.Character {
     }
 
     @Override
-    public String name() {
+    public String getName() {
         // TODO Auto-generated method stub
         return null;
     }

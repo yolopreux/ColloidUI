@@ -7,11 +7,18 @@ import colloid.model.event.Combat.Actor;
 import colloid.model.event.Combat.Effect;
 import colloid.model.event.Combat.Target;
 
-public class CombatDamageEvent implements Combat.Event {
+public abstract class CombatDamageEvent extends CombatEvent {
+
+    private static final long serialVersionUID = 827463100092857897L;
+
     Date timestamp;
     Actor actor;
     Target target;
     Effect<Ability> effect;
+
+    public CombatDamageEvent(Object source) {
+        super(source);
+    }
 
     @Override
     public void add(Actor actor, Target target, Effect<Ability> effect) {

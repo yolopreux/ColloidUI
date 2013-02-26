@@ -1,5 +1,8 @@
 package colloid.model.event;
 
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
+import javafx.collections.ObservableSet;
 import colloid.model.event.RecountLoop.InterruptLoopException;
 
 public interface Combat {
@@ -14,13 +17,19 @@ public interface Combat {
         public void init();
     }
 
+    public interface ObservableListString {
+        public ObservableList<String> getList();
+        public ObservableSet<String> getSet();
+        public ObservableMap<String, String> getMap();
+    }
+
     public interface Entity {
         public void compile();
     }
 
     public interface Character extends Entity {
         public boolean isPlayer();
-        public String name();
+        public String getName();
     }
 
     public interface Actor extends Character {
@@ -61,5 +70,6 @@ public interface Combat {
     public interface Event {
         public void add(Actor actor, Target target, Effect<Ability> effect);
         public void add(Actor actor, Effect<Ability> effect);
+        public void handle(Event event);
     }
 }

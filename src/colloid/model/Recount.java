@@ -47,6 +47,7 @@ public class Recount implements IRecount {
         return instance;
     }
 
+    @Deprecated
     class RecountThread extends Thread {
         public RecountThread(Runnable runnable) {
             super(runnable);

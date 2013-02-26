@@ -1,5 +1,6 @@
 package colloid.model;
 
+@Deprecated
 public interface IRecount {
 
     public interface UpdateTextLog {

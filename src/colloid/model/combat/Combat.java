@@ -18,6 +18,7 @@ public class Combat implements ICombat {
 
     HashMap<String, HashMap<String, Double>> data;
 
+    @Deprecated
     public Combat() {
         data = new HashMap<String, HashMap<String, Double>>();
     }
@@ -28,6 +29,7 @@ public class Combat implements ICombat {
     }
 
 
+    @Override
     public Combat add(String newEvent) {
         String[] items = newEvent.substring(1).split("\\]\\s\\[");
         if (items != null) {
@@ -80,20 +82,20 @@ public class Combat implements ICombat {
         for (String key: data.keySet()) {
             text = text + "Actor: " + key + "\n";
             if (data.get(key).containsKey("damage")) {
-                text = text + "Damage: " + Double.toString(data.get(key).get("damage")) + "\n"; 
+                text = text + "Damage: " + Double.toString(data.get(key).get("damage")) + "\n";
             }
         }
         text = text + "Damage:" + "\n";
         for (String key: data.keySet()) {
             text = text + "Actor: " + key + "\n";
             if (data.get(key).containsKey("heal")) {
-                text = text + "Heal: " + Double.toString(data.get(key).get("heal")) + "\n"; 
+                text = text + "Heal: " + Double.toString(data.get(key).get("heal")) + "\n";
             }
         }
         updateRecountLog.update(text);
     }
 
     public CombatEvent getCombatEvent() {
-        return event; 
+        return event;
     }
 }

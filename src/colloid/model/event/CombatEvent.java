@@ -5,9 +5,10 @@ import java.util.EventObject;
 import colloid.model.event.Combat.Ability;
 import colloid.model.event.Combat.Actor;
 import colloid.model.event.Combat.Effect;
+import colloid.model.event.Combat.Event;
 import colloid.model.event.Combat.Target;
 
-public class CombatEvent extends EventObject implements Combat.Event {
+public abstract class CombatEvent extends EventObject implements Combat.Event {
 
     private static final long serialVersionUID = -2692281973951200556L;
 

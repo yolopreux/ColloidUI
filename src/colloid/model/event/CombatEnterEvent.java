@@ -1,6 +1,6 @@
 package colloid.model.event;
 
-public class CombatEnterEvent extends CombatEvent implements Combat.Event {
+public abstract class CombatEnterEvent extends CombatEvent {
 
     private static final long serialVersionUID = 9172175510901559820L;
 

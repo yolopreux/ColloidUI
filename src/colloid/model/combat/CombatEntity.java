@@ -8,6 +8,7 @@ public abstract class CombatEntity implements ICombatEntity {
     double threat;
     double value;
 
+    @Deprecated
     public CombatEntity(String log) {
         logData = log;
         parse();
@@ -24,6 +25,7 @@ public abstract class CombatEntity implements ICombatEntity {
         return logData;
     }
 
+    @Override
     public void fromString(String logData) {
         this.logData = logData;
     }

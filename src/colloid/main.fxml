@@ -17,10 +17,10 @@
             <MenuItem mnemonicParsing="false" onAction="#closeAction" text="Close" fx:id="menuItemClose" />
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Edit">
+        <Menu mnemonicParsing="false" text="View">
           <items>
             <MenuItem mnemonicParsing="false" text="Reset" fx:id="resetMenuItem" />
-            <MenuItem mnemonicParsing="false" text="Popup" fx:id="textLogPopup" onAction="#openTextLogPopupAction" />
+            <MenuItem mnemonicParsing="false" onAction="#openTextLogPopupAction" text="Popup" fx:id="textLogPopup" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
@@ -60,7 +60,7 @@
                   <children>
                     <GridPane id="GridPane" GridPane.columnIndex="0" GridPane.rowIndex="0">
                       <children>
-                        <ListView id="textLog" fx:id="textLog" cache="false" cacheHint="DEFAULT" depthTest="ENABLE" orientation="VERTICAL" prefHeight="296.0" prefWidth="573.0" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <ListView fx:id="textLog" cache="false" cacheHint="DEFAULT" depthTest="ENABLE" orientation="VERTICAL" prefHeight="296.0" prefWidth="573.0" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                       </children>
                       <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />

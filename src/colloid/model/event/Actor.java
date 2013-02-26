@@ -1,18 +1,18 @@
 package colloid.model.event;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-
 import colloid.model.event.Combat;
-import colloid.model.event.Combat.Ability;
-import colloid.model.event.Combat.Effect;
-import colloid.model.event.Combat.Target;
 
 public class Actor implements Combat.Actor {
 
 //    HashMap<Date, CombatDamageEvent> damageEvent = new HashMap<Date, CombatDamageEvent>();
-    ArrayList<CombatDamageEvent> damageEvent = new ArrayList<CombatDamageEvent>();
+//    ArrayList<CombatDamageEvent> damageEvent = new ArrayList<CombatDamageEvent>();
+    protected String name;
+    protected String logdata;
+
+    public Actor(String logdata) {
+        this.logdata = logdata;
+        compile();
+    }
 
     @Override
     public boolean isPlayer() {
@@ -21,20 +21,19 @@ public class Actor implements Combat.Actor {
     }
 
     @Override
-    public String name() {
-        // TODO Auto-generated method stub
-        return null;
+    public String getName() {
+        return name;
     }
 
     @Override
     public void compile() {
-        // TODO Auto-generated method stub
-
+        String[] items = logdata.substring(1).split("\\]\\s\\[");
+        name = items[1];
     }
 
     @Override
     public void setOnHeal(CombatHealEvent event) {
-        // TODO Auto-generated method stub
+        event.handle(event);
 
     }
 
@@ -54,6 +53,31 @@ public class Actor implements Combat.Actor {
     public void setOnCombatExit(CombatExitEvent event) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Actor other = (Actor) obj;
+        if (name == null) {
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
+        return true;
     }
 
 

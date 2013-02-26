@@ -1,19 +1,21 @@
 package colloid.model.event;
 
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
-import javafx.concurrent.Task;
-
 import colloid.model.Recount;
-import colloid.model.IRecount.UpdateRecountLog;
-import colloid.model.IRecount.UpdateTextLog;
+import colloid.model.event.Combat.ObservableListString;
 
 
 public abstract class RecountLoop implements Combat.Recount {
 
     private boolean isRunning;
+    protected HashSet<Combat.Actor> actors= new HashSet<Combat.Actor>();
+    String combatDirPath;
+
+    protected ObservableListString observableObj;
 
     public RecountLoop() {
     }
@@ -29,6 +31,8 @@ public abstract class RecountLoop implements Combat.Recount {
 
     @Override
     public void onUpdate() {
+        actors.add(new Actor(""));
+        actors.iterator();
     }
 
     @Override
@@ -92,31 +96,6 @@ public abstract class RecountLoop implements Combat.Recount {
                 }
             }
         }).start();
-//        Task<String> task = new Task<String>() {
-//            public void update() {
-//                if (Platform.isFxApplicationThread()) {
-//                    onUpdate();
-//                } else {
-//                    Platform.runLater(new Runnable() {
-//                        @Override public void run() {
-//                            onUpdate();
-//                        }
-//                    });
-//                }
-//            }
-//
-//            @Override
-//            public String call() {
-//                onStart();
-//                while (isRunning) {
-//                    update();
-//                }
-//                return null;
-//            }
-//        };
-//
-////        recountLog.textProperty().bind(task.messageProperty());
-//        new RecountThread(task).start();
     }
 
     public void stop() {
@@ -135,4 +114,17 @@ public abstract class RecountLoop implements Combat.Recount {
     public class InterruptLoopException extends Exception {
         private static final long serialVersionUID = 2213013019370707528L;
     }
+
+    public void setCombatDirPath(String combatDirPath) {
+        this.combatDirPath = combatDirPath;
+    }
+
+    public void setObservable(Combat.ObservableListString observable) {
+        observableObj = observable;
+    }
+
+    public String getCombatDirPath() {
+        return combatDirPath;
+    }
+
 }

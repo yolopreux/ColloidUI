@@ -5,7 +5,7 @@ import colloid.model.event.Combat.Actor;
 import colloid.model.event.Combat.Effect;
 import colloid.model.event.Combat.Target;
 
-public class CombatHealEvent extends CombatEvent implements Combat.Event {
+public abstract class CombatHealEvent extends CombatEvent implements Combat.Event {
 
     private static final long serialVersionUID = -3960047681632022561L;
 
