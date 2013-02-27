@@ -14,14 +14,14 @@ public abstract class CombatDamageEvent extends CombatEvent {
     Date timestamp;
     Actor actor;
     Target target;
-    Effect<Ability> effect;
+    Effect effect;
 
     public CombatDamageEvent(Object source) {
         super(source);
     }
 
     @Override
-    public void add(Actor actor, Target target, Effect<Ability> effect) {
+    public void add(Actor actor, Target target, Effect effect) {
         timestamp = new Date();
         this.actor = actor;
         this.target = target;
@@ -29,7 +29,7 @@ public abstract class CombatDamageEvent extends CombatEvent {
     }
 
     @Override
-    public void add(Actor actor, Effect<Ability> effect) {
+    public void add(Actor actor, Effect effect) {
         timestamp = new Date();
         this.actor = actor;
         this.target = null;

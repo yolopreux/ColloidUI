@@ -7,7 +7,7 @@ import colloid.model.event.RecountLoop.InterruptLoopException;
 
 public interface Combat {
 
-    public Combat add(Actor actor, Target target, Effect<Ability> effect);
+    public Combat add(Actor actor, Target target, Effect effect);
     public Combat compile();
 
     public interface Recount {
@@ -33,32 +33,32 @@ public interface Combat {
     }
 
     public interface Actor extends Character {
-        public void setOnHeal(CombatHealEvent event);
-        public void setOnDamage(CombatDamageEvent event);
-        public void setOnCombatEnter(CombatEnterEvent event);
-        public void setOnCombatExit(CombatExitEvent event);
+        public void setOnHeal(EventHandler<CombatHealEvent> handler);
+        public void setOnDamage(EventHandler<CombatDamageEvent> handler);
+        public void setOnCombatEnter(EventHandler<CombatEnterEvent> handler);
+        public void setOnCombatExit(EventHandler<CombatExitEvent> handler);
     }
 
     public interface Target extends Character {
-        public void setOnHeal(CombatHealEvent event);
-        public void setOnDamage(CombatDamageEvent event);
-        public void setOnCombatEnter(CombatEnterEvent event);
-        public void setOnCombatExit(CombatExitEvent event);
+        public void setOnHeal(EventHandler<CombatHealEvent> handler);
+        public void setOnDamage(EventHandler<CombatDamageEvent> handler);
+        public void setOnCombatEnter(EventHandler<CombatEnterEvent> handler);
+        public void setOnCombatExit(EventHandler<CombatExitEvent> handler);
     }
 
     public interface Ability extends Entity {
         public String name();
-        public void setOnHeal(CombatHealEvent event);
-        public void setOnDamage(CombatDamageEvent event);
-        public void setOnCombatEnter(CombatEnterEvent event);
-        public void setOnCombatExit(CombatExitEvent event);
+        public void setOnHeal(EventHandler<CombatHealEvent> handler);
+        public void setOnDamage(EventHandler<CombatDamageEvent> handler);
+        public void setOnCombatEnter(EventHandler<CombatEnterEvent> handler);
+        public void setOnCombatExit(EventHandler<CombatExitEvent> handler);
     }
 
-    public interface Effect<T> extends Entity {
-        public void setOnHeal(CombatHealEvent event);
-        public void setOnDamage(CombatDamageEvent event);
-        public void setOnCombatEnter(CombatEnterEvent event);
-        public void setOnCombatExit(CombatExitEvent event);
+    public interface Effect extends Entity {
+        public void setOnHeal(EventHandler<CombatHealEvent> handler);
+        public void setOnDamage(EventHandler<CombatDamageEvent> handler);
+        public void setOnCombatEnter(EventHandler<CombatEnterEvent> handler);
+        public void setOnCombatExit(EventHandler<CombatExitEvent> handler);
 
         public interface Heal {
         }
@@ -68,8 +68,11 @@ public interface Combat {
     }
 
     public interface Event {
-        public void add(Actor actor, Target target, Effect<Ability> effect);
-        public void add(Actor actor, Effect<Ability> effect);
-        public void handle(Event event);
+        public void add(Actor actor, Target target, Effect effect);
+        public void add(Actor actor, Effect effect);
+    }
+
+    public interface EventHandler<E> {
+        public void handle(E event);
     }
 }

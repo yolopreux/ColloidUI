@@ -1,5 +1,7 @@
 package colloid.model.event;
 
+import colloid.model.event.Combat.EventHandler;
+
 public class Target implements Combat.Target {
 
     @Override
@@ -21,26 +23,27 @@ public class Target implements Combat.Target {
     }
 
     @Override
-    public void setOnHeal(CombatHealEvent event) {
+    public void setOnHeal(EventHandler<CombatHealEvent> handler) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void setOnDamage(CombatDamageEvent event) {
+    public void setOnDamage(EventHandler<CombatDamageEvent> handler) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void setOnCombatEnter(CombatEnterEvent event) {
+    public void setOnCombatEnter(EventHandler<CombatEnterEvent> handler) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void setOnCombatExit(CombatExitEvent event) {
+    public void setOnCombatExit(EventHandler<CombatExitEvent> handler) {
         // TODO Auto-generated method stub
 
     }
+
 }
