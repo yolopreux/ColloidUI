@@ -1,9 +1,8 @@
 package colloid.model.event;
 
 import colloid.model.event.Combat;
-import colloid.model.event.Combat.EventHandler;
 
-public class Actor implements Combat.Actor {
+public class Actor extends Character implements Combat.Actor {
 
     protected String name;
     protected String logdata;
@@ -54,33 +53,4 @@ public class Actor implements Combat.Actor {
             return false;
         return true;
     }
-
-    @Override
-    public void setOnHeal(EventHandler<CombatHealEvent> handler) {
-        CombatHealEvent event = CombatHealEvent.createEvent("");
-        if (event == null) {
-            return;
-        }
-
-        handler.handle(event);
-    }
-
-    @Override
-    public void setOnDamage(EventHandler<CombatDamageEvent> handler) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void setOnCombatEnter(EventHandler<CombatEnterEvent> handler) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void setOnCombatExit(EventHandler<CombatExitEvent> handler) {
-        // TODO Auto-generated method stub
-
-    }
-
 }

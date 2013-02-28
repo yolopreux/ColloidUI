@@ -15,6 +15,7 @@ public interface Combat {
         public void onUpdate();
         public void onStop();
         public void init();
+        public void onUpdate(EventHandler<CombatEvent> handler);
     }
 
     public interface ObservableListString {
@@ -30,20 +31,16 @@ public interface Combat {
     public interface Character extends Entity {
         public boolean isPlayer();
         public String getName();
+        public void setOnHeal(EventHandler<CombatHealEvent> handler);
+        public void setOnDamage(EventHandler<CombatDamageEvent> handler);
+        public void setOnCombatEnter(EventHandler<CombatEnterEvent> handler);
+        public void setOnCombatExit(EventHandler<CombatExitEvent> handler);
     }
 
     public interface Actor extends Character {
-        public void setOnHeal(EventHandler<CombatHealEvent> handler);
-        public void setOnDamage(EventHandler<CombatDamageEvent> handler);
-        public void setOnCombatEnter(EventHandler<CombatEnterEvent> handler);
-        public void setOnCombatExit(EventHandler<CombatExitEvent> handler);
     }
 
     public interface Target extends Character {
-        public void setOnHeal(EventHandler<CombatHealEvent> handler);
-        public void setOnDamage(EventHandler<CombatDamageEvent> handler);
-        public void setOnCombatEnter(EventHandler<CombatEnterEvent> handler);
-        public void setOnCombatExit(EventHandler<CombatExitEvent> handler);
     }
 
     public interface Ability extends Entity {

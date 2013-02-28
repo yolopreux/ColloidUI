@@ -14,7 +14,6 @@ public class RecountApp  extends RecountLoop {
 
     ObservableList<String> textLog;
     private static RecountApp instance;
-    String lastLine;
 
     protected RecountApp() {
     }
@@ -33,7 +32,6 @@ public class RecountApp  extends RecountLoop {
 
     @Override
     public void onUpdate() {
-        updateLog();
     }
 
     @Override
@@ -44,30 +42,4 @@ public class RecountApp  extends RecountLoop {
         this.textLog = textLog;
     }
 
-    private void updateLog() {
-        File[] logs = Util.filesByPath(getCombatDirPath());
-        if (logs == null || logs.length == 0) {
-            return;
-        }
-        File log = logs[logs.length - 1];
-        /**
-         * @TODO
-         */
-        if (log.isFile()) {
-            String tailLines = LogUtil.tail(log, 30);
-            String[] lines = tailLines.split("\n");
-            for (String line : lines) {
-                Date logTime = Util.parseDate(line);
-                if (logTime == null) {
-                    continue;
-                }
-                if (lastLine == null || !Util.isDone(logTime, lastLine)) {
-                    lastLine = line;
-                    if (observableObj != null && line != null) {
-                        observableObj.getList().add(0, line);
-                    }
-                }
-            }
-        }
-    }
 }

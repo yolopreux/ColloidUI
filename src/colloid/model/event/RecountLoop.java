@@ -1,11 +1,15 @@
 package colloid.model.event;
 
+import java.io.File;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
+import colloid.model.LogUtil;
 import colloid.model.Recount;
+import colloid.model.event.Combat.EventHandler;
 import colloid.model.event.Combat.ObservableListString;
 
 
@@ -14,8 +18,10 @@ public abstract class RecountLoop implements Combat.Recount {
     private boolean isRunning;
     protected HashSet<Combat.Actor> actors= new HashSet<Combat.Actor>();
     String combatDirPath;
-
+    EventHandler<CombatEvent> handler;
     protected ObservableListString observableObj;
+    String lastLine;
+    Date currentLogTime;
 
     public RecountLoop() {
     }
@@ -31,12 +37,20 @@ public abstract class RecountLoop implements Combat.Recount {
 
     @Override
     public void onUpdate() {
-        actors.add(new Actor(""));
-        actors.iterator();
     }
 
     @Override
     public void onStop() {
+    }
+
+    protected void update() {
+        try {
+            compileCurrent();
+        } catch (InvalidCombatDirPathException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        onUpdate();
     }
 
     class RecountThread extends Thread {
@@ -75,7 +89,7 @@ public abstract class RecountLoop implements Combat.Recount {
         new RecountThread(new Runnable() {
             void runLater() {
                 if (Platform.isFxApplicationThread()) {
-                    onUpdate();
+                    update();
                 } else {
                     try {
                         Thread.sleep(100);
@@ -115,8 +129,10 @@ public abstract class RecountLoop implements Combat.Recount {
         private static final long serialVersionUID = 2213013019370707528L;
     }
 
-    public void setCombatDirPath(String combatDirPath) {
+    public RecountLoop setCombatDirPath(String combatDirPath) {
         this.combatDirPath = combatDirPath;
+
+        return this;
     }
 
     public void setObservable(Combat.ObservableListString observable) {
@@ -127,4 +143,46 @@ public abstract class RecountLoop implements Combat.Recount {
         return combatDirPath;
     }
 
+    @Override
+    public void onUpdate(EventHandler<CombatEvent> handler) {
+        this.handler = handler;
+    }
+
+    public class InvalidCombatDirPathException extends Exception {
+        private static final long serialVersionUID = -346778478900727174L;
+    }
+
+    private void compileCurrent() throws InvalidCombatDirPathException {
+        if (getCombatDirPath() == null) {
+            throw new InvalidCombatDirPathException();
+        }
+        File[] logs = Util.filesByPath(getCombatDirPath());
+        if (logs == null || logs.length == 0) {
+            return;
+        }
+        File log = logs[logs.length - 1];
+        /**
+         * @TODO
+         */
+        if (log.isFile()) {
+            String tailLines = LogUtil.tail(log, 30);
+            String[] lines = tailLines.split("\n");
+            for (String line : lines) {
+                currentLogTime = Util.parseDate(line);
+                if (currentLogTime == null) {
+                    continue;
+                }
+                if (lastLine == null || !Util.isDone(currentLogTime, lastLine)) {
+                    lastLine = line;
+                    if (handler != null) {
+                        handler.handle(new CombatEvent(this, lastLine));
+                    }
+                }
+            }
+        }
+    }
+
+    public String getLastLine() {
+        return lastLine;
+    }
 }

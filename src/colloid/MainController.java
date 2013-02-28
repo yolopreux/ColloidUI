@@ -23,6 +23,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import colloid.model.Recount;
 import colloid.model.event.Combat;
+import colloid.model.event.CombatEvent;
 
 
 public class MainController extends AnchorPane implements Initializable {
@@ -117,22 +118,13 @@ public class MainController extends AnchorPane implements Initializable {
 
     public void toggleRecountAction(ActionEvent event) {
         if (!recountApp.isRunning()) {
-            recountApp.setCombatDirPath(logPathField.getText());
-            recountApp.setObservable(new Combat.ObservableListString() {
+            recountApp.setCombatDirPath(logPathField.getText()).run();
+            recountApp.onUpdate(new Combat.EventHandler<CombatEvent>() {
                 @Override
-                public ObservableList<String> getList() {
-                    return textLog.getItems();
-                }
-                @Override
-                public ObservableSet<String> getSet() {
-                    return null;
-                }
-                @Override
-                public ObservableMap<String, String> getMap() {
-                    return null;
+                public void handle(CombatEvent event) {
+                    textLog.getItems().add(recountApp.getLastLine());
                 }
             });
-            recountApp.run();
             parseActButton.setText("Stop");
         } else {
             recountApp.stop();

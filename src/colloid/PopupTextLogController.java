@@ -13,6 +13,7 @@ import javax.swing.SwingUtilities;
 import colloid.App.AppResource;
 import colloid.model.Recount;
 import colloid.model.event.Combat;
+import colloid.model.event.CombatEvent;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -46,20 +47,13 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
     public void initialize(URL url, ResourceBundle bundleResource) {
 
         resource = (AppResource) bundleResource;
-        RecountApp.getInstance().setObservable(new Combat.ObservableListString() {
-            @Override  public ObservableSet<String> getSet() {
-                return null;
-            }
-
-            @Override public ObservableMap<String, String> getMap() {
-                return null;
-            }
-
-            @Override public ObservableList<String> getList() {
-                return popupTextLog.getItems();
+        final RecountApp recountApp = RecountApp.getInstance();
+        recountApp.onUpdate(new Combat.EventHandler<CombatEvent>() {
+            @Override
+            public void handle(CombatEvent event) {
+                popupTextLog.getItems().add(recountApp.getLastLine());
             }
         });
-
         resource.getApp().getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {

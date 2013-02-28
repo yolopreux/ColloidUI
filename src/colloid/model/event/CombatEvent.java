@@ -11,9 +11,15 @@ import colloid.model.event.Combat.Target;
 public class CombatEvent extends EventObject implements Combat.Event {
 
     private static final long serialVersionUID = -2692281973951200556L;
+    protected String logdata;
 
     public CombatEvent(Object source) {
         super(source);
+    }
+
+    public CombatEvent(Object source, String logdata) {
+        super(source);
+        this.logdata = logdata;
     }
 
     Actor actor;
