@@ -51,7 +51,7 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
         recountApp.onUpdate(new Combat.EventHandler<CombatEvent>() {
             @Override
             public void handle(CombatEvent event) {
-                popupTextLog.getItems().add(recountApp.getLastLine());
+                popupTextLog.getItems().add(0, event.getLogdata());
             }
         });
         resource.getApp().getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {

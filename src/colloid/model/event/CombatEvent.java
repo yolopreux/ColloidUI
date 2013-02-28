@@ -44,4 +44,14 @@ public class CombatEvent extends EventObject implements Combat.Event {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return "CombatEvent [logdata=" + logdata + ", actor=" + actor
+                + ", target=" + target + ", effect=" + effect + "]";
+    }
+
+    public String getLogdata() {
+        return logdata;
+    }
+
 }

@@ -7,6 +7,10 @@ import javafx.collections.ObservableList;
 import colloid.model.IRecount;
 import colloid.model.LogUtil;
 import colloid.model.Recount;
+import colloid.model.event.Actor;
+import colloid.model.event.Combat;
+import colloid.model.event.CombatDamageEvent;
+import colloid.model.event.CombatHealEvent;
 import colloid.model.event.RecountLoop;
 import colloid.model.event.Util;
 
@@ -30,8 +34,10 @@ public class RecountApp  extends RecountLoop {
     public void onStart() {
     }
 
-    @Override
-    public void onUpdate() {
+    /**
+     * Executes in Fx application thread
+     */
+    @Override public void onUpdate() {
     }
 
     @Override

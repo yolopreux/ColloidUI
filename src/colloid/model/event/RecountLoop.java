@@ -50,7 +50,6 @@ public abstract class RecountLoop implements Combat.Recount {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        onUpdate();
     }
 
     class RecountThread extends Thread {
@@ -105,6 +104,7 @@ public abstract class RecountLoop implements Combat.Recount {
             }
             @Override
             public void run() {
+                onStart();
                 while (isRunning) {
                     runLater();
                 }
@@ -177,12 +177,17 @@ public abstract class RecountLoop implements Combat.Recount {
                     if (handler != null) {
                         handler.handle(new CombatEvent(this, lastLine));
                     }
+                    onUpdate();
                 }
             }
         }
     }
 
-    public String getLastLine() {
-        return lastLine;
+    public String getCurrentLogadata() {
+       return lastLine;
+    }
+
+    public boolean isStateChanged() {
+        return !Util.isDone(currentLogTime, lastLine);
     }
 }

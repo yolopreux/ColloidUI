@@ -122,7 +122,7 @@ public class MainController extends AnchorPane implements Initializable {
             recountApp.onUpdate(new Combat.EventHandler<CombatEvent>() {
                 @Override
                 public void handle(CombatEvent event) {
-                    textLog.getItems().add(recountApp.getLastLine());
+                    textLog.getItems().add(event.getLogdata());
                 }
             });
             parseActButton.setText("Stop");

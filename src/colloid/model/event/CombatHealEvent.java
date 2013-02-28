@@ -12,6 +12,10 @@ public class CombatHealEvent extends CombatEvent implements Combat.Event {
         super(source);
     }
 
+    public CombatHealEvent(Object source, String logdata) {
+        super(source, logdata);
+    }
+
     Actor actor;
     Target target;
     Effect effect;

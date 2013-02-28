@@ -20,6 +20,10 @@ public class CombatDamageEvent extends CombatEvent {
         super(source);
     }
 
+    public CombatDamageEvent(Object source, String logdata) {
+        super(source, logdata);
+    }
+
     @Override
     public void add(Actor actor, Target target, Effect effect) {
         timestamp = new Date();

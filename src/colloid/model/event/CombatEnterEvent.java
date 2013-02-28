@@ -6,7 +6,9 @@ public class CombatEnterEvent extends CombatEvent {
 
     public CombatEnterEvent(Object source) {
         super(source);
-        // TODO Auto-generated constructor stub
     }
 
+    public CombatEnterEvent(Object source, String logdata) {
+        super(source, logdata);
+    }
 }

@@ -8,4 +8,8 @@ public class CombatExitEvent  extends CombatEvent implements Combat.Event {
         super(source);
     }
 
+    public CombatExitEvent(Object source, String logdata) {
+        super(source, logdata);
+    }
+
 }

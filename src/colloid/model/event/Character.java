@@ -26,36 +26,36 @@ public class Character implements Combat.Character {
 
     @Override
     public void setOnHeal(EventHandler<CombatHealEvent> handler) {
-        String logdata = RecountApp.getInstance().getLastLine();
-        if (logdata.contains("Heal")) {
-            CombatHealEvent event = new CombatHealEvent(this);
+        String logdata = RecountApp.getInstance().getCurrentLogadata();
+        if (logdata != null && logdata.contains("Heal")) {
+            CombatHealEvent event = new CombatHealEvent(this, logdata);
             handler.handle(event);
         }
     }
 
     @Override
     public void setOnDamage(EventHandler<CombatDamageEvent> handler) {
-        String logdata = RecountApp.getInstance().getLastLine();
-        if (logdata.contains("Damage")) {
-            CombatDamageEvent event = new CombatDamageEvent(this);
+        String logdata = RecountApp.getInstance().getCurrentLogadata();
+        if (logdata != null && logdata.contains("Damage")) {
+            CombatDamageEvent event = new CombatDamageEvent(this, logdata);
             handler.handle(event);
         }
     }
 
     @Override
     public void setOnCombatEnter(EventHandler<CombatEnterEvent> handler) {
-        String logdata = RecountApp.getInstance().getLastLine();
-        if (logdata.contains("CombatEnter")) {
-            CombatEnterEvent event = new CombatEnterEvent(this);
+        String logdata = RecountApp.getInstance().getCurrentLogadata();
+        if (logdata != null && logdata.contains("CombatEnter")) {
+            CombatEnterEvent event = new CombatEnterEvent(this, logdata);
             handler.handle(event);
         }
     }
 
     @Override
     public void setOnCombatExit(EventHandler<CombatExitEvent> handler) {
-        String logdata = RecountApp.getInstance().getLastLine();
-        if (logdata.contains("CombatExit")) {
-            CombatExitEvent event = new CombatExitEvent(this);
+        String logdata = RecountApp.getInstance().getCurrentLogadata();
+        if (logdata != null && logdata.contains("CombatExit")) {
+            CombatExitEvent event = new CombatExitEvent(this, logdata);
             handler.handle(event);
         }
     }

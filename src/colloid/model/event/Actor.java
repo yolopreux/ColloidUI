@@ -25,8 +25,12 @@ public class Actor extends Character implements Combat.Actor {
 
     @Override
     public void compile() {
-        String[] items = logdata.substring(1).split("\\]\\s\\[");
-        name = items[1];
+        try {
+            String[] items = logdata.substring(1).split("\\]\\s\\[");
+            name = items[1];
+        } catch (StringIndexOutOfBoundsException ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
