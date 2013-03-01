@@ -2,6 +2,10 @@ package colloid.model.event;
 
 public class Target extends Character implements Combat.Target {
 
+    public Target(String logdata) {
+        super(logdata);
+    }
+
     @Override
     public boolean isPlayer() {
         // TODO Auto-generated method stub
@@ -10,13 +14,16 @@ public class Target extends Character implements Combat.Target {
 
     @Override
     public String getName() {
-        // TODO Auto-generated method stub
-        return null;
+        return name;
     }
 
     @Override
     public void compile() {
-        // TODO Auto-generated method stub
-
+        try {
+            String[] items = logdata.substring(1).split("\\]\\s\\[");
+            name = items[2];
+        } catch (StringIndexOutOfBoundsException ex) {
+            ex.printStackTrace();
+        }
     }
 }

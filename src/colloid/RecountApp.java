@@ -1,6 +1,8 @@
 package colloid;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 import javafx.collections.ObservableList;
@@ -46,6 +48,16 @@ public class RecountApp  extends RecountLoop {
 
     public void setTextLog(final ObservableList<String> textLog) {
         this.textLog = textLog;
+    }
+
+    /**
+     * Return sorted list of actors by damage done
+     */
+    public ArrayList<Actor> getActorList() {
+        ArrayList<Actor> list = new ArrayList<Actor>(getActors());
+        Collections.sort(list, Collections.reverseOrder());
+
+        return list;
     }
 
 }

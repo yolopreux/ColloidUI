@@ -31,8 +31,8 @@ public interface Combat {
     public interface Character extends Entity {
         public boolean isPlayer();
         public String getName();
-        public void setOnHeal(EventHandler<CombatHealEvent> handler);
-        public void setOnDamage(EventHandler<CombatDamageEvent> handler);
+        public void setOnHeal(EventHandler<Combat.Event> handler);
+        public void setOnDamage(EventHandler<Combat.Event> handler);
         public void setOnCombatEnter(EventHandler<CombatEnterEvent> handler);
         public void setOnCombatExit(EventHandler<CombatExitEvent> handler);
     }
@@ -67,6 +67,7 @@ public interface Combat {
     public interface Event {
         public void add(Actor actor, Target target, Effect effect);
         public void add(Actor actor, Effect effect);
+        public double getValue();
     }
 
     public interface EventHandler<E> {

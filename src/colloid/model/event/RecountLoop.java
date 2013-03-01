@@ -16,7 +16,7 @@ import colloid.model.event.Combat.ObservableListString;
 public abstract class RecountLoop implements Combat.Recount {
 
     private boolean isRunning;
-    protected HashSet<Combat.Actor> actors= new HashSet<Combat.Actor>();
+    protected HashSet<Actor> actors= new HashSet<Actor>();
     String combatDirPath;
     EventHandler<CombatEvent> handler;
     protected ObservableListString observableObj;
@@ -189,5 +189,13 @@ public abstract class RecountLoop implements Combat.Recount {
 
     public boolean isStateChanged() {
         return !Util.isDone(currentLogTime, lastLine);
+    }
+
+    public void registerActor(Actor actor) {
+        actors.add(actor);
+    }
+
+    public HashSet<Actor> getActors() {
+        return actors;
     }
 }

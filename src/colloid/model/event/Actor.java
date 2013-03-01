@@ -1,15 +1,15 @@
 package colloid.model.event;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+
 import colloid.model.event.Combat;
 
-public class Actor extends Character implements Combat.Actor {
-
-    protected String name;
-    protected String logdata;
+public class Actor extends Character implements Combat.Actor, Comparable<Actor> {
 
     public Actor(String logdata) {
-        this.logdata = logdata;
-        compile();
+        super(logdata);
     }
 
     @Override
@@ -27,7 +27,12 @@ public class Actor extends Character implements Combat.Actor {
     public void compile() {
         try {
             String[] items = logdata.substring(1).split("\\]\\s\\[");
+            if (items[1].contains("{")) {
+                name = items[1].substring(0, items[1].indexOf("{")-1);
+                return;
+            }
             name = items[1];
+
         } catch (StringIndexOutOfBoundsException ex) {
             ex.printStackTrace();
         }
@@ -56,5 +61,32 @@ public class Actor extends Character implements Combat.Actor {
         } else if (!name.equals(other.name))
             return false;
         return true;
+    }
+
+    public double getDamageDone() {
+        double sum =0;
+        Iterator<Combat.Event> iter = events.iterator();
+        while (iter.hasNext()) {
+            Combat.Event event = iter.next();
+            if (event instanceof CombatDamageEvent) {
+                sum += event.getValue();
+            }
+        }
+
+        return sum;
+    }
+
+    @Override
+    public int compareTo(Actor o) {
+        if (getDamageDone() > o.getDamageDone()) {
+            return 1;
+        }
+        return -1;
+    }
+
+    @Override
+    public String toString() {
+        return "Actor [getName()=" + getName() + ", getDamageDone()="
+                + getDamageDone() + "]";
     }
 }
