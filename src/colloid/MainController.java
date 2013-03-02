@@ -3,6 +3,7 @@ package colloid;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -22,6 +23,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import colloid.model.Recount;
+import colloid.model.event.Actor;
 import colloid.model.event.Combat;
 import colloid.model.event.CombatEvent;
 
@@ -52,7 +54,7 @@ public class MainController extends AnchorPane implements Initializable {
     @FXML
     MenuItem menuItemClose;
     @FXML
-    ListView<String> combatListView;
+    ListView<Actor> combatListView;
 
     private App application;
 
@@ -69,13 +71,11 @@ public class MainController extends AnchorPane implements Initializable {
         textLog.setEditable(false);
         recountLog.setEditable(false);
 
-        ObservableList<String> items = FXCollections.observableArrayList();
+        ObservableList<Actor> items = FXCollections.observableArrayList();
         combatListView.setItems(items);
-        recount.setCombatItems(items);
 
         ObservableList<String> logItems = FXCollections.observableArrayList();
         textLog.setItems(logItems);
-        recount.setCombatItems(items);
     }
 
     public App getApplication() {
@@ -122,7 +122,17 @@ public class MainController extends AnchorPane implements Initializable {
             recountApp.onUpdate(new Combat.EventHandler<CombatEvent>() {
                 @Override
                 public void handle(CombatEvent event) {
-                    textLog.getItems().add(event.getLogdata());
+                    textLog.getItems().add(0, event.getLogdata());
+
+                    recountApp.registerActor(new Actor(event.getLogdata()));
+                    Iterator<Actor> iter = recountApp.getActors().iterator();
+                    while(iter.hasNext()) {
+                        Actor act = iter.next();
+                        act.handleEvent(event.getLogdata());
+                    }
+                    combatListView.getItems().clear();
+                    combatListView.getItems().addAll(recountApp.getActorList());
+
                 }
             });
             parseActButton.setText("Stop");

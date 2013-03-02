@@ -18,6 +18,13 @@ public interface Combat {
         public void onUpdate(EventHandler<CombatEvent> handler);
     }
 
+    public interface RegisterHandler {
+        public void setOnHeal(EventHandler<Combat.Event> handler);
+        public void setOnDamage(EventHandler<Combat.Event> handler);
+        public void setOnCombatEnter(EventHandler<CombatEnterEvent> handler);
+        public void setOnCombatExit(EventHandler<CombatExitEvent> handler);
+    }
+
     public interface ObservableListString {
         public ObservableList<String> getList();
         public ObservableSet<String> getSet();
@@ -68,6 +75,7 @@ public interface Combat {
         public void add(Actor actor, Target target, Effect effect);
         public void add(Actor actor, Effect effect);
         public double getValue();
+        public void setFight(Fight current);
     }
 
     public interface EventHandler<E> {

@@ -72,9 +72,19 @@ public abstract class Character implements Combat.Character {
         if (!equals(new Actor(logdata))) {
             return;
         }
+        if (logdata != null && logdata.contains("EnterCombat")) {
+            CombatEnterEvent event = new CombatEnterEvent(this, logdata);
+//            handler.handle(event);
+            Fight.create();
+            events.add(event);
+        }
+
         if (logdata != null && logdata.contains("Heal")) {
             if (handlerHeal != null) {
                 Combat.Event healEvent = new CombatHealEvent(this, logdata);
+                if (Fight.inFight()) {
+                    healEvent.setFight(Fight.current());
+                }
                 handlerHeal.handle(healEvent);
                 events.add(healEvent);
             }
@@ -82,21 +92,20 @@ public abstract class Character implements Combat.Character {
         if (logdata != null && logdata.contains("Damage")) {
             if (handlerDamage != null) {
                 CombatDamageEvent damageEvent = new CombatDamageEvent(this, logdata);
+                if (Fight.inFight()) {
+                    damageEvent.setFight(Fight.current());
+                }
                 handlerDamage.handle(damageEvent);
                 events.add(damageEvent);
             }
 //
         }
-//            if (logdata != null && logdata.contains("CombatEnter")) {
-//                CombatEnterEvent event = new CombatEnterEvent(this, logdata);
-//                handler.handle(event);
-//                events.add(event);
-//            }
-//            if (logdata != null && logdata.contains("CombatExit")) {
-//                CombatExitEvent event2 = new CombatExitEvent(this, logdata);
+            if (logdata != null && logdata.contains("ExitCombat")) {
+                CombatExitEvent event2 = new CombatExitEvent(this, logdata);
+                Fight.finish();
 //                handler.handle(event2);
-//                events.add(event2);
-//            }
+                events.add(event2);
+            }
 
     }
 

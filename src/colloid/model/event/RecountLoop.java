@@ -1,14 +1,18 @@
 package colloid.model.event;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import colloid.model.LogUtil;
 import colloid.model.Recount;
+import colloid.model.event.Combat.Event;
 import colloid.model.event.Combat.EventHandler;
 import colloid.model.event.Combat.ObservableListString;
 
@@ -192,10 +196,44 @@ public abstract class RecountLoop implements Combat.Recount {
     }
 
     public void registerActor(Actor actor) {
-        actors.add(actor);
+        if (!actors.contains(actor)) {
+            actor.setOnDamage(new Combat.EventHandler<Combat.Event>() {
+                @Override
+                public void handle(Event event) {
+                }
+            });
+            actor.setOnHeal(new Combat.EventHandler<Combat.Event>() {
+                @Override
+                public void handle(Event event) {
+                }
+            });
+            actor.setOnCombatEnter(new Combat.EventHandler<CombatEnterEvent>() {
+                @Override
+                public void handle(CombatEnterEvent event) {
+                    // TODO Auto-generated method stub
+                }
+            });
+            actor.setOnCombatExit(new Combat.EventHandler<CombatExitEvent>() {
+                @Override
+                public void handle(CombatExitEvent event) {
+                }
+            });
+            actors.add(actor);
+        }
     }
 
     public HashSet<Actor> getActors() {
         return actors;
+    }
+
+
+    /**
+     * Return sorted list of actors by damage done
+     */
+    public ArrayList<Actor> getActorList() {
+        ArrayList<Actor> list = new ArrayList<Actor>(getActors());
+        Collections.sort(list, Collections.reverseOrder());
+
+        return list;
     }
 }

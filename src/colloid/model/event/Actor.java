@@ -76,6 +76,19 @@ public class Actor extends Character implements Combat.Actor, Comparable<Actor> 
         return sum;
     }
 
+    public double getHealDone() {
+        double sum =0;
+        Iterator<Combat.Event> iter = events.iterator();
+        while (iter.hasNext()) {
+            Combat.Event event = iter.next();
+            if (event instanceof CombatHealEvent) {
+                sum += event.getValue();
+            }
+        }
+
+        return sum;
+    }
+
     @Override
     public int compareTo(Actor o) {
         if (getDamageDone() > o.getDamageDone()) {
@@ -86,7 +99,9 @@ public class Actor extends Character implements Combat.Actor, Comparable<Actor> 
 
     @Override
     public String toString() {
-        return "Actor [getName()=" + getName() + ", getDamageDone()="
-                + getDamageDone() + "]";
+        return String.format(
+                "Actor [%s, DamageDone: %s, HealDone: %s]",
+                getName(), getDamageDone(), getHealDone());
     }
+
 }

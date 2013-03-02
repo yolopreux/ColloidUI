@@ -15,7 +15,7 @@ import javafx.concurrent.Task;
 import javafx.scene.control.TextArea;
 import colloid.model.combat.Combat;
 import colloid.model.combat.ICombat;
-
+@Deprecated
 public class Recount implements IRecount {
 
     private final static int DEFAULT_LINE_TAIL_SIZE = 10;

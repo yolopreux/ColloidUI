@@ -25,12 +25,6 @@ public class CombatDamageEvent extends CombatEvent {
     }
 
     @Override
-    public String toString() {
-        return "CombatDamageEvent [timestamp=" + timestamp + ", actor=" + actor
-                + ", target=" + target + ", effect=" + effect + "]";
-    }
-
-    @Override
     public void add(Actor actor, Target target, Effect effect) {
         timestamp = new Date();
         this.actor = actor;

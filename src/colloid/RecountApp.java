@@ -50,14 +50,5 @@ public class RecountApp  extends RecountLoop {
         this.textLog = textLog;
     }
 
-    /**
-     * Return sorted list of actors by damage done
-     */
-    public ArrayList<Actor> getActorList() {
-        ArrayList<Actor> list = new ArrayList<Actor>(getActors());
-        Collections.sort(list, Collections.reverseOrder());
-
-        return list;
-    }
 
 }

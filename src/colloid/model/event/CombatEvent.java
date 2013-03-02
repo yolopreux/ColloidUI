@@ -19,6 +19,7 @@ public class CombatEvent extends EventObject implements Combat.Event {
     Combat.Actor actor;
     Combat.Target target;
     Combat.Effect effect;
+    protected Fight fight;
 
     protected double value;
 
@@ -29,6 +30,21 @@ public class CombatEvent extends EventObject implements Combat.Event {
     public CombatEvent(Object source, String logdata) {
         super(source);
         this.logdata = logdata;
+    }
+
+    public CombatEvent(Object source, String logdata, Fight fight) {
+        super(source);
+        this.logdata = logdata;
+        this.fight = fight;
+    }
+
+    public Fight getFight() {
+        return fight;
+    }
+
+    @Override
+    public void setFight(Fight fight) {
+        this.fight = fight;
     }
 
     @Override
@@ -47,14 +63,15 @@ public class CombatEvent extends EventObject implements Combat.Event {
 
     @Override
     public String toString() {
-        return "CombatEvent [logdata=" + logdata + ", actor=" + actor
-                + ", target=" + target + ", effect=" + effect + "]";
+        return String.format("CombatEvent [actor=%s, fight=%s, value=%s]",
+                actor, fight, value);
     }
 
     public String getLogdata() {
         return logdata;
     }
 
+    @Override
     public double getValue() {
         if (Double.isNaN(value) || value == 0) {
             value = parseValue(logdata);

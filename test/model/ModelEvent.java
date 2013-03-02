@@ -121,6 +121,14 @@ public class ModelEvent {
                 public void handle(Event event) {
                 }
             });
+            act.setOnHeal(new Combat.EventHandler<Combat.Event>() {
+                @Override
+                public void handle(Event event) {
+                    // TODO Auto-generated method stub
+                }
+            });
+            act.handleEvent(combatStr);
+            act.handleEvent(combatStr);
             act.handleEvent(combatStr);
             act.handleEvent(logdata);
             act.handleEvent(logdata1);
