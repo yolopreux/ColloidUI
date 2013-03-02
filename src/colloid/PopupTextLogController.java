@@ -11,14 +11,10 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import colloid.App.AppResource;
-import colloid.model.Recount;
 import colloid.model.event.Combat;
 import colloid.model.event.CombatEvent;
 
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
-import javafx.collections.ObservableSet;
 import javafx.embed.swing.JFXPanel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

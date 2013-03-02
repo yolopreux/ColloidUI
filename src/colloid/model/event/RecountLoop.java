@@ -5,13 +5,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import colloid.model.LogUtil;
-import colloid.model.Recount;
 import colloid.model.event.Combat.Event;
 import colloid.model.event.Combat.EventHandler;
 import colloid.model.event.Combat.ObservableListString;
@@ -69,7 +67,7 @@ public abstract class RecountLoop implements Combat.Recount {
                 done = true;
             } catch (Exception ex) {
                 interrupt();
-                Logger.getLogger(Recount.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(RecountLoop.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
                 if (!done) {
                     interrupt();
@@ -95,7 +93,7 @@ public abstract class RecountLoop implements Combat.Recount {
                     update();
                 } else {
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(200);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

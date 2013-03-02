@@ -6,9 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import colloid.model.IRecount;
-import colloid.model.LogUtil;
-
 public class Util {
 
     public static File[] filesByPath(String path) {

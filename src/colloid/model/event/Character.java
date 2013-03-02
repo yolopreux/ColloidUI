@@ -1,12 +1,7 @@
 package colloid.model.event;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-
 import colloid.RecountApp;
-import colloid.model.event.Combat.Event;
 import colloid.model.event.Combat.EventHandler;
 
 public abstract class Character implements Combat.Character {

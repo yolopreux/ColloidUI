@@ -22,7 +22,6 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
-import colloid.model.Recount;
 import colloid.model.event.Actor;
 import colloid.model.event.Combat;
 import colloid.model.event.CombatEvent;
@@ -45,7 +44,6 @@ public class MainController extends AnchorPane implements Initializable {
     TextArea recountLog;
     @FXML
     Button resetCombatButton;
-    Recount recount = Recount.getInstance();
     protected RecountApp recountApp = RecountApp.getInstance();
     @FXML
     TitledPane logPath;
@@ -100,19 +98,19 @@ public class MainController extends AnchorPane implements Initializable {
 
     public void chooseCombatDirPathAction(ActionEvent event) {
 
-        if (!Recount.getInstance().isRunning()) {
+        if (!recountApp.isRunning()) {
             DirectoryChooser directoryChooser = new DirectoryChooser();
             directoryChooser.setTitle("Choose combat log file path ...");
             File file = directoryChooser.showDialog(null);
             if (file != null) {
                 logPathField.setText(file.getPath());
-                recount.setCombatDirPath(file.getPath());
+                recountApp.setCombatDirPath(file.getPath());
                 application.props.setProperty("combatLogPath", logPathField.getText());
                 application.saveParams();
                 parseActButton.setDisable(false);
             }
         } else {
-            recount.stop();
+            recountApp.stop();
         }
     }
 

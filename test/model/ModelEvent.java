@@ -1,21 +1,9 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
 import org.junit.Test;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
-import org.jmock.auto.Mock;
-import org.jmock.integration.junit4.JUnitRuleMockery;
-import org.junit.Rule;
-
 import colloid.RecountApp;
 import colloid.model.event.*;
 import colloid.model.event.Combat.Event;

@@ -16,14 +16,11 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.fxml.JavaFXBuilderFactory;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import colloid.model.Recount;
 
 
 public class App extends Application {
@@ -32,7 +29,6 @@ public class App extends Application {
     TextField logPathField = new TextField("");
     Button logPathButton;
     Button parseActButton;
-    Recount recount = Recount.getInstance();
 
     private Stage stage;
 
@@ -68,7 +64,7 @@ public class App extends Application {
 
     @Override
     public void stop() throws Exception {
-        recount.stop();
+        RecountApp.getInstance().stop();
         stage.close();
     }
 

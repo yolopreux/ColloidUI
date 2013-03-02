@@ -2,7 +2,6 @@ package colloid.model.event;
 
 import java.util.Date;
 
-import colloid.model.event.Combat.Ability;
 import colloid.model.event.Combat.Actor;
 import colloid.model.event.Combat.Effect;
 import colloid.model.event.Combat.Target;

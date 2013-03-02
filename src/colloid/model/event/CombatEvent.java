@@ -9,7 +9,6 @@ import colloid.model.event.Target;
 import colloid.model.event.Effect;
 import colloid.model.event.Combat;
 
-import colloid.model.combat.CombatEntity;
 
 public class CombatEvent extends EventObject implements Combat.Event {
 
