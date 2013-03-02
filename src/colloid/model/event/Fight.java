@@ -1,14 +1,34 @@
 package colloid.model.event;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class Fight {
+public class Fight implements Comparable<Fight> {
 
     protected Date start;
+    public Date getStart() {
+        return start;
+    }
+
+    public void setStart(Date start) {
+        this.start = start;
+    }
+
     protected Date finish;
+    protected HashSet<Actor> actors= new HashSet<Actor>();
 
     public Date getFinish() {
         return finish;
+    }
+
+    public HashSet<Actor> getActors() {
+        return actors;
+    }
+
+    public void setActors(HashSet<Actor> actors) {
+        this.actors = actors;
     }
 
     public void setFinish(Date finish) {
@@ -51,6 +71,13 @@ public class Fight {
         return true;
     }
 
+    public static void addActor(Actor actor) {
+        if (instance == null) {
+            Logger.getLogger(RecountLoop.class.getName()).log(Level.SEVERE, "Invalid fight", "");
+        }
+        instance.getActors().add(actor);
+    }
+
 
     public long identificator() {
         return start.getTime();
@@ -83,7 +110,17 @@ public class Fight {
 
     @Override
     public String toString() {
-        return String.format("Fight [start=%s, finish=%s]", start, finish);
+        return String.format("Fight start: %s, finish: %s, \n actors: [%s]", start,
+                finish, actors);
     }
+
+    @Override
+    public int compareTo(Fight o) {
+        if (start.getTime() > o.getStart().getTime()) {
+            return 1;
+        }
+        return -1;
+    }
+
 
 }

@@ -95,12 +95,15 @@ public abstract class Character implements Combat.Character {
             }
 //
         }
-            if (logdata != null && logdata.contains("ExitCombat")) {
-                CombatExitEvent event2 = new CombatExitEvent(this, logdata);
-                Fight.finish();
-//                handler.handle(event2);
-                events.add(event2);
-            }
+        if (logdata != null && logdata.contains("ExitCombat")) {
+            CombatExitEvent event2 = new CombatExitEvent(this, logdata);
+            Fight.finish();
+            events.add(event2);
+        }
+        if (Fight.inFight()) {
+            Fight.addActor((Actor) this);
+            RecountApp.getInstance().getFights().add(Fight.current());
+        }
 
     }
 

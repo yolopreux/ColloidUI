@@ -1,7 +1,5 @@
 package colloid.model.event;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 
 import colloid.model.event.Combat;

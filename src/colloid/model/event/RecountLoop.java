@@ -19,6 +19,7 @@ public abstract class RecountLoop implements Combat.Recount {
 
     private boolean isRunning;
     protected HashSet<Actor> actors= new HashSet<Actor>();
+    protected HashSet<Fight> fights= new HashSet<Fight>();
     String combatDirPath;
     EventHandler<CombatEvent> handler;
     protected ObservableListString observableObj;
@@ -233,5 +234,21 @@ public abstract class RecountLoop implements Combat.Recount {
         Collections.sort(list, Collections.reverseOrder());
 
         return list;
+    }
+
+    public ArrayList<Fight> getFightList() {
+        ArrayList<Fight> list = new ArrayList<Fight>(getFights());
+        Collections.sort(list, Collections.reverseOrder());
+
+        return list;
+    }
+
+
+    public HashSet<Fight> getFights() {
+        return fights;
+    }
+
+    public void setFights(HashSet<Fight> fights) {
+        this.fights = fights;
     }
 }

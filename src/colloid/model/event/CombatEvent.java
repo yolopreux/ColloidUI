@@ -6,8 +6,8 @@ import java.util.regex.Pattern;
 
 import colloid.model.event.Actor;
 import colloid.model.event.Target;
-import colloid.model.event.Effect;
 import colloid.model.event.Combat;
+import colloid.model.event.Fight;
 
 
 public class CombatEvent extends EventObject implements Combat.Event {
@@ -37,8 +37,9 @@ public class CombatEvent extends EventObject implements Combat.Event {
         this.fight = fight;
     }
 
+    @Override
     public Fight getFight() {
-        return fight;
+        return this.fight;
     }
 
     @Override
@@ -107,6 +108,4 @@ public class CombatEvent extends EventObject implements Combat.Event {
             System.out.println(e);
         }
     }
-
-
 }

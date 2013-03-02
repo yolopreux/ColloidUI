@@ -76,6 +76,7 @@ public interface Combat {
         public void add(Actor actor, Effect effect);
         public double getValue();
         public void setFight(Fight current);
+        public Fight getFight();
     }
 
     public interface EventHandler<E> {

@@ -5,14 +5,18 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowListener;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import colloid.App.AppResource;
+import colloid.model.event.Actor;
 import colloid.model.event.Combat;
 import colloid.model.event.CombatEvent;
+import colloid.model.event.Fight;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
@@ -22,34 +26,53 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.WindowEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.DragEvent;
 
 public class PopupTextLogController extends AnchorPane implements Initializable {
+
+    final RecountApp recountApp = RecountApp.getInstance();
     static AppResource resource;
+    ArrayList<Actor> historyLog = new ArrayList<Actor>();
+
     JFrame frame;
     @FXML
-    ListView<String> popupTextLog;
+    ListView<Fight> popupTextLog;
     @FXML
     Button moveMe;
     @FXML
     Button close;
     @FXML
     Button resize;
+    @FXML
+    TreeView<String> treeView;
+
+    TreeItem<ArrayList<Actor>> rootItem = new TreeItem<ArrayList<Actor>>();
 
     @Override
     public void initialize(URL url, ResourceBundle bundleResource) {
 
         resource = (AppResource) bundleResource;
-        final RecountApp recountApp = RecountApp.getInstance();
         recountApp.onUpdate(new Combat.EventHandler<CombatEvent>() {
             @Override
             public void handle(CombatEvent event) {
-                popupTextLog.getItems().add(0, event.getLogdata());
+//                popupTextLog.getItems().add(0, event.getLogdata());
+
+                recountApp.registerActor(new Actor(event.getLogdata()));
+                Iterator<Actor> iter = recountApp.getActors().iterator();
+                while(iter.hasNext()) {
+                    Actor act = iter.next();
+                    act.handleEvent(event.getLogdata());
+                }
+                popupTextLog.getItems().clear();
+                popupTextLog.getItems().addAll(0, recountApp.getFightList());
             }
         });
+
         resource.getApp().getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
