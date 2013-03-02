@@ -161,7 +161,7 @@ public class App extends Application {
             if (!Double.isNaN(stageHeight)) {
                 page.setPrefHeight(stageHeight);
             }
-            //scene.getStylesheets().add("uicontrol/greeg-theme/win7glass.css");
+            scene.getStylesheets().add("uicontrol/greeg-theme/win7glass.css");
             stage.setScene(scene);
         } else {
             stage.getScene().setRoot(page);

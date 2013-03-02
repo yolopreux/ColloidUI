@@ -41,7 +41,7 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
 
     JFrame frame;
     @FXML
-    ListView<Fight> popupTextLog;
+    ListView<String> popupTextLog;
     @FXML
     Button moveMe;
     @FXML
@@ -50,6 +50,9 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
     Button resize;
     @FXML
     TreeView<String> treeView;
+    @FXML
+    TreeView<String> combatTreeView;
+
 
     TreeItem<ArrayList<Actor>> rootItem = new TreeItem<ArrayList<Actor>>();
 
@@ -60,7 +63,7 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
         recountApp.onUpdate(new Combat.EventHandler<CombatEvent>() {
             @Override
             public void handle(CombatEvent event) {
-//                popupTextLog.getItems().add(0, event.getLogdata());
+                popupTextLog.getItems().add(0, event.getLogdata());
 
                 recountApp.registerActor(new Actor(event.getLogdata()));
                 Iterator<Actor> iter = recountApp.getActors().iterator();
@@ -68,8 +71,7 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
                     Actor act = iter.next();
                     act.handleEvent(event.getLogdata());
                 }
-                popupTextLog.getItems().clear();
-                popupTextLog.getItems().addAll(0, recountApp.getFightList());
+                createTreeView(recountApp.getFightList());
             }
         });
 
@@ -213,13 +215,38 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
     public void closeAction(ActionEvent event) {
         Platform.runLater(new Runnable() {
             @Override public void run() {
-                if (frame != null) {
-                    frame.dispose();
-                    resource.getApp().getStage().close();
-                }
-                resource.getApp().getStage().setOpacity(1f);
-                resource.getApp().showMain();
+                showFxMain();
             }
         });
+    }
+
+    private void showFxMain() {
+        if (frame != null) {
+            frame.dispose();
+            resource.getApp().getStage().close();
+        }
+        resource.getApp().getStage().setOpacity(1f);
+        resource.getApp().showMain();
+    }
+
+    private void createTreeView(ArrayList<Fight> fights) {
+        TreeItem<String> root = new TreeItem<String>("Combat Fights");
+        root.setExpanded(true);
+        Iterator<Fight> iter = fights.iterator();
+        int i = 0;
+        while(iter.hasNext()) {
+            Fight fight = iter.next();
+            TreeItem<String> item = new TreeItem<String>(fight.info());
+            if (i == 0) {
+                item.setExpanded(true);
+            }
+            Iterator<Actor> iterActor = fight.getActors().iterator();
+            while(iterActor.hasNext()) {
+                item.getChildren().add(new TreeItem<String>(iterActor.next().toString()));
+            }
+            root.getChildren().add(item);
+            i++;
+        }
+        combatTreeView.setRoot(root);
     }
 }

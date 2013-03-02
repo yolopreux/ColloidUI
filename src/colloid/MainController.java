@@ -3,6 +3,7 @@ package colloid;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 
@@ -19,12 +20,15 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import colloid.model.event.Actor;
 import colloid.model.event.Combat;
 import colloid.model.event.CombatEvent;
+import colloid.model.event.Fight;
 
 
 public class MainController extends AnchorPane implements Initializable {
@@ -53,6 +57,8 @@ public class MainController extends AnchorPane implements Initializable {
     MenuItem menuItemClose;
     @FXML
     ListView<Actor> combatListView;
+    @FXML
+    TreeView<String> treeView;
 
     private App application;
 
@@ -74,6 +80,14 @@ public class MainController extends AnchorPane implements Initializable {
 
         ObservableList<String> logItems = FXCollections.observableArrayList();
         textLog.setItems(logItems);
+
+        recountApp.onUpdate(new Combat.EventHandler<CombatEvent>() {
+            @Override
+            public void handle(CombatEvent event) {
+                updateActorCombat(event);
+                createTreeView(recountApp.getFightList());
+            }
+        });
     }
 
     public App getApplication() {
@@ -145,5 +159,30 @@ public class MainController extends AnchorPane implements Initializable {
 
     public void openTextLogPopupAction(ActionEvent event) {
         application.showPopupTextLog();
+    }
+
+    private void createTreeView(ArrayList<Fight> fights) {
+        TreeItem<String> root = new TreeItem<String>("Combat Fights");
+        root.setExpanded(true);
+        Iterator<Fight> iter = fights.iterator();
+        while(iter.hasNext()) {
+            Fight fight = iter.next();
+            TreeItem<String> item = new TreeItem<String>(fight.info());
+            Iterator<Actor> iterActor = fight.getActors().iterator();
+            while(iterActor.hasNext()) {
+                item.getChildren().add(new TreeItem<String>(iterActor.next().toString()));
+            }
+            root.getChildren().add(item);
+        }
+        treeView.setRoot(root);
+    }
+
+    private void updateActorCombat(CombatEvent event) {
+        recountApp.registerActor(new Actor(event.getLogdata()));
+        Iterator<Actor> iter = recountApp.getActors().iterator();
+        while(iter.hasNext()) {
+            Actor act = iter.next();
+            act.handleEvent(event.getLogdata());
+        }
     }
 }

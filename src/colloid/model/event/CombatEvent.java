@@ -29,11 +29,15 @@ public class CombatEvent extends EventObject implements Combat.Event {
     public CombatEvent(Object source, String logdata) {
         super(source);
         this.logdata = logdata;
+        actor = new Actor(logdata);
+        target = new Target(logdata);
     }
 
     public CombatEvent(Object source, String logdata, Fight fight) {
         super(source);
         this.logdata = logdata;
+        actor = new Actor(logdata);
+        target = new Target(logdata);
         this.fight = fight;
     }
 
@@ -59,6 +63,11 @@ public class CombatEvent extends EventObject implements Combat.Event {
         this.actor = actor;
         this.target = null;
         this.effect = effect;
+    }
+
+    public String info() {
+        return String.format("%s --> %s -> %s",
+                actor.getName(), target.getName(), value);
     }
 
     @Override

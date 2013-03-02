@@ -1,5 +1,6 @@
 package colloid.model.event;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.logging.Level;
@@ -106,6 +107,18 @@ public class Fight implements Comparable<Fight> {
         } else if (!start.equals(other.start))
             return false;
         return true;
+    }
+
+    public String info() {
+        if (finish == null) {
+            return String.format("Fight start: %s", start);
+        }
+        Date diff = new Date(finish.getTime() - start.getTime());
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(diff);
+
+        return String.format("Fight start: %s, finish: %s, duration: %s:%s", start,
+                finish, cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
     }
 
     @Override

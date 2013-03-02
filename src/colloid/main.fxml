@@ -30,7 +30,7 @@
         </Menu>
       </menus>
     </MenuBar>
-    <Accordion id="accordion" prefHeight="465.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
+    <Accordion id="accordion" prefHeight="465.0" prefWidth="600.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="24.0">
       <panes>
         <TitledPane fx:id="logPath" alignment="TOP_LEFT" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#switchPaneAction" prefHeight="400.0" prefWidth="600.0" text="Combat log" textOverrun="CLIP">
           <content>
@@ -87,7 +87,7 @@
               <children>
                 <TabPane prefHeight="397.0" prefWidth="596.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                   <tabs>
-                    <Tab fx:id="combatTab" text="Combat">
+                    <Tab fx:id="combatTab" disable="true" text="Combat">
                       <content>
                         <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                           <children>
@@ -97,7 +97,7 @@
                         </AnchorPane>
                       </content>
                     </Tab>
-                    <Tab text="History">
+                    <Tab disable="true" text="Log">
                       <content>
                         <AnchorPane id="Content" minHeight="0.0" minWidth="0.0">
                           <children>
@@ -111,6 +111,15 @@
                                 </FXCollections>
                               </items>
                             </ComboBox>
+                          </children>
+                        </AnchorPane>
+                      </content>
+                    </Tab>
+                    <Tab text="History">
+                      <content>
+                        <AnchorPane id="Content" minHeight="0.0" minWidth="0.0">
+                          <children>
+                            <TreeView fx:id="treeView" prefHeight="361.0" prefWidth="596.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                           </children>
                         </AnchorPane>
                       </content>

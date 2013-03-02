@@ -1,6 +1,9 @@
 package colloid.model.event;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+
 import colloid.RecountApp;
 import colloid.model.event.Combat.EventHandler;
 
@@ -8,8 +11,8 @@ public abstract class Character implements Combat.Character {
 
     protected String name;
     protected String logdata;
-    protected EventHandler<Combat.Event> handlerDamage;
-    protected EventHandler<Combat.Event> handlerHeal;
+    protected HashSet<EventHandler<Combat.Event>> handlerDamage = new HashSet<EventHandler<Combat.Event>>();
+    protected HashSet<EventHandler<Combat.Event>> handlerHeal = new HashSet<EventHandler<Combat.Event>>();
     protected ArrayList<Combat.Event> events = new ArrayList<Combat.Event>();
 
     public Character(String logdata) {
@@ -27,7 +30,7 @@ public abstract class Character implements Combat.Character {
     @Override
     public void setOnHeal(EventHandler<Combat.Event> handler) {
         String logdata = RecountApp.getInstance().getCurrentLogadata();
-        handlerHeal = handler;
+        handlerHeal.add(handler);
         if (logdata != null && logdata.contains("Heal")) {
             Combat.Event event = new CombatHealEvent(this, logdata);
             handler.handle(event);
@@ -37,7 +40,7 @@ public abstract class Character implements Combat.Character {
     @Override
     public void setOnDamage(EventHandler<Combat.Event> handler) {
         String logdata = RecountApp.getInstance().getCurrentLogadata();
-        handlerDamage = handler;
+        handlerDamage.add(handler);
         if (logdata != null && logdata.contains("Damage")) {
             CombatDamageEvent event = new CombatDamageEvent(this, logdata);
             handler.handle(event);
@@ -80,7 +83,10 @@ public abstract class Character implements Combat.Character {
                 if (Fight.inFight()) {
                     healEvent.setFight(Fight.current());
                 }
-                handlerHeal.handle(healEvent);
+                Iterator<EventHandler<Combat.Event>> iter = handlerHeal.iterator();
+                while(iter.hasNext()) {
+                    iter.next().handle(healEvent);
+                }
                 events.add(healEvent);
             }
         }
@@ -90,10 +96,12 @@ public abstract class Character implements Combat.Character {
                 if (Fight.inFight()) {
                     damageEvent.setFight(Fight.current());
                 }
-                handlerDamage.handle(damageEvent);
+                Iterator<EventHandler<Combat.Event>> iter = handlerDamage.iterator();
+                while(iter.hasNext()) {
+                    iter.next().handle(damageEvent);
+                }
                 events.add(damageEvent);
             }
-//
         }
         if (logdata != null && logdata.contains("ExitCombat")) {
             CombatExitEvent event2 = new CombatExitEvent(this, logdata);

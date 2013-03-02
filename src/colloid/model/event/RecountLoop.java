@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,7 +22,7 @@ public abstract class RecountLoop implements Combat.Recount {
     protected HashSet<Actor> actors= new HashSet<Actor>();
     protected HashSet<Fight> fights= new HashSet<Fight>();
     String combatDirPath;
-    EventHandler<CombatEvent> handler;
+    HashSet<EventHandler<CombatEvent>> handler = new HashSet<EventHandler<CombatEvent>>();
     protected ObservableListString observableObj;
     String lastLine;
     Date currentLogTime;
@@ -148,7 +149,7 @@ public abstract class RecountLoop implements Combat.Recount {
 
     @Override
     public void onUpdate(EventHandler<CombatEvent> handler) {
-        this.handler = handler;
+        this.handler.add(handler);
     }
 
     public class InvalidCombatDirPathException extends Exception {
@@ -178,7 +179,10 @@ public abstract class RecountLoop implements Combat.Recount {
                 if (lastLine == null || !Util.isDone(currentLogTime, lastLine)) {
                     lastLine = line;
                     if (handler != null) {
-                        handler.handle(new CombatEvent(this, lastLine));
+                        Iterator<EventHandler<CombatEvent>> iter = handler.iterator();
+                        while (iter.hasNext()) {
+                            iter.next().handle(new CombatEvent(this, lastLine));
+                        }
                     }
                     onUpdate();
                 }
