@@ -174,7 +174,13 @@ public abstract class RecountLoop implements Combat.Recount {
          * @TODO
          */
         if (log.isFile()) {
-            String tailLines = LogUtil.tail(log, 30);
+            String tailLines;
+            try {
+                tailLines = LogUtil.tail(log, 30);
+            } catch (StringIndexOutOfBoundsException ex) {
+                Logger.getLogger(RecountLoop.class.getName()).log(Level.SEVERE, "Invalid log combat source");
+                return;
+            }
             String[] lines = tailLines.split("\n");
             for (String line : lines) {
                 currentLogTime = Util.parseDate(line);

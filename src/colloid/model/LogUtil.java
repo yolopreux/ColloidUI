@@ -6,7 +6,7 @@ import java.io.RandomAccessFile;
 
 public class LogUtil {
 
-    public static String tail(File file) {
+    public static String tail(File file) throws StringIndexOutOfBoundsException {
 
         RandomAccessFile fileHandler = null;
         try {
@@ -56,7 +56,7 @@ public class LogUtil {
         }
     }
 
-    public static String tail(File file, int lines) {
+    public static String tail(File file, int lines) throws StringIndexOutOfBoundsException {
 
         RandomAccessFile fileHandler = null;
         try {
