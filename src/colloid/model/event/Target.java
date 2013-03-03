@@ -2,7 +2,7 @@ package colloid.model.event;
 
 public class Target extends Character implements Combat.Target {
 
-    public Target(String logdata) {
+    public Target(String logdata) throws DoesNotExist {
         super(logdata);
     }
 
@@ -18,12 +18,12 @@ public class Target extends Character implements Combat.Target {
     }
 
     @Override
-    public void compile() {
+    public void compile() throws DoesNotExist {
         try {
             String[] items = logdata.substring(1).split("\\]\\s\\[");
             name = items[2];
         } catch (StringIndexOutOfBoundsException ex) {
-            ex.printStackTrace();
+            throw new DoesNotExist();
         }
     }
 }

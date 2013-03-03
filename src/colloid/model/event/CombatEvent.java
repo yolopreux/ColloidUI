@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import colloid.model.event.Actor;
+import colloid.model.event.Character.DoesNotExist;
 import colloid.model.event.Target;
 import colloid.model.event.Combat;
 import colloid.model.event.Fight;
@@ -29,15 +30,31 @@ public class CombatEvent extends EventObject implements Combat.Event {
     public CombatEvent(Object source, String logdata) {
         super(source);
         this.logdata = logdata;
-        actor = new Actor(logdata);
-        target = new Target(logdata);
+        try {
+            actor = new Actor(logdata);
+        } catch (DoesNotExist e1) {
+            actor = null;
+        }
+        try {
+            target = new Target(logdata);
+        } catch (DoesNotExist e) {
+            target = null;
+        }
     }
 
     public CombatEvent(Object source, String logdata, Fight fight) {
         super(source);
         this.logdata = logdata;
-        actor = new Actor(logdata);
-        target = new Target(logdata);
+        try {
+            actor = new Actor(logdata);
+        } catch (DoesNotExist e1) {
+            actor = null;
+        }
+        try {
+            target = new Target(logdata);
+        } catch (DoesNotExist e) {
+            target = null;
+        }
         this.fight = fight;
     }
 
@@ -109,8 +126,16 @@ public class CombatEvent extends EventObject implements Combat.Event {
     void compile(String logdata) {
         String[] data = logdata.substring(1).split("\\]\\s\\[");
         try {
-            actor = new Actor(logdata);
-            target = new Target(logdata);
+            try {
+                actor = new Actor(logdata);
+            } catch (DoesNotExist e1) {
+                actor = null;
+            }
+            try {
+                target = new Target(logdata);
+            } catch (DoesNotExist e) {
+                actor = null;
+            }
 //            ability = data[3]
 //            effect = data[4];
         } catch (ArrayIndexOutOfBoundsException e) {

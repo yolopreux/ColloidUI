@@ -1,8 +1,10 @@
 package colloid.model.event;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -110,15 +112,17 @@ public class Fight implements Comparable<Fight> {
     }
 
     public String info() {
+        final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss",
+                Locale.getDefault());
+
         if (finish == null) {
-            return String.format("Fight start: %s", start);
+            return String.format("Fight start: %s", timeFormat.format(start));
         }
         Date diff = new Date(finish.getTime() - start.getTime());
         Calendar cal = Calendar.getInstance();
         cal.setTime(diff);
-
-        return String.format("Fight start: %s, finish: %s, duration: %s:%s", start,
-                finish, cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
+        return String.format("%s - %s, %s:%s min.", timeFormat.format(start),
+                timeFormat.format(finish), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
     }
 
     @Override

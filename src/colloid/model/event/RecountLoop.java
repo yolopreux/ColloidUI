@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import colloid.model.LogUtil;
+import colloid.model.event.Character.DoesNotExist;
 import colloid.model.event.Combat.Event;
 import colloid.model.event.Combat.EventHandler;
 import colloid.model.event.Combat.ObservableListString;
@@ -125,6 +126,10 @@ public abstract class RecountLoop implements Combat.Recount {
         return isRunning;
     }
 
+    /**
+     * @TODO stop thread should use InterruptLoopException
+     * @throws InterruptLoopException
+     */
     public void interrupt() throws InterruptLoopException {
         throw new InterruptLoopException();
     }
@@ -178,7 +183,8 @@ public abstract class RecountLoop implements Combat.Recount {
                 }
                 if (lastLine == null || !Util.isDone(currentLogTime, lastLine)) {
                     lastLine = line;
-                    if (handler != null) {
+                    if (!handler.isEmpty()) {
+                        beforeUpdate(lastLine);
                         Iterator<EventHandler<CombatEvent>> iter = handler.iterator();
                         while (iter.hasNext()) {
                             iter.next().handle(new CombatEvent(this, lastLine));
@@ -187,6 +193,22 @@ public abstract class RecountLoop implements Combat.Recount {
                     onUpdate();
                 }
             }
+        }
+    }
+
+    /**
+     * Executes before combat event update
+     */
+    protected void beforeUpdate(String combatlog) {
+        try {
+            registerActor(new Actor(combatlog));
+        } catch (DoesNotExist e) {
+            //do nothing
+        }
+        Iterator<Actor> iterActor = getActors().iterator();
+        while(iterActor.hasNext()) {
+            Actor act = iterActor.next();
+            act.handleEvent(combatlog);
         }
     }
 

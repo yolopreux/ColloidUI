@@ -3,10 +3,11 @@ package colloid.model.event;
 import java.util.Iterator;
 
 import colloid.model.event.Combat;
+import colloid.model.event.Combat.Event;
 
 public class Actor extends Character implements Combat.Actor, Comparable<Actor> {
 
-    public Actor(String logdata) {
+    public Actor(String logdata) throws DoesNotExist {
         super(logdata);
     }
 
@@ -22,7 +23,7 @@ public class Actor extends Character implements Combat.Actor, Comparable<Actor> 
     }
 
     @Override
-    public void compile() {
+    public void compile() throws DoesNotExist {
         try {
             String[] items = logdata.substring(1).split("\\]\\s\\[");
             if (items[1].contains("{")) {
@@ -32,7 +33,9 @@ public class Actor extends Character implements Combat.Actor, Comparable<Actor> 
             name = items[1];
 
         } catch (StringIndexOutOfBoundsException ex) {
-            ex.printStackTrace();
+            throw new DoesNotExist();
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            throw new DoesNotExist();
         }
     }
 
@@ -62,11 +65,67 @@ public class Actor extends Character implements Combat.Actor, Comparable<Actor> 
     }
 
     public double getDamageDone() {
-        double sum =0;
+        return getValueDone(new EventFilter() {
+            @Override boolean hasEvent(Event event) {
+                if (event instanceof CombatDamageEvent) {
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    public double getDamageDone(final Fight fight) {
+        if (fight == null) {
+            return 0;
+        }
+        return getValueDone(new EventFilter() {
+            @Override boolean hasEvent(Event event) {
+                if (event.getFight() == null) {
+                    return false;
+                }
+                if (event instanceof CombatDamageEvent && event.getFight().equals(fight)) {
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    public double getHealDone() {
+        return getValueDone(new EventFilter() {
+            @Override boolean hasEvent(Event event) {
+                if (event instanceof CombatHealEvent) {
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    public double getHealDone(final Fight fight) {
+        if (fight == null) {
+            return 0;
+        }
+        return getValueDone(new EventFilter() {
+            @Override boolean hasEvent(Event event) {
+                if (event.getFight() == null) {
+                    return false;
+                }
+                if (event instanceof CombatHealEvent && event.getFight().equals(fight)) {
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    protected double getValueDone(EventFilter filter) {
+        double sum = 0;
         Iterator<Combat.Event> iter = events.iterator();
         while (iter.hasNext()) {
             Combat.Event event = iter.next();
-            if (event instanceof CombatDamageEvent) {
+            if (filter.hasEvent(event)) {
                 sum += event.getValue();
             }
         }
@@ -74,17 +133,8 @@ public class Actor extends Character implements Combat.Actor, Comparable<Actor> 
         return sum;
     }
 
-    public double getHealDone() {
-        double sum =0;
-        Iterator<Combat.Event> iter = events.iterator();
-        while (iter.hasNext()) {
-            Combat.Event event = iter.next();
-            if (event instanceof CombatHealEvent) {
-                sum += event.getValue();
-            }
-        }
-
-        return sum;
+    abstract class EventFilter {
+        abstract boolean hasEvent(Combat.Event event);
     }
 
     @Override
@@ -94,6 +144,20 @@ public class Actor extends Character implements Combat.Actor, Comparable<Actor> 
         }
         return -1;
     }
+
+    public String info(String dps, String hps) {
+
+        return String.format(
+                "%s, damage: %s: dps: %s, heal: %s, hps: %s",
+                getName(), getDamageDone(), dps, getHealDone(), hps);
+    }
+
+    public String info(Fight fight, String dps, String hps) {
+        return String.format(
+                "%s, damage: %s: dps: %s, heal: %s, hps: %s",
+                getName(), getDamageDone(fight), dps, getHealDone(fight), hps);
+    }
+
 
     @Override
     public String toString() {

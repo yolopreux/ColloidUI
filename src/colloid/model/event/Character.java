@@ -15,7 +15,7 @@ public abstract class Character implements Combat.Character {
     protected HashSet<EventHandler<Combat.Event>> handlerHeal = new HashSet<EventHandler<Combat.Event>>();
     protected ArrayList<Combat.Event> events = new ArrayList<Combat.Event>();
 
-    public Character(String logdata) {
+    public Character(String logdata) throws DoesNotExist {
 
         this.logdata = logdata;
         compile();
@@ -67,7 +67,11 @@ public abstract class Character implements Combat.Character {
 
 
     public void handleEvent(String logdata) {
-        if (!equals(new Actor(logdata))) {
+        try {
+            if (!equals(new Actor(logdata))) {
+                return;
+            }
+        } catch (DoesNotExist e) {
             return;
         }
         if (logdata != null && logdata.contains("EnterCombat")) {
@@ -117,6 +121,10 @@ public abstract class Character implements Combat.Character {
 
     public ArrayList<Combat.Event> getEvents() {
         return events;
+    }
+
+    public class DoesNotExist extends Exception {
+        private static final long serialVersionUID = 1L;
     }
 
 }

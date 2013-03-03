@@ -16,7 +16,7 @@ import colloid.App.AppResource;
 import colloid.model.event.Actor;
 import colloid.model.event.Combat;
 import colloid.model.event.CombatEvent;
-import colloid.model.event.Fight;
+import colloid.model.event.Util;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
@@ -64,14 +64,7 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
             @Override
             public void handle(CombatEvent event) {
                 popupTextLog.getItems().add(0, event.getLogdata());
-
-                recountApp.registerActor(new Actor(event.getLogdata()));
-                Iterator<Actor> iter = recountApp.getActors().iterator();
-                while(iter.hasNext()) {
-                    Actor act = iter.next();
-                    act.handleEvent(event.getLogdata());
-                }
-                createTreeView(recountApp.getFightList());
+                combatTreeView.setRoot(Util.rootTreeView(recountApp.getFightList()));
             }
         });
 
@@ -227,26 +220,5 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
         }
         resource.getApp().getStage().setOpacity(1f);
         resource.getApp().showMain();
-    }
-
-    private void createTreeView(ArrayList<Fight> fights) {
-        TreeItem<String> root = new TreeItem<String>("Combat Fights");
-        root.setExpanded(true);
-        Iterator<Fight> iter = fights.iterator();
-        int i = 0;
-        while(iter.hasNext()) {
-            Fight fight = iter.next();
-            TreeItem<String> item = new TreeItem<String>(fight.info());
-            if (i == 0) {
-                item.setExpanded(true);
-            }
-            Iterator<Actor> iterActor = fight.getActors().iterator();
-            while(iterActor.hasNext()) {
-                item.getChildren().add(new TreeItem<String>(iterActor.next().toString()));
-            }
-            root.getChildren().add(item);
-            i++;
-        }
-        combatTreeView.setRoot(root);
     }
 }
