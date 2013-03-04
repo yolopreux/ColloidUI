@@ -128,7 +128,7 @@ public class App extends Application {
         }
     }
 
-    private Initializable replaceSceneContent(String fxml) throws Exception {
+    private Initializable replaceSceneContent(String fxml, Scene scene) throws Exception {
         AppResource resource = new AppResource();
         resource.set("app", this);
         FXMLLoader loader = new FXMLLoader();
@@ -142,32 +142,19 @@ public class App extends Application {
         } finally {
             in.close();
         }
-        // store the stage height in case the user has resized the window
-        double stageWidth = stage.getWidth();
-        if (!Double.isNaN(stageWidth)) {
-//            stageWidth -= (stage.getWidth() - stage.getScene().getWidth());
-        }
-        double stageHeight = stage.getHeight();
-        if (!Double.isNaN(stageHeight)) {
-//            stageHeight -= (stage.getHeight() - stage.getScene().getHeight());
-        }
-        Scene scene;
-        scene = stage.getScene();
         if (scene == null) {
             scene = new Scene(page);
-            if (!Double.isNaN(stageWidth)) {
-                page.setPrefWidth(stageWidth);
-            }
-            if (!Double.isNaN(stageHeight)) {
-                page.setPrefHeight(stageHeight);
-            }
             scene.getStylesheets().add("uicontrol/greeg-theme/win7glass.css");
             stage.setScene(scene);
-        } else {
-            stage.getScene().setRoot(page);
         }
+        stage.getScene().setRoot(page);
         stage.sizeToScene();
+
         return (Initializable) loader.getController();
+    }
+
+    private Initializable replaceSceneContent(String fxml) throws Exception {
+        return replaceSceneContent(fxml, null);
     }
 
     public void showMain() {
@@ -194,5 +181,16 @@ public class App extends Application {
 
     public Stage getStage() {
         return stage;
+    }
+
+    public Properties getProps() {
+        if (props == null) {
+            loadParams();
+        }
+        return props;
+    }
+
+    public void setProps(Properties props) {
+        this.props = props;
     }
 }
