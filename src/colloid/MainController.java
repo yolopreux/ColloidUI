@@ -73,6 +73,9 @@ public class MainController extends AnchorPane implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        if (recountApp.isRunning()) {
+            parseActButton.setText("Stop");
+        }
         textLog.setEditable(false);
         recountLog.setEditable(false);
 

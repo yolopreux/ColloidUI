@@ -6,6 +6,7 @@ import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowListener;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 
@@ -16,9 +17,11 @@ import colloid.App.AppResource;
 import colloid.model.event.Actor;
 import colloid.model.event.Combat;
 import colloid.model.event.CombatEvent;
+import colloid.model.event.Fight;
 import colloid.model.event.Util;
 
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -38,6 +41,7 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
     final RecountApp recountApp = RecountApp.getInstance();
     static AppResource resource;
     ArrayList<Actor> historyLog = new ArrayList<Actor>();
+    Fight lastFight;
 
     JFrame frame;
     @FXML
@@ -52,19 +56,32 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
     TreeView<String> treeView;
     @FXML
     TreeView<String> combatTreeView;
-
+    @FXML
+    TreeView<String> settingsTreeView;
 
     TreeItem<ArrayList<Actor>> rootItem = new TreeItem<ArrayList<Actor>>();
 
     @Override
     public void initialize(URL url, ResourceBundle bundleResource) {
+        settingsTreeView.setRoot(new TreeItem<String>("Info"));
+        settingsTreeView.getRoot().setExpanded(true);
+        settingsTreeView.getRoot().getChildren().add(0, new TreeItem<String>(recountApp.sysInfo.allocatedMemInfo()));
+        settingsTreeView.getRoot().getChildren().add(1, new TreeItem<String>(recountApp.sysInfo.maxMemInfo()));
+        settingsTreeView.getRoot().getChildren().add(2, new TreeItem<String>(recountApp.sysInfo.freeMemInfo()));
+        settingsTreeView.getRoot().getChildren().add(3, new TreeItem<String>(recountApp.sysInfo.totalMemInfo()));
+        settingsTreeView.getRoot().getChildren().add(4, new TreeItem<String>(recountApp.sysInfo.osInfo()));
 
         resource = (AppResource) bundleResource;
         recountApp.onUpdate(new Combat.EventHandler<CombatEvent>() {
             @Override
             public void handle(CombatEvent event) {
                 popupTextLog.getItems().add(0, event.getLogdata());
-                combatTreeView.setRoot(Util.rootTreeView(recountApp.getFightList()));
+                updateCombatTree(recountApp.getFightList());
+                settingsTreeView.getRoot().getChildren().set(0, new TreeItem<String>(recountApp.sysInfo.allocatedMemInfo()));
+                settingsTreeView.getRoot().getChildren().set(1, new TreeItem<String>(recountApp.sysInfo.maxMemInfo()));
+                settingsTreeView.getRoot().getChildren().set(2, new TreeItem<String>(recountApp.sysInfo.freeMemInfo()));
+                settingsTreeView.getRoot().getChildren().set(3, new TreeItem<String>(recountApp.sysInfo.totalMemInfo()));
+                settingsTreeView.getRoot().getChildren().set(4, new TreeItem<String>(recountApp.sysInfo.osInfo()));
             }
         });
 
@@ -128,8 +145,8 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
         final JFXPanel fxPanel = new JFXPanel();
         frame.add(fxPanel);
         frame.setAlwaysOnTop(true);
-        frame.setSize(new java.awt.Dimension(150, 180));
-        frame.setLocation(new java.awt.Point(10, 600));
+        frame.setSize(new java.awt.Dimension(312, 265));
+        frame.setLocation(new java.awt.Point(1280, 550));
         frame.setUndecorated(true);
         frame.setOpacity(0.8f);
         frame.setVisible(true);
@@ -230,5 +247,67 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
         if (!recountApp.isRunning()) {
             recountApp.run();
         }
+    }
+
+    private TreeItem<String> rootTreeView(ArrayList<Fight> fights) {
+        TreeItem<String> root = new TreeItem<String>("Combat Fights");
+        root.setExpanded(true);
+        Iterator<Fight> iter = fights.iterator();
+        int i = 0;
+        while (iter.hasNext()) {
+            TreeItem<String> item = createFightTree(iter.next());
+            if (i == 0) {
+                item.setExpanded(true);
+            }
+            root.getChildren().add(item);
+            i++;
+        }
+        return root;
+    }
+
+    private TreeItem<String> createFightTree(Fight fight) {
+        TreeItem<String> item = new TreeItem<String>(fight.info());
+
+        Iterator<Actor> iterActor = fight.getActors().iterator();
+        while(iterActor.hasNext()) {
+            Actor actor = iterActor.next();
+            String dps = "";
+            String hps = "";
+            Date endTime = fight.getFinish();
+            if (endTime == null) {
+                endTime = new Date();
+            }
+            long duration = endTime.getTime() - fight.getStart().getTime();
+            if (duration > 100) {
+                dps = Util.valuePerSecond(actor.getDamageDone(fight), duration);
+                hps = Util.valuePerSecond(actor.getHealDone(fight), duration);
+                item.getChildren().add(new TreeItem<String>(actor.info(fight, dps, hps)));
+            }
+        }
+
+        return item;
+
+    }
+
+    private void updateCombatTree(ArrayList<Fight> fights) {
+        if (fights.isEmpty()) {
+            return;
+        }
+        if (combatTreeView.getRoot() == null) {
+            combatTreeView.setRoot(rootTreeView(fights));
+
+            return;
+        }
+        ObservableList<TreeItem<String>> children = combatTreeView.getRoot().getChildren();
+
+        Fight fight = fights.get(0);
+        children.get(0).setExpanded(false);
+        if (fight.equals(lastFight)) {
+            children.set(0, createFightTree(fight));
+        } else {
+            children.add(0, createFightTree(fight));
+        }
+        lastFight = fight;
+        children.get(0).setExpanded(true);
     }
 }

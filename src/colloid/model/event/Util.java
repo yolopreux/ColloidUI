@@ -29,7 +29,7 @@ public class Util {
         } catch (ParseException e) {
             System.out.println(e.getMessage());
         } catch (StringIndexOutOfBoundsException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
 
         return null;
@@ -54,7 +54,7 @@ public class Util {
         root.setExpanded(true);
         Iterator<Fight> iter = fights.iterator();
         int i = 0;
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             Fight fight = iter.next();
             TreeItem<String> item = new TreeItem<String>(fight.info());
             if (i == 0) {

@@ -96,7 +96,6 @@ public class App extends Application {
             if (props == null) {
                 props = new Properties();
             }
-            props.setProperty("combatLogPath", logPathField.getText());
             File file = new File("app.properties");
             OutputStream out = new FileOutputStream(file);
             props.store(out, "Colloid app properties");

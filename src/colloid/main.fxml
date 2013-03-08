@@ -19,13 +19,13 @@
         </Menu>
         <Menu mnemonicParsing="false" text="View">
           <items>
-            <MenuItem mnemonicParsing="false" text="Reset" fx:id="resetMenuItem" />
+            <MenuItem disable="true" mnemonicParsing="false" text="Reset" fx:id="resetMenuItem" />
             <MenuItem mnemonicParsing="false" onAction="#openTextLogPopupAction" text="Popup" fx:id="textLogPopup" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
           <items>
-            <MenuItem mnemonicParsing="false" text="About" />
+            <MenuItem disable="true" mnemonicParsing="false" text="About" />
           </items>
         </Menu>
       </menus>

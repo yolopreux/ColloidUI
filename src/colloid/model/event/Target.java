@@ -24,6 +24,8 @@ public class Target extends Character implements Combat.Target {
             name = items[2];
         } catch (StringIndexOutOfBoundsException ex) {
             throw new DoesNotExist();
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            throw new DoesNotExist();
         }
     }
 }
