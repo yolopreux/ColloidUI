@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <anttasks:AntTask xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:anttasks="http://at.bestsolution.efxclipse.tooling.jdt/1.0" buildDirectory="${workspace}/ColloidUI/build">
-  <deploy>
-    <application name="ColloidUI"/>
-    <info/>
+  <deploy nativePackage="true">
+    <application name="ColloidUI" mainclass="colloid.App" version="0.0.1" toolkit="fx"/>
+    <info vendor="yolopreux"/>
   </deploy>
   <signjar/>
 </anttasks:AntTask>
