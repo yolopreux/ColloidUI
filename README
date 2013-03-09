@@ -5,10 +5,6 @@ Java Platform (JDK) 7u13 with FX
 
 How to set up development environment:
 
-git clone https://github.com/yolopreux/ColloidUI.git
-git submodule init
-git submodule update
-
 Open your preferred java editor and create new JavaFX project with ColloidUI source.
 
 I recommend eclipse with e(fx)clipse plugin, see: http://www.efxclipse.org/install.html
