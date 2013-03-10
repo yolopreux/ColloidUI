@@ -1,3 +1,11 @@
+/**
+ *  Colloid project
+ *
+ *  Combat log analyzer.
+ *
+ *  copyright: (c) 2013 by Darek <netmik12 [AT] gmail [DOT] com>
+ *  license: BSD, see LICENSE for more details
+ */
 package colloid.model.event;
 
 import java.util.ArrayList;
@@ -14,6 +22,7 @@ public abstract class Character implements Combat.Character {
     protected HashSet<EventHandler<Combat.Event>> handlerDamage = new HashSet<EventHandler<Combat.Event>>();
     protected HashSet<EventHandler<Combat.Event>> handlerHeal = new HashSet<EventHandler<Combat.Event>>();
     protected ArrayList<Combat.Event> events = new ArrayList<Combat.Event>();
+    protected HashSet<Combat.Ability> abilities = new HashSet<Combat.Ability>();
 
     public Character(String logdata) throws DoesNotExist {
 
@@ -114,6 +123,12 @@ public abstract class Character implements Combat.Character {
         }
         if (Fight.inFight()) {
             Fight.addActor((Actor) this);
+            try {
+                abilities.add(new Ability(logdata));
+            } catch (DoesNotExist e) {
+                e.printStackTrace();
+                //do nothing
+            }
             RecountApp.getInstance().getFights().add(Fight.current());
         }
 
@@ -123,8 +138,11 @@ public abstract class Character implements Combat.Character {
         return events;
     }
 
-    public class DoesNotExist extends Exception {
-        private static final long serialVersionUID = 1L;
+    public HashSet<Combat.Ability> getAbilities() {
+        return abilities;
     }
 
+    public void setAbilities(HashSet<Combat.Ability> abilities) {
+        this.abilities = abilities;
+    }
 }

@@ -1,3 +1,11 @@
+/**
+ *  Colloid project
+ *
+ *  Combat log analyzer.
+ *
+ *  copyright: (c) 2013 by Darek <netmik12 [AT] gmail [DOT] com>
+ *  license: BSD, see LICENSE for more details
+ */
 package colloid;
 
 import java.awt.GraphicsEnvironment;
@@ -235,6 +243,7 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
             frame.dispose();
 //            resource.getApp().getStage().close();
         }
+        resource.getApp().getStage().close();
         resource.getApp().getStage().setOpacity(1f);
         resource.getApp().showMain();
     }

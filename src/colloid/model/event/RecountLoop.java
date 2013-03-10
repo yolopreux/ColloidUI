@@ -1,3 +1,11 @@
+/**
+ *  Colloid project
+ *
+ *  Combat log analyzer.
+ *
+ *  copyright: (c) 2013 by Darek <netmik12 [AT] gmail [DOT] com>
+ *  license: BSD, see LICENSE for more details
+ */
 package colloid.model.event;
 
 import java.io.File;
@@ -11,7 +19,7 @@ import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import colloid.model.LogUtil;
-import colloid.model.event.Character.DoesNotExist;
+import colloid.model.event.DoesNotExist;
 import colloid.model.event.Combat.Event;
 import colloid.model.event.Combat.EventHandler;
 import colloid.model.event.Combat.ObservableListString;
@@ -189,11 +197,12 @@ public abstract class RecountLoop implements Combat.Recount {
                 }
                 if (lastLine == null || !Util.isDone(currentLogTime, lastLine)) {
                     lastLine = line;
+                    CombatEvent event = new CombatEvent(this, lastLine);
                     if (!handler.isEmpty()) {
                         beforeUpdate(lastLine);
                         Iterator<EventHandler<CombatEvent>> iter = handler.iterator();
                         while (iter.hasNext()) {
-                            iter.next().handle(new CombatEvent(this, lastLine));
+                            iter.next().handle(event);
                         }
                     }
                     onUpdate();

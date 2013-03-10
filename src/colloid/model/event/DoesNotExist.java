@@ -8,10 +8,6 @@
  */
 package colloid.model.event;
 
-public class Entity implements Combat.Entity{
-
-    @Override
-    public void compile() {
-        // TODO Auto-generated method stub
-    }
+public class DoesNotExist extends Exception {
+    private static final long serialVersionUID = 1L;
 }

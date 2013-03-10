@@ -171,8 +171,14 @@ public class App extends Application {
     }
 
     public void showPopupTextLog() {
+        stage = new Stage();
+        stage.setTitle("Colloid combat");
+        stage.setMinWidth(200);
+        stage.setMinHeight(312);
+        stage.setResizable(true);
         try {
             PopupTextLogController controller = (PopupTextLogController) replaceSceneContent("popupTextLog.fxml");
+            stage.show();
         } catch (Exception ex) {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }

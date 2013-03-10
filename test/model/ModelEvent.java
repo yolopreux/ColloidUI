@@ -6,7 +6,7 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import colloid.RecountApp;
 import colloid.model.event.*;
-import colloid.model.event.Character.DoesNotExist;
+import colloid.model.event.DoesNotExist;
 import colloid.model.event.Combat.Event;
 import colloid.model.event.RecountLoop.InterruptLoopException;
 
@@ -198,6 +198,31 @@ public class ModelEvent {
         }
         assertEquals(3, app.getActors().size());
         assertEquals(droid, app.getActorList().get(0));
+    }
+    
+    @Test public void compileAbility() {
+        final String logdata ="[23:45:12.782] [Thul Artillery Droid {670199581769728}:9572007456857] [@Yalo] [Twin-linked Railguns {2455114975543296}] [ApplyEffect {836045448945477}: Damage {836045448945501}] (346 energy {836045448940874}) <346>";
+        final String logdata1 ="[23:23:12.901] [@Jolo] [@Jano] [Innervate {1104395005591552}] [ApplyEffect {836045448945477}: Heal {836045448945500}] (1714* force)";
+        final String logdata2 ="[23:45:12.782] [Thul Artillery Droid {670199581769728}:9572007456857] [@Yalo] [Twin-linked Railguns {2455114975543296}] [ApplyEffect {836045448945477}: Damage {836045448945501}] (346 energy {836045448940874}) <346>";
+        final String logdata3 ="[23:23:12.901] [@Jolo] [@Jano] [Innervate {1104395005591552}] [ApplyEffect {836045448945477}: Heal {836045448945500}] (1714)";
+
+        Ability ability = null;
+        Ability ability1 = null;
+        Ability ability2 = null;
+        Ability ability3 = null;
+        try {
+            ability = new Ability(logdata);
+            ability1 = new Ability(logdata1);
+            ability2 = new Ability(logdata2);
+            ability3 = new Ability(logdata3);
+        } catch (DoesNotExist e) {
+            e.printStackTrace();
+        }
+        assertEquals("Twin-linked Railguns", ability.name());
+        assertEquals("Innervate", ability1.name());
+        assertEquals("Twin-linked Railguns", ability2.name());
+        assertEquals("Innervate", ability3.name());
+        assertTrue("Equals the same ability", ability1.equals(ability3));
     }
 
 }

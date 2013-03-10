@@ -1,3 +1,11 @@
+/**
+ *  Colloid project
+ *
+ *  Combat log analyzer.
+ *
+ *  copyright: (c) 2013 by Darek <netmik12 [AT] gmail [DOT] com>
+ *  license: BSD, see LICENSE for more details
+ */
 package colloid.model.event;
 
 import java.util.regex.Matcher;

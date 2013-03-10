@@ -1,9 +1,17 @@
+/**
+ *  Colloid project
+ *
+ *  Combat log analyzer.
+ *
+ *  copyright: (c) 2013 by Darek <netmik12 [AT] gmail [DOT] com>
+ *  license: BSD, see LICENSE for more details
+ */
 package colloid.model.event;
 
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.collections.ObservableSet;
-import colloid.model.event.Character.DoesNotExist;
+import colloid.model.event.DoesNotExist;
 import colloid.model.event.RecountLoop.InterruptLoopException;
 
 public interface Combat {
