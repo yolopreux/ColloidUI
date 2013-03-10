@@ -10,7 +10,7 @@
 
 
 bin
-C
-C
+
 *.properties
 *.bak
+build

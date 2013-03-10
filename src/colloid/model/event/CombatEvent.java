@@ -1,5 +1,6 @@
 package colloid.model.event;
 
+import java.util.Date;
 import java.util.EventObject;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,15 +21,18 @@ public class CombatEvent extends EventObject implements Combat.Event {
     Combat.Target target;
     Combat.Effect effect;
     protected Fight fight;
+    Date timestamp;
 
     protected double value;
 
     public CombatEvent(Object source) {
         super(source);
+        timestamp = new Date();
     }
 
     public CombatEvent(Object source, String logdata) {
         super(source);
+        timestamp = new Date();
         this.logdata = logdata;
         try {
             actor = new Actor(logdata);
@@ -44,6 +48,7 @@ public class CombatEvent extends EventObject implements Combat.Event {
 
     public CombatEvent(Object source, String logdata, Fight fight) {
         super(source);
+        timestamp = new Date();
         this.logdata = logdata;
         try {
             actor = new Actor(logdata);
@@ -141,5 +146,9 @@ public class CombatEvent extends EventObject implements Combat.Event {
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println(e);
         }
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
     }
 }

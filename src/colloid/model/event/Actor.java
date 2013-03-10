@@ -89,6 +89,13 @@ public class Actor extends Character implements Combat.Actor, Comparable<Actor> 
                 }
                 return false;
             }
+
+            public boolean isOld(Event event) {
+                if (fight.start.getTime() < ((CombatEvent) event).getTimestamp().getTime()) {
+                    return false;
+                }
+                return true;
+            }
         });
     }
 
