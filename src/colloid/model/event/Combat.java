@@ -3,7 +3,7 @@ package colloid.model.event;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.collections.ObservableSet;
-import colloid.model.event.Character.DoesNotExist;
+import colloid.model.event.DoesNotExist;
 import colloid.model.event.RecountLoop.InterruptLoopException;
 
 public interface Combat {

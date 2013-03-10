@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import colloid.model.LogUtil;
-import colloid.model.event.Character.DoesNotExist;
+import colloid.model.event.DoesNotExist;
 import colloid.model.event.Combat.Event;
 import colloid.model.event.Combat.EventHandler;
 import colloid.model.event.Combat.ObservableListString;

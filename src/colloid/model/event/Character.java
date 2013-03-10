@@ -122,9 +122,4 @@ public abstract class Character implements Combat.Character {
     public ArrayList<Combat.Event> getEvents() {
         return events;
     }
-
-    public class DoesNotExist extends Exception {
-        private static final long serialVersionUID = 1L;
-    }
-
 }

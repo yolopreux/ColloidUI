@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import colloid.model.event.Actor;
-import colloid.model.event.Character.DoesNotExist;
+import colloid.model.event.DoesNotExist;
 import colloid.model.event.Target;
 import colloid.model.event.Combat;
 import colloid.model.event.Fight;
@@ -16,11 +16,11 @@ public class CombatEvent extends EventObject implements Combat.Event {
     private static final long serialVersionUID = -2692281973951200556L;
     protected String logdata;
     static final Pattern pattern = Pattern.compile(".*\\((\\d+)(.*)");
-    Combat.Actor actor;
-    Combat.Target target;
-    Combat.Effect effect;
+    protected Combat.Actor actor;
+    protected Combat.Target target;
+    protected Combat.Effect effect;
     protected Fight fight;
-
+    protected Ability ability;
     protected double value;
 
     public CombatEvent(Object source) {
@@ -40,6 +40,11 @@ public class CombatEvent extends EventObject implements Combat.Event {
         } catch (DoesNotExist e) {
             target = null;
         }
+        try {
+            ability = new Ability(logdata);
+        } catch (DoesNotExist ex) {
+            ability = null;
+        }
     }
 
     public CombatEvent(Object source, String logdata, Fight fight) {
@@ -56,6 +61,11 @@ public class CombatEvent extends EventObject implements Combat.Event {
             target = null;
         }
         this.fight = fight;
+        try {
+            ability = new Ability(logdata);
+        } catch (DoesNotExist ex) {
+            ability = null;
+        }
     }
 
     @Override
@@ -124,7 +134,6 @@ public class CombatEvent extends EventObject implements Combat.Event {
     }
 
     void compile(String logdata) {
-        String[] data = logdata.substring(1).split("\\]\\s\\[");
         try {
             try {
                 actor = new Actor(logdata);
@@ -136,10 +145,22 @@ public class CombatEvent extends EventObject implements Combat.Event {
             } catch (DoesNotExist e) {
                 actor = null;
             }
-//            ability = data[3]
-//            effect = data[4];
+            try {
+                ability = new Ability(logdata);
+            } catch (DoesNotExist ex) {
+                ability = null;
+            }
+            //effect = data[4];
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println(e);
         }
+    }
+
+    public Ability getAbility() {
+        return ability;
+    }
+
+    public void setAbility(Ability ability) {
+        this.ability = ability;
     }
 }
