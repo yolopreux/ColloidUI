@@ -27,6 +27,7 @@ import colloid.model.event.Combat;
 import colloid.model.event.CombatEvent;
 import colloid.model.event.Fight;
 import colloid.model.event.Util;
+import colloid.model.event.Combat.Ability;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -66,6 +67,10 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
     TreeView<String> combatTreeView;
     @FXML
     TreeView<String> settingsTreeView;
+    @FXML
+    TreeView<String> combatDamageTreeView;
+    @FXML
+    TreeView<String> combatHealTreeView;
 
     TreeItem<ArrayList<Actor>> rootItem = new TreeItem<ArrayList<Actor>>();
 
@@ -81,10 +86,14 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
 
         resource = (AppResource) bundleResource;
         recountApp.onUpdate(new Combat.EventHandler<CombatEvent>() {
+            private ArrayList<Fight> fights;
+
             @Override
             public void handle(CombatEvent event) {
                 popupTextLog.getItems().add(0, event.getLogdata());
-                updateCombatTree(recountApp.getFightList());
+                fights = recountApp.getFightList();
+                updateCombatTree(fights);
+                updateDamageTree(fights);
                 settingsTreeView.getRoot().getChildren().set(0, new TreeItem<String>(recountApp.sysInfo.allocatedMemInfo()));
                 settingsTreeView.getRoot().getChildren().set(1, new TreeItem<String>(recountApp.sysInfo.maxMemInfo()));
                 settingsTreeView.getRoot().getChildren().set(2, new TreeItem<String>(recountApp.sysInfo.freeMemInfo()));
@@ -318,5 +327,62 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
         }
         lastFight = fight;
         children.get(0).setExpanded(true);
+    }
+
+    private void updateDamageTree(ArrayList<Fight> fights) {
+        if (fights.isEmpty()) {
+            return;
+        }
+        if (combatDamageTreeView.getRoot() == null) {
+            combatDamageTreeView.setRoot(rootTreeView(fights));
+
+            return;
+        }
+        ObservableList<TreeItem<String>> children = combatDamageTreeView.getRoot().getChildren();
+
+        Fight fight = fights.get(0);
+        children.get(0).setExpanded(false);
+        if (fight.equals(lastFight)) {
+            children.set(0, createDamageFightTree(fight));
+        } else {
+            children.add(0, createDamageFightTree(fight));
+        }
+        lastFight = fight;
+        children.get(0).setExpanded(true);
+    }
+
+    /**
+     * @TODO move into model control
+     * @param Fight fight
+     * @return {@link TreeItem}
+     */
+    private TreeItem<String> createDamageFightTree(Fight fight) {
+        TreeItem<String> item = new TreeItem<String>(fight.info());
+
+        Iterator<Actor> iterActor = fight.getActors().iterator();
+        while(iterActor.hasNext()) {
+            Actor actor = iterActor.next();
+            String dps = "";
+            Date endTime = fight.getFinish();
+            if (endTime == null) {
+                endTime = new Date();
+            }
+            long duration = endTime.getTime() - fight.getStart().getTime();
+            if (duration > 100) {
+                dps = Util.valuePerSecond(actor.getDamageDone(fight), duration);
+                String info = String.format("%s: %s(%s)", actor.getName(), actor.getDamageDone(fight), dps);
+                TreeItem<String> itemActor = new TreeItem<String>(info);
+
+                Iterator<Ability> iterAbility = actor.getAbilities().iterator();
+                while (iterAbility.hasNext()) {
+                    Ability ability = iterAbility.next();
+                    if (ability.name() != null) {
+                        itemActor.getChildren().add(new TreeItem<String>(ability.name()));
+                    }
+                }
+                item.getChildren().add(itemActor);
+            }
+        }
+        return item;
     }
 }

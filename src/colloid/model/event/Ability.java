@@ -27,6 +27,9 @@ public class Ability implements Combat.Ability {
     public void compile() throws DoesNotExist {
         try {
             String[] items = logdata.substring(1).split("\\]\\s\\[");
+            if (items[3] == null) {
+                throw new DoesNotExist();
+            }
             if (items[3].contains("{")) {
                 name = items[3].substring(0, items[3].indexOf("{")-1);
                 return;
@@ -97,8 +100,13 @@ public class Ability implements Combat.Ability {
     public void setValueDone(double valueDone) {
         this.valueDone = valueDone;
     }
-    
+
     public void incrementValueDone(double value) {
         valueDone += value;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Ability [name=%s]", name);
     }
 }
