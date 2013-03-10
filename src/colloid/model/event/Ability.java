@@ -1,7 +1,7 @@
 /**
  *  Colloid project
  *
- *  Combat log analizer.
+ *  Combat log analyzer.
  *
  *  copyright: (c) 2013 by Darek <netmik12 [AT] gmail [DOT] com>
  *  license: BSD, see LICENSE for more details
@@ -96,5 +96,9 @@ public class Ability implements Combat.Ability {
 
     public void setValueDone(double valueDone) {
         this.valueDone = valueDone;
+    }
+    
+    public void incrementValueDone(double value) {
+        valueDone += value;
     }
 }

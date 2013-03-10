@@ -1,7 +1,7 @@
 /**
  *  Colloid project
  *
- *  Combat log analizer.
+ *  Combat log analyzer.
  *
  *  copyright: (c) 2013 by Darek <netmik12 [AT] gmail [DOT] com>
  *  license: BSD, see LICENSE for more details
@@ -197,11 +197,12 @@ public abstract class RecountLoop implements Combat.Recount {
                 }
                 if (lastLine == null || !Util.isDone(currentLogTime, lastLine)) {
                     lastLine = line;
+                    CombatEvent event = new CombatEvent(this, lastLine);
                     if (!handler.isEmpty()) {
                         beforeUpdate(lastLine);
                         Iterator<EventHandler<CombatEvent>> iter = handler.iterator();
                         while (iter.hasNext()) {
-                            iter.next().handle(new CombatEvent(this, lastLine));
+                            iter.next().handle(event);
                         }
                     }
                     onUpdate();
