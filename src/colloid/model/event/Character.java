@@ -22,7 +22,7 @@ public abstract class Character implements Combat.Character {
     protected HashSet<EventHandler<Combat.Event>> handlerDamage = new HashSet<EventHandler<Combat.Event>>();
     protected HashSet<EventHandler<Combat.Event>> handlerHeal = new HashSet<EventHandler<Combat.Event>>();
     protected ArrayList<Combat.Event> events = new ArrayList<Combat.Event>();
-    protected HashSet<Combat.Ability> abilities = new HashSet<Combat.Ability>();
+    protected HashSet<Ability> abilities = new HashSet<Ability>();
 
     public Character(String logdata) throws DoesNotExist {
 
@@ -84,6 +84,7 @@ public abstract class Character implements Combat.Character {
             return;
         }
         if (logdata != null && logdata.contains("EnterCombat")) {
+            abilities.clear();
             CombatEnterEvent event = new CombatEnterEvent(this, logdata);
 //            handler.handle(event);
             Fight.create();
@@ -109,7 +110,17 @@ public abstract class Character implements Combat.Character {
                 CombatDamageEvent damageEvent = new CombatDamageEvent(this, logdata);
                 if (Fight.inFight()) {
                     damageEvent.setFight(Fight.current());
-                    abilities.add(damageEvent.getAbility());
+                    if (abilities.contains(damageEvent.getAbility())) {
+                        Iterator<Ability> iterAbility = abilities.iterator();
+                        while(iterAbility.hasNext()) {
+                            Ability ability = iterAbility.next();
+                            if (ability.equals(damageEvent.getAbility())) {
+                                ability.incrementValueDone(damageEvent.getValue());
+                            }
+                        }
+                    } else {
+                        abilities.add(damageEvent.getAbility());
+                    }
                 }
                 Iterator<EventHandler<Combat.Event>> iter = handlerDamage.iterator();
                 while(iter.hasNext()) {
@@ -140,11 +151,11 @@ public abstract class Character implements Combat.Character {
         return events;
     }
 
-    public HashSet<Combat.Ability> getAbilities() {
+    public HashSet<Ability> getAbilities() {
         return abilities;
     }
 
-    public void setAbilities(HashSet<Combat.Ability> abilities) {
+    public void setAbilities(HashSet<Ability> abilities) {
         this.abilities = abilities;
     }
 }

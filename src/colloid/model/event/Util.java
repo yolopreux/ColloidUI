@@ -99,4 +99,18 @@ public class Util {
 
         return "0.00";
     }
+
+    public static String percentTotal(double value, double total) {
+        if (total <= 0) {
+            return "0%";
+        }
+        final DecimalFormat df = new DecimalFormat("#.00");
+        double result = (value*100)/total;
+        if (result > 0.01) {
+            return df.format(result);
+        }
+
+        return "0.00";
+    }
+
 }

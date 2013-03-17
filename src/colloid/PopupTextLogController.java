@@ -30,7 +30,7 @@ import colloid.model.event.Combat;
 import colloid.model.event.CombatEvent;
 import colloid.model.event.Fight;
 import colloid.model.event.Util;
-import colloid.model.event.Combat.Ability;
+import colloid.model.event.Ability;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -97,6 +97,10 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
                 fights = recountApp.getFightList();
                 updateCombatTree(fights);
                 updateDamageTree(fights);
+                if (!fights.isEmpty()) {
+                    lastFight = fights.get(0);
+                }
+
                 settingsTreeView.getRoot().getChildren().set(0, new TreeItem<String>(recountApp.sysInfo.allocatedMemInfo()));
                 settingsTreeView.getRoot().getChildren().set(1, new TreeItem<String>(recountApp.sysInfo.maxMemInfo()));
                 settingsTreeView.getRoot().getChildren().set(2, new TreeItem<String>(recountApp.sysInfo.freeMemInfo()));
@@ -331,7 +335,7 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
         } else {
             children.add(0, createFightTree(fight));
         }
-        lastFight = fight;
+        //lastFight = fight;
         children.get(0).setExpanded(true);
     }
 
@@ -353,7 +357,7 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
         } else {
             children.add(0, createDamageFightTree(fight));
         }
-        lastFight = fight;
+        //lastFight = fight;
         children.get(0).setExpanded(true);
     }
 
@@ -365,7 +369,10 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
     private TreeItem<String> createDamageFightTree(Fight fight) {
         TreeItem<String> item = new TreeItem<String>(fight.info());
 
-        Iterator<Actor> iterActor = fight.getActors().iterator();
+        ArrayList<Actor> fightActors = new ArrayList<Actor>(fight.getActors());
+        Collections.sort(fightActors, fight.new ActorDamageDoneComparator());
+        Iterator<Actor> iterActor = fightActors.iterator();
+
         while(iterActor.hasNext()) {
             Actor actor = iterActor.next();
             String dps = "";
@@ -376,14 +383,18 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
             long duration = endTime.getTime() - fight.getStart().getTime();
             if (duration > 100) {
                 dps = Util.valuePerSecond(actor.getDamageDone(fight), duration);
-                String info = String.format("%s: %s(%s)", actor.getName(), actor.getDamageDone(fight), dps);
+                double damageDone = actor.getDamageDone(fight);
+                String info = String.format("%s: %s(%s)", actor.getName(), damageDone, dps);
                 TreeItem<String> itemActor = new TreeItem<String>(info);
 
-                Iterator<Ability> iterAbility = actor.getAbilities().iterator();
+                ArrayList<Ability> actorAbilities = new ArrayList<Ability>(actor.getAbilities());
+                Collections.sort(actorAbilities, actor.new AbilityDamageDoneComparator());
+                Iterator<Ability> iterAbility = actorAbilities.iterator();
+
                 while (iterAbility.hasNext()) {
                     Ability ability = iterAbility.next();
                     if (ability.name() != null) {
-                        itemActor.getChildren().add(new TreeItem<String>(ability.name()));
+                        itemActor.getChildren().add(new TreeItem<String>(ability.info(damageDone)));
                     }
                 }
                 item.getChildren().add(itemActor);

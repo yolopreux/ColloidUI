@@ -115,4 +115,13 @@ public class Ability implements Combat.Ability {
     public String toString() {
         return String.format("Ability [name=%s]", name);
     }
+
+    public String info() {
+        return String.format("%s: %s", name, valueDone);
+    }
+
+    public String info(double totalDamage) {
+        return String.format("%s: %s(%s%s)", name, valueDone, Util.percentTotal(valueDone, totalDamage), "%");
+    }
+
 }
