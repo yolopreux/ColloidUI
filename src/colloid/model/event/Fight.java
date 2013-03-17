@@ -10,6 +10,7 @@ package colloid.model.event;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
@@ -147,5 +148,14 @@ public class Fight implements Comparable<Fight> {
         return -1;
     }
 
+    public class ActorDamageDoneComparator implements Comparator<Actor> {
+
+        @Override public int compare(Actor actor1, Actor actor2) {
+            if (actor1.getDamageDone() < actor2.getDamageDone()) {
+                return 1;
+            }
+            return -1;
+        }
+    }
 
 }

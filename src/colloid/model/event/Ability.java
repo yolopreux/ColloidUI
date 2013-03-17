@@ -23,6 +23,12 @@ public class Ability implements Combat.Ability {
         compile();
     }
 
+    public Ability(CombatEvent event) throws DoesNotExist {
+        this.logdata = event.getLogdata();
+
+        compile();
+    }
+
     @Override
     public void compile() throws DoesNotExist {
         try {

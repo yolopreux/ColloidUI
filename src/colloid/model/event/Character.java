@@ -92,9 +92,10 @@ public abstract class Character implements Combat.Character {
 
         if (logdata != null && logdata.contains("Heal")) {
             if (handlerHeal != null) {
-                Combat.Event healEvent = new CombatHealEvent(this, logdata);
+                CombatHealEvent healEvent = new CombatHealEvent(this, logdata);
                 if (Fight.inFight()) {
                     healEvent.setFight(Fight.current());
+                    abilities.add(healEvent.getAbility());
                 }
                 Iterator<EventHandler<Combat.Event>> iter = handlerHeal.iterator();
                 while(iter.hasNext()) {
@@ -108,6 +109,7 @@ public abstract class Character implements Combat.Character {
                 CombatDamageEvent damageEvent = new CombatDamageEvent(this, logdata);
                 if (Fight.inFight()) {
                     damageEvent.setFight(Fight.current());
+                    abilities.add(damageEvent.getAbility());
                 }
                 Iterator<EventHandler<Combat.Event>> iter = handlerDamage.iterator();
                 while(iter.hasNext()) {
@@ -122,13 +124,13 @@ public abstract class Character implements Combat.Character {
             events.add(event2);
         }
         if (Fight.inFight()) {
+//            try {
+//                abilities.add(new Ability(combatEvent));
+//            } catch (DoesNotExist e) {
+//                //e.printStackTrace();
+//                //do nothing
+//            }
             Fight.addActor((Actor) this);
-            try {
-                abilities.add(new Ability(logdata));
-            } catch (DoesNotExist e) {
-                e.printStackTrace();
-                //do nothing
-            }
             RecountApp.getInstance().getFights().add(Fight.current());
         }
 

@@ -53,7 +53,7 @@ public class CombatEvent extends EventObject implements Combat.Event {
             target = null;
         }
         try {
-            ability = new Ability(logdata);
+            ability = new Ability(this);
         } catch (DoesNotExist ex) {
             ability = null;
         }

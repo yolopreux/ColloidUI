@@ -14,7 +14,10 @@ import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowListener;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 
@@ -286,7 +289,10 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
     private TreeItem<String> createFightTree(Fight fight) {
         TreeItem<String> item = new TreeItem<String>(fight.info());
 
-        Iterator<Actor> iterActor = fight.getActors().iterator();
+        ArrayList<Actor> fightActors = new ArrayList<Actor>(fight.getActors());
+        Collections.sort(fightActors, fight.new ActorDamageDoneComparator());
+        Iterator<Actor> iterActor = fightActors.iterator();
+
         while(iterActor.hasNext()) {
             Actor actor = iterActor.next();
             String dps = "";
