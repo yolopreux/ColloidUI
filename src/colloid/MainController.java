@@ -16,11 +16,15 @@ import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
@@ -59,9 +63,17 @@ public class MainController extends AnchorPane implements Initializable {
     @FXML
     MenuItem menuItemClose;
     @FXML
+    MenuItem menuHelpHowto;
+    @FXML
     ListView<Actor> combatListView;
     @FXML
     TreeView<String> treeView;
+    @FXML
+    TextArea helptext;
+    @FXML
+    Tab howToUse;
+    @FXML
+    TabPane combatTabPane;
 
     private App application;
 
@@ -113,6 +125,11 @@ public class MainController extends AnchorPane implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void howTouseAction(ActionEvent event) {
+        recountLogPane.setExpanded(true);
+        combatTabPane.getSelectionModel().clearAndSelect(3);
     }
 
     public void chooseCombatDirPathAction(ActionEvent event) {

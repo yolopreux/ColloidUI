@@ -58,7 +58,14 @@ public class Ability implements Combat.Ability {
     }
 
     protected void setIcon() {
-        String iconPath = String.format("/img/small/%s.jpg", name.replaceAll(" ", "_").toLowerCase());
+        String iconName = name;
+        if (iconName.indexOf("(") != -1) {
+            iconName = iconName.substring(0, iconName.indexOf("(") -1);
+        }
+        if (iconName.indexOf("[") != -1) {
+            iconName = iconName.substring(0, iconName.indexOf("[") -1);
+        }
+        String iconPath = String.format("/img/small/%s.jpg", iconName.trim().replaceAll(" ", "_").toLowerCase());
         try {
             icon = new ImageView(new Image(getClass().getResourceAsStream(iconPath)));
         } catch (NullPointerException ex) {

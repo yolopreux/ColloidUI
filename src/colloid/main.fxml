@@ -26,6 +26,7 @@
         <Menu mnemonicParsing="false" text="Help">
           <items>
             <MenuItem disable="true" mnemonicParsing="false" text="About" />
+            <MenuItem disable="false" mnemonicParsing="false" onAction="#howTouseAction" text="How to use ..." fx:id="menuHelpHowto" />
           </items>
         </Menu>
       </menus>
@@ -85,7 +86,7 @@
           <content>
             <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
               <children>
-                <TabPane prefHeight="397.0" prefWidth="596.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <TabPane fx:id="combatTabPane" prefHeight="397.0" prefWidth="596.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                   <tabs>
                     <Tab fx:id="combatTab" disable="true" text="Combat">
                       <content>
@@ -120,6 +121,15 @@
                         <AnchorPane id="Content" minHeight="0.0" minWidth="0.0">
                           <children>
                             <TreeView fx:id="treeView" prefHeight="361.0" prefWidth="596.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                          </children>
+                        </AnchorPane>
+                      </content>
+                    </Tab>
+                    <Tab fx:id="howToUse" disable="false" text="How to use">
+                      <content>
+                        <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                          <children>
+                            <TextArea id="recountLog" fx:id="helptext" prefHeight="361.0" prefWidth="596.0" promptText="" text="How to use.&#10;You need to enable full combat logging and set graphic windowed mode. &#10;&#10;1) In the game preference set &quot;Enable combat logging to file&quot; option. &#10;In you're mydocuments/the old republic folder you will have a combat loging folder. &#10;2) Set you log location by typing log path and click Start button.&#10;3) Click popup menu View.&#10;" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                           </children>
                         </AnchorPane>
                       </content>
