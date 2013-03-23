@@ -190,4 +190,13 @@ public class Actor extends Character implements Combat.Actor, Comparable<Actor> 
             return -1;
         }
     }
+
+    public class AbilityHealDoneComparator implements Comparator<Ability> {
+        @Override public int compare(Ability ability1, Ability ability2) {
+            if (ability1.getHealDone() < ability2.getHealDone()) {
+                return 1;
+            }
+            return -1;
+        }
+    }
 }

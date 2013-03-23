@@ -44,15 +44,15 @@ abstract class FightTree {
                 String info = String.format("%s: %s(%s)", actor.getName(), valueDone, vps);
                 TreeItem<String> itemActor = new TreeItem<String>(info);
 
-                ArrayList<Ability> actorAbilities = new ArrayList<Ability>(actor.getAbilities());
-                Collections.sort(actorAbilities, actor.new AbilityValueDoneComparator());
+                ArrayList<Ability> actorAbilities = getAbilities(actor);
+                Collections.sort(actorAbilities, getAbilityComparator(actor));
                 Iterator<Ability> iterAbility = actorAbilities.iterator();
 
                 while (iterAbility.hasNext()) {
                     Ability ability = iterAbility.next();
                     if (ability.name() != null) {
-                        final Node abilityIcon =  new ImageView(new Image(getClass().getResourceAsStream("/img/dark_embrace.jpg")));
-                        itemActor.getChildren().add(new TreeItem<String>(ability.info(valueDone), abilityIcon));
+                        //final Node abilityIcon =  new ImageView(new Image(getClass().getResourceAsStream("/img/small/dark_field.jpg")));
+                        itemActor.getChildren().add(new TreeItem<String>(abilityInfo(ability, valueDone), ability.getIcon()));
                     }
                 }
                 item.getChildren().add(itemActor);
@@ -61,6 +61,9 @@ abstract class FightTree {
     }
 
     abstract protected double valueDone(Actor actor, Fight fight);
+    abstract protected  ArrayList<Ability> getAbilities(Actor actor);
+    abstract protected  String abilityInfo(Ability ability, double totalVal);
+    abstract protected  Comparator<Ability> getAbilityComparator(Actor actor);
 
     public TreeItem<String> getItem() {
         return item;

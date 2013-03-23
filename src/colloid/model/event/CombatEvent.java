@@ -33,6 +33,11 @@ public class CombatEvent extends EventObject implements Combat.Event {
     protected Ability ability;
     protected double value;
 
+    public enum EventType {
+        HEAL, DAMAGE
+    }
+
+
     public CombatEvent(Object source) {
         super(source);
         timestamp = new Date();

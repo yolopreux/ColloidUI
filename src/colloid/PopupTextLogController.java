@@ -26,6 +26,7 @@ import javax.swing.SwingUtilities;
 
 import colloid.App.AppResource;
 import colloid.model.control.DamageFightTree;
+import colloid.model.control.HealFightTree;
 import colloid.model.event.Actor;
 import colloid.model.event.Combat;
 import colloid.model.event.CombatEvent;
@@ -101,6 +102,7 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
                 fights = recountApp.getFightList();
                 updateCombatTree(fights);
                 updateDamageTree(fights);
+                updateHealTree(fights);
                 if (!fights.isEmpty()) {
                     lastFight = fights.get(0);
                 }
@@ -365,4 +367,28 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
         //lastFight = fight;
         children.get(0).setExpanded(true);
     }
+
+    private void updateHealTree(ArrayList<Fight> fights) {
+        if (fights.isEmpty()) {
+            return;
+        }
+        if (combatHealTreeView.getRoot() == null) {
+            combatHealTreeView.setRoot(rootTreeView(fights));
+
+            return;
+        }
+        ObservableList<TreeItem<String>> children = combatHealTreeView.getRoot().getChildren();
+
+        Fight fight = fights.get(0);
+        children.get(0).setExpanded(false);
+        HealFightTree treeItem = new HealFightTree(fight);
+        if (fight.equals(lastFight)) {
+            children.set(0, treeItem.getItem());
+        } else {
+            children.add(0, treeItem.getItem());
+        }
+
+        children.get(0).setExpanded(true);
+    }
+
 }

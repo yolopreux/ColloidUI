@@ -8,6 +8,10 @@
  */
 package colloid.model.event;
 
+import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import colloid.model.event.CombatEvent.EventType;
 import colloid.model.event.DoesNotExist;
 import colloid.model.event.Combat.EventHandler;
 
@@ -15,18 +19,23 @@ public class Ability implements Combat.Ability {
 
     protected String logdata;
     protected String name;
-    protected double valueDone;
+    protected double valueDone = 0;
+    protected double healDone = 0;
+    protected double damageDone = 0;
+    protected double threatDone = 0;
+    protected EventType etype;
+    protected Node icon;
 
     public Ability(String logdata) throws DoesNotExist {
         this.logdata = logdata;
-
         compile();
+        setIcon();
     }
 
     public Ability(CombatEvent event) throws DoesNotExist {
         this.logdata = event.getLogdata();
-
         compile();
+        setIcon();
     }
 
     @Override
@@ -45,6 +54,15 @@ public class Ability implements Combat.Ability {
             throw new DoesNotExist();
         } catch (ArrayIndexOutOfBoundsException ex) {
             throw new DoesNotExist();
+        }
+    }
+
+    protected void setIcon() {
+        String iconPath = String.format("/img/small/%s.jpg", name.replaceAll(" ", "_").toLowerCase());
+        try {
+            icon = new ImageView(new Image(getClass().getResourceAsStream(iconPath)));
+        } catch (NullPointerException ex) {
+            icon = null;
         }
     }
 
@@ -103,6 +121,17 @@ public class Ability implements Combat.Ability {
         return valueDone;
     }
 
+    public double getHealDone() {
+        return healDone;
+    }
+
+    /**
+     * @TODO move value done into damage done
+     */
+    public double getDamageDone() {
+        return valueDone;
+    }
+
     public void setValueDone(double valueDone) {
         this.valueDone = valueDone;
     }
@@ -110,6 +139,15 @@ public class Ability implements Combat.Ability {
     public void incrementValueDone(double value) {
         valueDone += value;
     }
+
+    public void incrementHealDone(double value) {
+        healDone += value;
+    }
+
+    public void incrementDamageDone(double value) {
+        damageDone += value;
+    }
+
 
     @Override
     public String toString() {
@@ -120,8 +158,20 @@ public class Ability implements Combat.Ability {
         return String.format("%s: %s", name, valueDone);
     }
 
-    public String info(double totalDamage) {
-        return String.format("%s: %s(%s%s)", name, valueDone, Util.percentTotal(valueDone, totalDamage), "%");
+    public String info(double totalValue) {
+        return String.format("%s: %s(%s%s)", name, valueDone, Util.percentTotal(valueDone, totalValue), "%");
+    }
+
+    public String healInfo(double totalValue) {
+        return String.format("%s: %s(%s%s)", name, healDone, Util.percentTotal(healDone, totalValue), "%");
+    }
+
+    public EventType getEtype() {
+        return etype;
+    }
+
+    public Node getIcon() {
+        return icon;
     }
 
 }

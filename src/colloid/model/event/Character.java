@@ -96,7 +96,17 @@ public abstract class Character implements Combat.Character {
                 CombatHealEvent healEvent = new CombatHealEvent(this, logdata);
                 if (Fight.inFight()) {
                     healEvent.setFight(Fight.current());
-                    abilities.add(healEvent.getAbility());
+                    if (abilities.contains(healEvent.getAbility())) {
+                        Iterator<Ability> iterAbility = abilities.iterator();
+                        while(iterAbility.hasNext()) {
+                            Ability ability = iterAbility.next();
+                            if (ability.equals(healEvent.getAbility())) {
+                                ability.incrementHealDone(healEvent.getValue());
+                            }
+                        }
+                    } else {
+                        abilities.add(healEvent.getAbility());
+                    }
                 }
                 Iterator<EventHandler<Combat.Event>> iter = handlerHeal.iterator();
                 while(iter.hasNext()) {
