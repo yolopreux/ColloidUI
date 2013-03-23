@@ -16,6 +16,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import colloid.App;
 
 import javafx.scene.control.TreeItem;
 
@@ -37,7 +41,7 @@ public class Util {
         } catch (ParseException e) {
             System.out.println(e.getMessage());
         } catch (StringIndexOutOfBoundsException e) {
-            e.printStackTrace();
+            Logger.getLogger(Util.class.getName()).log(Level.SEVERE, line, e);
         }
 
         return null;

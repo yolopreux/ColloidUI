@@ -158,4 +158,14 @@ public class Fight implements Comparable<Fight> {
         }
     }
 
+    public class ActorHealDoneComparator implements Comparator<Actor> {
+
+        @Override public int compare(Actor actor1, Actor actor2) {
+            if (actor1.getHealDone() < actor2.getHealDone()) {
+                return 1;
+            }
+            return -1;
+        }
+    }
+
 }

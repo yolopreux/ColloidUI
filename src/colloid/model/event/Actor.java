@@ -182,7 +182,7 @@ public class Actor extends Character implements Combat.Actor, Comparable<Actor> 
                 getName(), getDamageDone(), getHealDone());
     }
 
-    public class AbilityDamageDoneComparator implements Comparator<Ability> {
+    public class AbilityValueDoneComparator implements Comparator<Ability> {
         @Override public int compare(Ability ability1, Ability ability2) {
             if (ability1.getValueDone() < ability2.getValueDone()) {
                 return 1;

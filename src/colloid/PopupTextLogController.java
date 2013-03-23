@@ -25,6 +25,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import colloid.App.AppResource;
+import colloid.model.control.DamageFightTree;
 import colloid.model.event.Actor;
 import colloid.model.event.Combat;
 import colloid.model.event.CombatEvent;
@@ -39,12 +40,15 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.WindowEvent;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.DragEvent;
 
@@ -352,54 +356,13 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
 
         Fight fight = fights.get(0);
         children.get(0).setExpanded(false);
+        DamageFightTree treeItem = new DamageFightTree(fight);
         if (fight.equals(lastFight)) {
-            children.set(0, createDamageFightTree(fight));
+            children.set(0, treeItem.getItem());
         } else {
-            children.add(0, createDamageFightTree(fight));
+            children.add(0, treeItem.getItem());
         }
         //lastFight = fight;
         children.get(0).setExpanded(true);
-    }
-
-    /**
-     * @TODO move into model control
-     * @param Fight fight
-     * @return {@link TreeItem}
-     */
-    private TreeItem<String> createDamageFightTree(Fight fight) {
-        TreeItem<String> item = new TreeItem<String>(fight.info());
-
-        ArrayList<Actor> fightActors = new ArrayList<Actor>(fight.getActors());
-        Collections.sort(fightActors, fight.new ActorDamageDoneComparator());
-        Iterator<Actor> iterActor = fightActors.iterator();
-
-        while(iterActor.hasNext()) {
-            Actor actor = iterActor.next();
-            String dps = "";
-            Date endTime = fight.getFinish();
-            if (endTime == null) {
-                endTime = new Date();
-            }
-            long duration = endTime.getTime() - fight.getStart().getTime();
-            if (duration > 100) {
-                dps = Util.valuePerSecond(actor.getDamageDone(fight), duration);
-                double damageDone = actor.getDamageDone(fight);
-                String info = String.format("%s: %s(%s)", actor.getName(), damageDone, dps);
-                TreeItem<String> itemActor = new TreeItem<String>(info);
-
-                ArrayList<Ability> actorAbilities = new ArrayList<Ability>(actor.getAbilities());
-                Collections.sort(actorAbilities, actor.new AbilityDamageDoneComparator());
-                Iterator<Ability> iterAbility = actorAbilities.iterator();
-
-                while (iterAbility.hasNext()) {
-                    Ability ability = iterAbility.next();
-                    if (ability.name() != null) {
-                        itemActor.getChildren().add(new TreeItem<String>(ability.info(damageDone)));
-                    }
-                }
-                item.getChildren().add(itemActor);
-            }
-        }
-        return item;
     }
 }
