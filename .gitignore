@@ -15,3 +15,4 @@ bin
 *.bak
 build
 src/img/small/*
+_peer*

@@ -23,6 +23,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
@@ -32,6 +33,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
+import colloid.http.Peer;
 import colloid.model.event.Actor;
 import colloid.model.event.Combat;
 import colloid.model.event.CombatEvent;
@@ -74,6 +76,8 @@ public class MainController extends AnchorPane implements Initializable {
     Tab howToUse;
     @FXML
     TabPane combatTabPane;
+    @FXML
+    RadioButton isPeer;
 
     private App application;
 
@@ -122,6 +126,7 @@ public class MainController extends AnchorPane implements Initializable {
     public void closeAction(ActionEvent event) {
         try {
             application.stop();
+            Peer.getInstance().stop();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -159,12 +164,15 @@ public class MainController extends AnchorPane implements Initializable {
                     textLog.getItems().add(0, event.getLogdata());
                     combatListView.getItems().clear();
                     combatListView.getItems().addAll(recountApp.getActorList());
-
                 }
             });
+            if (isPeer.isSelected()) {
+                Peer.getInstance().run();
+            }
             parseActButton.setText("Stop");
         } else {
             recountApp.stop();
+            Peer.getInstance().stop();
             parseActButton.setText("Start");
         }
     }

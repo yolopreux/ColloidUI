@@ -12,6 +12,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import colloid.http.Peer;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -65,6 +67,7 @@ public class App extends Application {
     @Override
     public void stop() throws Exception {
         RecountApp.getInstance().stop();
+        Peer.getInstance().stop();
         stage.close();
     }
 
