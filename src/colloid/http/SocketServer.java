@@ -58,6 +58,7 @@ package colloid.http;
 import net.jxta.document.AdvertisementFactory;
 import net.jxta.exception.PeerGroupException;
 import net.jxta.id.IDFactory;
+import net.jxta.impl.id.UUID.PeerGroupID;
 import net.jxta.peergroup.PeerGroup;
 import net.jxta.pipe.PipeID;
 import net.jxta.pipe.PipeService;
@@ -88,7 +89,7 @@ import java.text.MessageFormat;
 public class SocketServer {
 
     private transient PeerGroup netPeerGroup = null;
-    public final static String SOCKETIDSTR = "urn:jxta:uuid-59616261646162614E5047205032503393B5C2F6CA7A41FBB0F890173088E79404";
+    public final static String SOCKETIDSTR = "urn:jxta:cbid-59616261646162614E504720503250336578130B8AD24518835DCF215ED3EDC604";
     private boolean isRunning = false;
     private transient NetworkManager manager;
 
@@ -102,17 +103,19 @@ public class SocketServer {
     public static PipeAdvertisement createSocketAdvertisement() {
         PipeID socketID = null;
 
-        try {
-            socketID = (PipeID) IDFactory.fromURI(new URI(SOCKETIDSTR));
-        } catch (URISyntaxException use) {
-            use.printStackTrace();
-        }
+//        try {
+//            socketID = (PipeID) IDFactory.fromURI(new URI(SOCKETIDSTR));
+//        } catch (URISyntaxException use) {
+//            use.printStackTrace();
+//        }
+
+        socketID = IDFactory.newPipeID(PeerGroupID.defaultNetPeerGroupID, "ColloidPeer".getBytes());
         PipeAdvertisement advertisement = (PipeAdvertisement)
                 AdvertisementFactory.newAdvertisement(PipeAdvertisement.getAdvertisementType());
 
         advertisement.setPipeID(socketID);
         advertisement.setType(PipeService.UnicastType);
-        advertisement.setName("Socket tutorial");
+        advertisement.setName("Colloid peer");
         return advertisement;
     }
 

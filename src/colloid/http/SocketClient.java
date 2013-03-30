@@ -62,6 +62,7 @@ import net.jxta.protocol.PipeAdvertisement;
 import net.jxta.socket.JxtaSocket;
 
 import java.io.*;
+import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.text.MessageFormat;
 
@@ -96,6 +97,8 @@ public class SocketClient {
     private transient PipeAdvertisement pipeAdv;
     private transient boolean waitForRendezvous = false;
 
+    protected ArrayDeque<String> logdata = new ArrayDeque<String>();
+
     public SocketClient(boolean waitForRendezvous) {
         try {
             manager = new NetworkManager(NetworkManager.ConfigMode.ADHOC, "SocketClient",
@@ -116,18 +119,27 @@ public class SocketClient {
     /**
      * Interact with the server.
      */
-    public void send(final String logdata) {
-        Thread.currentThread().setName(SocketClient.class.getName() + ".send()");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                sendLogdata(logdata);
-            }
-        }).start();
+    public void send(final String log) {
+        logdata.add(log);
     }
 
     public void send() {
         sendLogdata("hallo");
+    }
+
+    public void run() {
+        Thread.currentThread().setName(SocketClient.class.getName() + ".send()");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    String log = logdata.poll();
+                    if (log != null) {
+                        sendLogdata(log);
+                    }
+                }
+            }
+        }).start();
     }
 
     protected void sendLogdata(String logdata) {
@@ -268,6 +280,7 @@ public class SocketClient {
 
     public void start() {
         try {
+            run();
             manager.startNetwork();
         } catch (PeerGroupException e) {
             e.printStackTrace();

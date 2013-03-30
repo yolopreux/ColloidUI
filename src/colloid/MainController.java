@@ -164,7 +164,7 @@ public class MainController extends AnchorPane implements Initializable {
                     combatListView.getItems().clear();
                     combatListView.getItems().addAll(recountApp.getActorList());
                     if (Peer.getInstance().isRunning()) {
-                        //Peer.getInstance().send(event.getLogdata());
+                        Peer.getInstance().send(event.getLogdata());
                     }
                 }
             });

@@ -60,6 +60,19 @@ public class Peer {
     }
 
     protected void init() {
+        if (Platform.isFxApplicationThread()) {
+            initWithFx();
+        } else {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    init();
+                }
+            });
+        }
+    }
+
+    protected void initWithFx() {
         server = SocketServer.init();
         client = SocketClient.init();
     }
