@@ -104,7 +104,7 @@ public class Peer {
     }
 
     public void send(String combatlog) {
-        client.send();
+        client.send(combatlog);
     }
 
     private static void log(String message, Level level) {

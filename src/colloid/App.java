@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import colloid.http.Peer;
+import colloid.http.Server;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -39,7 +40,11 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        System.setProperty("net.jxta.logging.Logging", "FINEST");
+        System.setProperty("net.jxta.level", "FINEST");
+        System.setProperty("java.util.logging.config.file", "logging.properties");
         loadParams();
+
         stage = primaryStage;
         //stage.setScene(createScene());
 

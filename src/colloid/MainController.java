@@ -163,15 +163,20 @@ public class MainController extends AnchorPane implements Initializable {
                     textLog.getItems().add(0, event.getLogdata());
                     combatListView.getItems().clear();
                     combatListView.getItems().addAll(recountApp.getActorList());
+                    if (Peer.getInstance().isRunning()) {
+                        //Peer.getInstance().send(event.getLogdata());
+                    }
                 }
             });
-//            if (isPeer.isSelected()) {
-//                Peer.getInstance().run();
-//            }
+            if (isPeer.isSelected() && !Peer.getInstance().isRunning()) {
+                Peer.getInstance().run();
+            }
             parseActButton.setText("Stop");
         } else {
             recountApp.stop();
-            Peer.getInstance().stop();
+            if (Peer.getInstance().isRunning()) {
+                Peer.getInstance().stop();
+            }
             parseActButton.setText("Start");
         }
     }

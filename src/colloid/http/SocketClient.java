@@ -116,7 +116,63 @@ public class SocketClient {
     /**
      * Interact with the server.
      */
+    public void send(final String logdata) {
+        Thread.currentThread().setName(SocketClient.class.getName() + ".send()");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                sendLogdata(logdata);
+            }
+        }).start();
+    }
+
     public void send() {
+        sendLogdata("hallo");
+    }
+
+    protected void sendLogdata(String logdata) {
+        System.out.println(String.format("Sending log data: %s", logdata));
+        try {
+            if (waitForRendezvous) {
+                manager.waitForRendezvousConnection(0);
+            }
+
+            long start = System.currentTimeMillis();
+            System.out.println("Connecting to the server");
+            JxtaSocket socket = new JxtaSocket(netPeerGroup,
+                    // no specific peerid
+                    null,
+                    pipeAdv,
+                    // connection timeout: 5 seconds(5000)
+                    20000,
+                    // reliable connection
+                    true);
+
+            // get the socket output stream
+            OutputStream out = socket.getOutputStream();
+            DataOutput dos = new DataOutputStream(out);
+
+            // get the socket input stream
+            InputStream in = socket.getInputStream();
+            DataInput dis = new DataInputStream(in);
+
+            dos.writeUTF(logdata);
+            out.flush();
+
+            out.close();
+            in.close();
+
+            long finish = System.currentTimeMillis();
+            long elapsed = finish - start;
+
+            socket.close();
+            System.out.println("Socket connection closed");
+        } catch (IOException io) {
+            io.printStackTrace();
+        }
+    }
+
+    protected void sendData(String logdata) {
         try {
             if (waitForRendezvous) {
                 manager.waitForRendezvousConnection(0);
@@ -156,8 +212,6 @@ public class SocketClient {
                 Arrays.fill(out_buf, (byte) current);
                 out.write(out_buf);
                 out.flush();
-                dis.readFully(in_buf);
-                assert Arrays.equals(in_buf, out_buf);
                 current++;
             }
             out.close();
@@ -233,12 +287,6 @@ public class SocketClient {
            String value = System.getProperty("RDVWAIT", "false");
            boolean waitForRendezvous = Boolean.valueOf(value);
            socEx = new SocketClient(waitForRendezvous);
-
-//           for (int i = 1; i <= RUNS; i++) {
-//               System.out.println("Run #" + i);
-//               socEx.run();
-//           }
-//           socEx.stop();
        } catch (Throwable e) {
            System.out.flush();
            System.err.println("Failed : " + e);

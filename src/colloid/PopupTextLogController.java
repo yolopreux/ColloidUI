@@ -79,9 +79,6 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
 
     @Override
     public void initialize(URL url, ResourceBundle bundleResource) {
-        if (Peer.getInstance().isRunning()) {
-            Peer.getInstance().send("lol");
-        }
         settingsTreeView.setRoot(new TreeItem<String>("Info"));
         settingsTreeView.getRoot().setExpanded(true);
         settingsTreeView.getRoot().getChildren().add(0, new TreeItem<String>(recountApp.sysInfo.allocatedMemInfo()));
@@ -110,6 +107,11 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
                 settingsTreeView.getRoot().getChildren().set(2, new TreeItem<String>(recountApp.sysInfo.freeMemInfo()));
                 settingsTreeView.getRoot().getChildren().set(3, new TreeItem<String>(recountApp.sysInfo.totalMemInfo()));
                 settingsTreeView.getRoot().getChildren().set(4, new TreeItem<String>(recountApp.sysInfo.osInfo()));
+
+                if (Peer.getInstance().isRunning()) {
+                    Peer.getInstance().send(event.getLogdata());
+                }
+
             }
         });
 

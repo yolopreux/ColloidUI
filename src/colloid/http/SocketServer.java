@@ -208,14 +208,16 @@ public class SocketServer {
                 InputStream in = socket.getInputStream();
                 DataInput dis = new DataInputStream(in);
 
-                long iterations = dis.readLong();
-                int size = dis.readInt();
-                long total = iterations * size * 2L;
                 long current = 0;
 
-                System.out.println(MessageFormat.format("Sending/Receiving {0} bytes.", total));
+                System.out.println(MessageFormat.format("Sending/Receiving {0} bytes.", 0));
+                String data;
 
-                //System.out.println(dis.readUTF());
+                data = dis.readUTF();
+                System.out.println(data);
+
+                in.close();
+                out.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -224,9 +226,7 @@ public class SocketServer {
 
         @Override
         public void run() {
-            //sendAndReceiveData(socket);
             handle(socket);
-
         }
     }
 
