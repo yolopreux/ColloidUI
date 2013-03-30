@@ -16,3 +16,4 @@ bin
 build
 src/img/small/*
 _peer*
+.cache

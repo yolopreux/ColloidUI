@@ -32,17 +32,20 @@ import net.jxta.socket.JxtaServerSocket;
 
 public class Peer {
 
-    private boolean isRunning;
+    private SocketServer server;
+    private SocketClient client;
+
+    protected boolean isRunning;
     protected NetworkManager networkManager;
     protected NetworkConfigurator networkConfigurator;
     protected PeerGroup peerGroup;
 
-    public static final String Name = "_peer-colloid-jxta";
-    public static final int TcpPort = 9714;
-    public static final PeerID PID = IDFactory.newPeerID(PeerGroupID.defaultNetPeerGroupID, Name.getBytes());
-    public static final File ConfigurationFile = new File("." + System.getProperty("file.separator") + Name);
+    public static final String name = "_peer-colloid-jxta";
+    public static final int tcpPort = 9714;
+//    public static final PeerID PID = IDFactory.newPeerID(PeerGroupID.defaultNetPeerGroupID, name.getBytes());
+//    public static final File configurationFile = new File("." + System.getProperty("file.separator") + name);
 
-    protected static Peer instance;
+    private static Peer instance;
 
     public Peer() {
         init();
@@ -57,150 +60,59 @@ public class Peer {
     }
 
     protected void init() {
-        try {
-            networkManager = new NetworkManager(NetworkManager.ConfigMode.RENDEZVOUS, Name, ConfigurationFile.toURI());
-            // Retrieving the network configurator
-            networkConfigurator = networkManager.getConfigurator();
-
-            // Setting more configuration
-            networkConfigurator.setTcpPort(TcpPort);
-            networkConfigurator.setTcpEnabled(true);
-            networkConfigurator.setTcpIncoming(true);
-            networkConfigurator.setTcpOutgoing(true);
-            // Setting the Peer ID
-            log("Setting the peer ID to :\n\n" + PID.toString());
-            networkConfigurator.setPeerID(PID);
-
-            // Starting the JXTA network
-            log("Start the JXTA network");
-            peerGroup = networkManager.startNetwork();
-
-        } catch (IOException ex) {
-            log(ex.toString(), Level.SEVERE);
-        } catch (PeerGroupException ex) {
-            log(ex.toString(), Level.SEVERE);
-        }
+        server = SocketServer.init();
+        client = SocketClient.init();
     }
 
     public void run() {
 
+        isRunning = true;
         new Thread(new Runnable() {
             @Override
             public void run() {
                 start();
-                isRunning = true;
             }
         }).start();
     }
 
     protected void start() {
-        if (isRunning) {
-            return;
-        }
-        try {
-
-            // Waiting for other peers to connect to JXTA
-            log("Waiting for other peers to connect to JXTA");
-
-            // Creating the JXTA socket server
-            int BackLog = 20;
-            int Timeout = 30000;
-
-            JxtaServerSocket serverSocket = new JxtaServerSocket(peerGroup, GetPipeAdvertisement(), BackLog, Timeout);
-            log("JXTA socket server created");
-
-            Socket colloidSocket = serverSocket.accept();
-
-            if (colloidSocket != null) {
-                log("Socket connection established");
-
-                // Retrieving the input streams
-                InputStream inputStream = colloidSocket.getInputStream();
-                DataInput dataInput = new DataInputStream(inputStream);
-
-                String IncomingMessage = dataInput.readUTF();
-                log("Received socket message:\n\n" + IncomingMessage);
-
-                // Retrieving the output stream
-                OutputStream outputStream = colloidSocket.getOutputStream();
-                DataOutput dataOutput = new DataOutputStream(outputStream);
-
-                // Sending a message
-                dataOutput.writeUTF("Hello from " + Name);
-                outputStream.flush();
-
-                // Sleeping for 10 seconds
-                goToSleep(10000);
-
-                // Closing the streams
-                outputStream.close();
-                inputStream.close();
-
-                // Closing the socket
-                colloidSocket.close();
-            }
-
-            // Closing the JXTA socket server
-            serverSocket.close();
-
-            // Retrieving connected peers
-            connectedPeersInfo(peerGroup.getRendezVousService(), Name);
-
-        } catch (IOException ex) {
-            log(ex.toString(), Level.SEVERE);
-        }
+        server.start();
     }
 
     public void stop() {
-        log("Stop the JXTA network");
-        networkManager.stopNetwork();
+        server.stop();
+        client.stop();
+        log("Stop peer");
     }
 
-    public static PipeAdvertisement GetPipeAdvertisement() {
+    protected void connectedPeersInfo(RendezVousService TheRendezVous, String Name) {
 
-        // Creating a Pipe Advertisement
-        PipeAdvertisement MyPipeAdvertisement = (PipeAdvertisement) AdvertisementFactory.newAdvertisement(PipeAdvertisement.getAdvertisementType());
-        PipeID MyPipeID = IDFactory.newPipeID(PeerGroupID.defaultNetPeerGroupID, Name.getBytes());
-
-        MyPipeAdvertisement.setPipeID(MyPipeID);
-        MyPipeAdvertisement.setType(PipeService.UnicastType);
-        MyPipeAdvertisement.setName("Test Socket");
-        MyPipeAdvertisement.setDescription("Created by " + Name);
-
-        return MyPipeAdvertisement;
-    }
-
-    private void log(String message, Level level) {
-        Logger.getLogger(Peer.class.getName()).log(level, message);
-    }
-
-    private void log(String message) {
-        log(message, Level.INFO);
-    }
-
-    public static final void goToSleep(long Duration) {
-        long Delay = System.currentTimeMillis() + Duration;
-        while (System.currentTimeMillis()<Delay) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException Ex) {
-                // We don't care
-            }
-        }
-    }
-
-    private void connectedPeersInfo(RendezVousService TheRendezVous, String Name) {
-
-        List<PeerID> TheList = TheRendezVous.getLocalRendezVousView();
-        Iterator<PeerID> Iter = TheList.iterator();
+        List<PeerID> theList = TheRendezVous.getLocalRendezVousView();
+        Iterator<PeerID> iter = theList.iterator();
         int count = 0;
-        while (Iter.hasNext()) {
+        while (iter.hasNext()) {
             count++;
-            log("Peer connected to this rendezvous:\n\n" + Iter.next().toString());
+            log("Peer connected to this rendezvous:\n\n" + iter.next().toString());
         }
-
         if (count==0) {
             log("No peers connected to this rendezvous!");
         }
     }
+
+    public boolean isRunning() {
+        return isRunning;
+    }
+
+    public void send(String combatlog) {
+        client.send();
+    }
+
+    private static void log(String message, Level level) {
+        Logger.getLogger(Peer.class.getName()).log(level, message);
+    }
+
+    private static void log(String message) {
+        log(message, Level.INFO);
+    }
 }
+

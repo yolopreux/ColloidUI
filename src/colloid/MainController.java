@@ -13,11 +13,10 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -166,9 +165,9 @@ public class MainController extends AnchorPane implements Initializable {
                     combatListView.getItems().addAll(recountApp.getActorList());
                 }
             });
-            if (isPeer.isSelected()) {
-                Peer.getInstance().run();
-            }
+//            if (isPeer.isSelected()) {
+//                Peer.getInstance().run();
+//            }
             parseActButton.setText("Stop");
         } else {
             recountApp.stop();

@@ -14,17 +14,17 @@ import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowListener;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+
 import colloid.App.AppResource;
+import colloid.http.Peer;
 import colloid.model.control.DamageFightTree;
 import colloid.model.control.HealFightTree;
 import colloid.model.event.Actor;
@@ -32,8 +32,6 @@ import colloid.model.event.Combat;
 import colloid.model.event.CombatEvent;
 import colloid.model.event.Fight;
 import colloid.model.event.Util;
-import colloid.model.event.Ability;
-
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
@@ -41,15 +39,12 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.WindowEvent;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.DragEvent;
 
@@ -84,6 +79,9 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
 
     @Override
     public void initialize(URL url, ResourceBundle bundleResource) {
+        if (Peer.getInstance().isRunning()) {
+            Peer.getInstance().send("lol");
+        }
         settingsTreeView.setRoot(new TreeItem<String>("Info"));
         settingsTreeView.getRoot().setExpanded(true);
         settingsTreeView.getRoot().getChildren().add(0, new TreeItem<String>(recountApp.sysInfo.allocatedMemInfo()));
