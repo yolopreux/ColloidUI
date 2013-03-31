@@ -33,9 +33,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import colloid.http.Peer;
+import colloid.http.User;
+import colloid.http.User.UnloggedUserError;
 import colloid.model.event.Actor;
 import colloid.model.event.Combat;
 import colloid.model.event.CombatEvent;
+import colloid.model.event.DoesNotExist;
 import colloid.model.event.Util;
 
 
@@ -160,6 +163,9 @@ public class MainController extends AnchorPane implements Initializable {
             recountApp.onUpdate(new Combat.EventHandler<CombatEvent>() {
                 @Override
                 public void handle(CombatEvent event) {
+                    if (event.getLogdata().contains("Safe Login")) {
+                        User.getInstance().login(event.getLogdata());
+                    }
                     textLog.getItems().add(0, event.getLogdata());
                     combatListView.getItems().clear();
                     combatListView.getItems().addAll(recountApp.getActorList());

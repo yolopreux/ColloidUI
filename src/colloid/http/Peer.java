@@ -32,8 +32,8 @@ import net.jxta.socket.JxtaServerSocket;
 
 public class Peer {
 
-    private SocketServer server;
-    private SocketClient client;
+    private PeerServer server;
+    private PeerClient client;
 
     protected boolean isRunning;
     protected NetworkManager networkManager;
@@ -48,7 +48,6 @@ public class Peer {
     private static Peer instance;
 
     public Peer() {
-        init();
     }
 
     public static Peer getInstance() {
@@ -73,13 +72,23 @@ public class Peer {
     }
 
     protected void initWithFx() {
-        server = SocketServer.init();
-        client = SocketClient.init();
+        if (server == null) {
+            server = PeerServer.init();
+        }
+        if (client == null) {
+            client = PeerClient.init();
+        }
     }
 
     public void run() {
-
         isRunning = true;
+        init();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                init();
+            }
+        });
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -93,9 +102,11 @@ public class Peer {
     }
 
     public void stop() {
-        server.stop();
-        client.stop();
-        log("Stop peer");
+        if (isRunning) {
+            server.stop();
+            client.stop();
+            log("Stop peer");
+        }
     }
 
     protected void connectedPeersInfo(RendezVousService TheRendezVous, String Name) {
@@ -126,6 +137,15 @@ public class Peer {
 
     private static void log(String message) {
         log(message, Level.INFO);
+    }
+
+    /**
+     * TODO
+     * @param messgae
+     * @param level
+     */
+    public static void log(String name, String messgae, Level level) {
+        System.out.println(messgae);
     }
 }
 

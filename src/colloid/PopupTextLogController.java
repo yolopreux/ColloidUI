@@ -25,6 +25,8 @@ import javax.swing.SwingUtilities;
 
 import colloid.App.AppResource;
 import colloid.http.Peer;
+import colloid.http.User;
+import colloid.http.User.UnloggedUserError;
 import colloid.model.control.DamageFightTree;
 import colloid.model.control.HealFightTree;
 import colloid.model.event.Actor;
@@ -33,6 +35,7 @@ import colloid.model.event.CombatEvent;
 import colloid.model.event.Fight;
 import colloid.model.event.Util;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.event.ActionEvent;
@@ -81,12 +84,8 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
     public void initialize(URL url, ResourceBundle bundleResource) {
         settingsTreeView.setRoot(new TreeItem<String>("Info"));
         settingsTreeView.getRoot().setExpanded(true);
-        settingsTreeView.getRoot().getChildren().add(0, new TreeItem<String>(recountApp.sysInfo.allocatedMemInfo()));
-        settingsTreeView.getRoot().getChildren().add(1, new TreeItem<String>(recountApp.sysInfo.maxMemInfo()));
-        settingsTreeView.getRoot().getChildren().add(2, new TreeItem<String>(recountApp.sysInfo.freeMemInfo()));
-        settingsTreeView.getRoot().getChildren().add(3, new TreeItem<String>(recountApp.sysInfo.totalMemInfo()));
-        settingsTreeView.getRoot().getChildren().add(4, new TreeItem<String>(recountApp.sysInfo.osInfo()));
 
+        initSettingsTab(settingsTreeView.getRoot().getChildren());
         resource = (AppResource) bundleResource;
         recountApp.onUpdate(new Combat.EventHandler<CombatEvent>() {
             private ArrayList<Fight> fights;
@@ -101,12 +100,7 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
                 if (!fights.isEmpty()) {
                     lastFight = fights.get(0);
                 }
-
-                settingsTreeView.getRoot().getChildren().set(0, new TreeItem<String>(recountApp.sysInfo.allocatedMemInfo()));
-                settingsTreeView.getRoot().getChildren().set(1, new TreeItem<String>(recountApp.sysInfo.maxMemInfo()));
-                settingsTreeView.getRoot().getChildren().set(2, new TreeItem<String>(recountApp.sysInfo.freeMemInfo()));
-                settingsTreeView.getRoot().getChildren().set(3, new TreeItem<String>(recountApp.sysInfo.totalMemInfo()));
-                settingsTreeView.getRoot().getChildren().set(4, new TreeItem<String>(recountApp.sysInfo.osInfo()));
+                initSettingsTab(settingsTreeView.getRoot().getChildren());
 
                 if (Peer.getInstance().isRunning()) {
                     Peer.getInstance().send(event.getLogdata());
@@ -389,6 +383,26 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
         }
 
         children.get(0).setExpanded(true);
+    }
+
+    private void initSettingsTab(ObservableList<TreeItem<String>> children) {
+        if (children.size() < 6) {
+            for (int i =0; i < 6; i++) {
+                children.add(new TreeItem<String>(""));
+            }
+        }
+        children.set(0, new TreeItem<String>(recountApp.sysInfo.allocatedMemInfo()));
+        children.set(1, new TreeItem<String>(recountApp.sysInfo.maxMemInfo()));
+        children.set(2, new TreeItem<String>(recountApp.sysInfo.freeMemInfo()));
+        children.set(3, new TreeItem<String>(recountApp.sysInfo.totalMemInfo()));
+        children.set(4, new TreeItem<String>(recountApp.sysInfo.osInfo()));
+        try {
+            children.set(5, new TreeItem<String>(String.format("Peer owner: @me=: %s", User.getInstance().me().getName())));
+        } catch (UnloggedUserError e) {
+            if (!Peer.getInstance().isRunning()) {
+                children.set(5, new TreeItem<String>(String.format("Peer is disabled.")));
+            }
+        }
     }
 
 }

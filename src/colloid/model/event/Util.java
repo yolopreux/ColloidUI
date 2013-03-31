@@ -19,15 +19,12 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import colloid.App;
-
 import javafx.scene.control.TreeItem;
 
 public class Util {
 
     public static File[] filesByPath(String path) {
         File dir = new File(path);
-
         return dir.listFiles();
     }
 
@@ -116,5 +113,4 @@ public class Util {
 
         return "0.00";
     }
-
 }

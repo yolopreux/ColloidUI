@@ -13,7 +13,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import colloid.http.Peer;
-import colloid.http.Server;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
