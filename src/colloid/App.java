@@ -212,12 +212,24 @@ public class App extends Application {
 
     public void showPopupTextLog() {
         try {
-            //PopupTextLogController controller = (PopupTextLogController) replaceSceneContent("popupTextLog.fxml");
             PageLoader pageloader = new PageLoader("popupTextLog.fxml");
             Scene scene = new Scene(pageloader.page);
             scene.getStylesheets().add("uicontrol/greeg-theme/win7glass.css");
             pageloader.resource.set("scene", scene);
             PopupTextLogController controller = (PopupTextLogController) pageloader.loader.getController();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            getLogger().log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void showDotTimer() {
+        try {
+            PageLoader pageloader = new PageLoader("dot.fxml");
+            Scene scene = new Scene(pageloader.page);
+            scene.getStylesheets().add("uicontrol/greeg-theme/win7glass.css");
+            pageloader.resource.set("scene", scene);
+            DotController controller = (DotController) pageloader.loader.getController();
         } catch (Exception ex) {
             ex.printStackTrace();
             getLogger().log(Level.SEVERE, null, ex);
@@ -243,7 +255,7 @@ public class App extends Application {
         if (logger == null) {
             Handler handler = null;
             try {
-                handler = new FileHandler("app.log");
+                handler = new FileHandler("app.log", true);
             } catch (SecurityException e) {
                 e.printStackTrace();
             } catch (IOException e) {

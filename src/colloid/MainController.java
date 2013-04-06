@@ -193,4 +193,8 @@ public class MainController extends AnchorPane implements Initializable {
     public void openTextLogPopupAction(ActionEvent event) {
         application.showPopupTextLog();
     }
+
+    public void openDotTimer(ActionEvent event) {
+        application.showDotTimer();
+    }
 }
