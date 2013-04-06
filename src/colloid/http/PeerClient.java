@@ -9,7 +9,11 @@ import net.jxta.socket.JxtaSocket;
 import java.io.*;
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.text.MessageFormat;
+
+import colloid.App;
 
 public class PeerClient {
 
@@ -27,8 +31,8 @@ public class PeerClient {
                     new File(new File(".cache"), "SocketClient").toURI());
             start();
         } catch (Exception e) {
+            App.getLogger().log(Level.SEVERE, e.toString());
             e.printStackTrace();
-            System.exit(-1);
         }
 
         netPeerGroup = manager.getNetPeerGroup();
@@ -71,14 +75,13 @@ public class PeerClient {
                 manager.waitForRendezvousConnection(0);
             }
 
-            long start = System.currentTimeMillis();
             System.out.println("Connecting to the server");
             JxtaSocket socket = new JxtaSocket(netPeerGroup,
                     // no specific peerid
                     null,
                     pipeAdv,
                     // connection timeout: 5 seconds(5000)
-                    20000,
+                    1000,
                     // reliable connection
                     true);
 
@@ -119,10 +122,9 @@ public class PeerClient {
     }
 
     public static PeerClient init() {
-        System.setProperty("net.jxta.logging.Logging", "FINEST");
-        System.setProperty("net.jxta.level", "FINEST");
-        System.setProperty("java.util.logging.config.file", "logging.properties");
-
+//        System.setProperty("net.jxta.logging.Logging", "FINEST");
+//        System.setProperty("net.jxta.level", "FINEST");
+//        System.setProperty("java.util.logging.config.file", "logging.properties");
         PeerClient socEx = null;
        try {
            Thread.currentThread().setName(PeerClient.class.getName() + ".main()");
@@ -130,10 +132,10 @@ public class PeerClient {
            boolean waitForRendezvous = Boolean.valueOf(value);
            socEx = new PeerClient(waitForRendezvous);
        } catch (Throwable e) {
+           App.getLogger().log(Level.SEVERE, e.toString());
            System.out.flush();
            System.err.println("Failed : " + e);
            e.printStackTrace(System.err);
-           System.exit(-1);
        }
 
        return socEx;

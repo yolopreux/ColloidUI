@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import colloid.App;
+
 import javafx.application.Platform;
 
 import net.jxta.document.AdvertisementFactory;
@@ -141,11 +143,12 @@ public class Peer {
 
     /**
      * TODO
-     * @param messgae
+     * @param message
      * @param level
      */
-    public static void log(String name, String messgae, Level level) {
-        System.out.println(messgae);
+    public static void log(String name, String message, Level level) {
+        App.getLogger().info(message);
+        System.out.println(message);
     }
 }
 

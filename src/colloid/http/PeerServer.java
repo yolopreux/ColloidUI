@@ -19,8 +19,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.text.MessageFormat;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import colloid.App;
 import colloid.http.User.UnloggedUserError;
 
 public class PeerServer {
@@ -79,9 +83,9 @@ public class PeerServer {
             serverSocket = new JxtaServerSocket(netPeerGroup, createSocketAdvertisement(), 10);
             serverSocket.setSoTimeout(0);
         } catch (IOException e) {
+            App.getLogger().severe(e.toString());
             System.out.println("failed to create a server socket");
             e.printStackTrace();
-            System.exit(-1);
         }
 
         while (isRunning) {
@@ -94,6 +98,7 @@ public class PeerServer {
                     thread.start();
                 }
             } catch (Exception e) {
+                App.getLogger().log(Level.SEVERE, e.toString());
                 e.printStackTrace();
             }
         }
@@ -142,10 +147,11 @@ public class PeerServer {
          System.setProperty("java.util.logging.config.file", "logging.properties");
 
         try {
-            Thread.currentThread().setName(PeerServer.class.getName() + ".main()");
+            //Thread.currentThread().setName(PeerServer.class.getName() + ".main()");
             PeerServer socEx = new PeerServer();
             socEx.run();
         } catch (Throwable e) {
+            Logger.getLogger("err").log(Level.SEVERE, e.toString());
             System.err.println("Failed : " + e);
             e.printStackTrace(System.err);
             System.exit(-1);
@@ -157,20 +163,19 @@ public class PeerServer {
     }
 
     public static PeerServer init() {
-        System.setProperty("net.jxta.logging.Logging", "FINEST");
-        System.setProperty("net.jxta.level", "FINEST");
-        System.setProperty("java.util.logging.config.file", "logging.properties");
-
-        PeerServer socEx = null;
+//        System.setProperty("net.jxta.logging.Logging", "FINEST");
+//        System.setProperty("net.jxta.level", "FINEST");
+//        System.setProperty("java.util.logging.config.file", "logging.properties");
+       PeerServer socEx = null;
        try {
-           Thread.currentThread().setName(PeerServer.class.getName() + ".main()");
+           //Thread.currentThread().setName(PeerServer.class.getName() + ".main()");
            socEx = new PeerServer();
 
            return socEx;
        } catch (Throwable e) {
+           App.getLogger().log(Level.SEVERE, e.toString());
            System.err.println("Failed : " + e);
            e.printStackTrace(System.err);
-           System.exit(-1);
        }
 
        return socEx;

@@ -3,12 +3,15 @@ package colloid;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,6 +34,8 @@ public class App extends Application {
     TextField logPathField = new TextField("");
     Button logPathButton;
     Button parseActButton;
+
+    public static Logger logger;
 
     private Stage stage;
 
@@ -204,5 +209,22 @@ public class App extends Application {
 
     public void setProps(Properties props) {
         this.props = props;
+    }
+
+    public static Logger getLogger() {
+        if (logger == null) {
+            Handler handler = null;
+            try {
+                handler = new FileHandler("app.log");
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            logger = Logger.getLogger("app");
+            logger.addHandler(handler);
+        }
+
+        return logger;
     }
 }
