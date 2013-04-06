@@ -42,6 +42,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TreeItem;
@@ -159,7 +160,7 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
             }
         });
         if (!GraphicsEnvironment.isHeadless()) {
-            resource.getApp().getStage().setOpacity(0.0f);
+            //resource.getApp().getStage().setOpacity(0.0f);
             showSwing();
         }
     }
@@ -230,7 +231,11 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
     }
 
     private static void initFX(JFXPanel fxPanel) {
-        fxPanel.setScene(resource.getApp().getStage().getScene());
+        if (resource.getObject("scene") != null) {
+            fxPanel.setScene((Scene) resource.getObject("scene"));
+        } else {
+            fxPanel.setScene(resource.getApp().getStage().getScene());
+        }
     }
 
     public void showSwing() {
@@ -259,9 +264,9 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
             frame.dispose();
 //            resource.getApp().getStage().close();
         }
-        resource.getApp().getStage().close();
-        resource.getApp().getStage().setOpacity(1f);
-        resource.getApp().showMain();
+//        resource.getApp().getStage().close();
+//        resource.getApp().getStage().setOpacity(1f);
+//        resource.getApp().showMain();
     }
 
     private void runRecountApp() throws InvalidCombatlogPath {

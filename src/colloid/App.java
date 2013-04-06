@@ -139,29 +139,57 @@ public class App extends Application {
         }
     }
 
-    private Initializable replaceSceneContent(String fxml, Scene scene) throws Exception {
-        AppResource resource = new AppResource();
-        resource.set("app", this);
-        FXMLLoader loader = new FXMLLoader();
-        InputStream in = App.class.getResourceAsStream(fxml);
-        loader.setBuilderFactory(new JavaFXBuilderFactory());
-        loader.setLocation(App.class.getResource(fxml));
+    public class PageLoader {
+
+        FXMLLoader loader;
         AnchorPane page;
-        loader.setResources(resource);
-        try {
-            page = (AnchorPane) loader.load(in);
-        } finally {
-            in.close();
+        AppResource resource;
+        public PageLoader(String fxml) {
+            try {
+                this.loadPage(fxml);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
+        private AnchorPane loadPage(String fxml) throws IOException {
+            resource = new AppResource();
+            resource.set("app", App.this);
+            loader = new FXMLLoader();
+            InputStream in = App.class.getResourceAsStream(fxml);
+            loader.setBuilderFactory(new JavaFXBuilderFactory());
+            loader.setLocation(App.class.getResource(fxml));
+
+            loader.setResources(resource);
+            try {
+                page = (AnchorPane) loader.load(in);
+            } finally {
+                in.close();
+            }
+            return page;
+        }
+
+        public FXMLLoader getLoader() {
+            return loader;
+        }
+
+        public AnchorPane getPage() {
+            return page;
+        }
+
+    }
+
+    private Initializable replaceSceneContent(String fxml, Scene scene) throws Exception {
+        PageLoader pageLoader = new PageLoader(fxml);
         if (scene == null) {
-            scene = new Scene(page);
+            scene = new Scene(pageLoader.page);
             scene.getStylesheets().add("uicontrol/greeg-theme/win7glass.css");
             stage.setScene(scene);
         }
-        stage.getScene().setRoot(page);
+        stage.getScene().setRoot(pageLoader.page);
         stage.sizeToScene();
 
-        return (Initializable) loader.getController();
+        return (Initializable) pageLoader.loader.getController();
     }
 
     private Initializable replaceSceneContent(String fxml) throws Exception {
@@ -183,16 +211,16 @@ public class App extends Application {
     }
 
     public void showPopupTextLog() {
-        stage = new Stage();
-        stage.setTitle("Colloid combat");
-        stage.setMinWidth(200);
-        stage.setMinHeight(312);
-        stage.setResizable(true);
         try {
-            PopupTextLogController controller = (PopupTextLogController) replaceSceneContent("popupTextLog.fxml");
-            stage.show();
+            //PopupTextLogController controller = (PopupTextLogController) replaceSceneContent("popupTextLog.fxml");
+            PageLoader pageloader = new PageLoader("popupTextLog.fxml");
+            Scene scene = new Scene(pageloader.page);
+            scene.getStylesheets().add("uicontrol/greeg-theme/win7glass.css");
+            pageloader.resource.set("scene", scene);
+            PopupTextLogController controller = (PopupTextLogController) pageloader.loader.getController();
         } catch (Exception ex) {
-            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+            getLogger().log(Level.SEVERE, null, ex);
         }
     }
 
