@@ -185,4 +185,8 @@ public class CombatEvent extends EventObject implements Combat.Event {
     public void setAbility(Ability ability) {
         this.ability = ability;
     }
+
+    public Combat.Actor getActor() {
+        return actor;
+    }
 }

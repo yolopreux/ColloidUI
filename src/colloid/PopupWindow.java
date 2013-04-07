@@ -4,14 +4,11 @@ import java.awt.GraphicsEnvironment;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowListener;
-import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
@@ -26,51 +23,65 @@ public class PopupWindow {
     static AppResource resource;
     JFrame frame;
 
-    Button moveMe;
-    Button close;
-    Button resize;
+    Button moveMe = null;
+    Button close = null;
+    Button resize = null;
 
     public PopupWindow(ResourceBundle bundleResource, Button moveMe, Button resize) {
-        initialize(bundleResource, moveMe, resize);
+        this.moveMe = moveMe;
+        this.resize = resize;
+        initialize(bundleResource);
     }
 
-    public void initialize(ResourceBundle bundleResource, Button moveMe, Button resize) {
+    public PopupWindow(ResourceBundle bundleResource, Button resize) {
+        this.resize = resize;
+        initialize(bundleResource);
+    }
+
+    public PopupWindow(ResourceBundle bundleResource) {
+        initialize(bundleResource);
+    }
+
+    public void initialize(ResourceBundle bundleResource) {
         resource = (AppResource) bundleResource;
         if (!GraphicsEnvironment.isHeadless()) {
             showSwing();
         }
 
-        moveMe.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (frame == null) {
-                    return;
+        if (moveMe != null) {
+            moveMe.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (frame == null) {
+                        return;
+                    }
+                    java.awt.Point location = frame.getLocationOnScreen();
+                    location.setLocation(event.getScreenX(), event.getScreenY());
+                    frame.setLocation(location);
                 }
-                java.awt.Point location = frame.getLocationOnScreen();
-                location.setLocation(event.getScreenX(), event.getScreenY());
-                frame.setLocation(location);
-            }
-        });
+            });
+        }
 
-        resize.setOnMouseDragged(new EventHandler<MouseEvent>() {
+        if (resize != null) {
+            resize.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (frame == null) {
+                        return;
+                    }
 
-            @Override
-            public void handle(MouseEvent event) {
-                if (frame == null) {
-                    return;
+                    java.awt.Dimension size = frame.getSize();
+                    java.awt.Point location = frame.getLocationOnScreen();
+                    double width = event.getScreenX() - location.getX();
+                    double height = event.getScreenY() - location.getY();
+
+                    if (width > 5 && height > 5) {
+                        size.setSize(width, height);
+                    }
+                    frame.setSize(size);
                 }
-
-                java.awt.Dimension size = frame.getSize();
-                java.awt.Point location = frame.getLocationOnScreen();
-                double width = event.getScreenX() - location.getX();
-                double height = event.getScreenY() - location.getY();
-
-                if (width > 5 && height > 5) {
-                    size.setSize(width, height);
-                }
-                frame.setSize(size);
-            }
-        });
+            });
+        }
     }
 
     private static void initFX(JFXPanel fxPanel) {

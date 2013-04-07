@@ -18,7 +18,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
-import colloid.http.Peer;
 import colloid.model.LogUtil;
 import colloid.model.event.DoesNotExist;
 import colloid.model.event.Combat.Event;
@@ -203,7 +202,8 @@ public abstract class RecountLoop implements Combat.Recount {
                         beforeUpdate(lastLine);
                         Iterator<EventHandler<CombatEvent>> iter = handler.iterator();
                         while (iter.hasNext()) {
-                            iter.next().handle(event);
+                            EventHandler<CombatEvent> hand = iter.next();
+                            hand.handle(event);
                         }
                     }
                     onUpdate();
