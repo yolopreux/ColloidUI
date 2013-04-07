@@ -110,7 +110,7 @@ public class PopupWindow {
         final JFXPanel fxPanel = new JFXPanel();
         frame.add(fxPanel);
         frame.setAlwaysOnTop(true);
-        frame.setSize(new java.awt.Dimension(490, 65));
+        frame.setSize(new java.awt.Dimension(490, 60));
         frame.setLocation(new java.awt.Point(180, 550));
         frame.setUndecorated(true);
         frame.setOpacity(0.8f);

@@ -21,7 +21,7 @@
           <items>
             <MenuItem disable="true" mnemonicParsing="false" text="Reset" fx:id="resetMenuItem" />
             <MenuItem mnemonicParsing="false" onAction="#openTextLogPopupAction" text="Combat popup" fx:id="textLogPopup" />
-            <MenuItem mnemonicParsing="false" onAction="#openDotTimer" text="Sorcerrer Madness Dot Timer" />
+            <MenuItem mnemonicParsing="false" onAction="#openDotTimer" text="Sorcerer Madness Dot Timer" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">

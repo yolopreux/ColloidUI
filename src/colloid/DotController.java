@@ -42,6 +42,9 @@ public class DotController extends AnchorPane implements Initializable {
     @FXML
     Label creepingTerror;
     @FXML
+    Label wrath;
+
+    @FXML
     Button close;
     @FXML
     GridPane gridPane;
@@ -50,21 +53,20 @@ public class DotController extends AnchorPane implements Initializable {
     private final String CRUSHING_DARKNESS = "Crushing Darkness";
     private final String AFFLICTION = "Affliction";
     private final String CREEPING_TERROR = "Creeping Terror";
+    private final String WRATH = "Wrath";
 
     private final long DURATION_CRUSHING_DARKNESS = 8000L;
     private final long DURATION_AFFLICTION = 21000L;
     private final long DURATION_CREEPING_TERROR = 18000L;
-
+    private final long DURATION_WRATH = 30000L;
 
     private final String ABILITY_ACTIVATE = "AbilityActivate";
     private final String REMOVE_EFFECT = "RemoveEffect";
+    private final String APPLY_EFFECT = "ApplyEffect";
 
     private final String COMBAT_EXIT = "CombatExit";
 
     HashSet<SpellContainer> spells = new HashSet<SpellContainer>();
-
-    //Parasitism
-
 
     private void initAbilities() {
         crushingDarkness.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/img/crushing_darkness.jpg"))));
@@ -81,10 +83,18 @@ public class DotController extends AnchorPane implements Initializable {
         creepingTerror.setText(CREEPING_TERROR);
         creepingTerror.setVisible(false);
         spells.add(new SpellContainer(CREEPING_TERROR, DURATION_CREEPING_TERROR, creepingTerror));
+
+        wrath.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/img/wrath.jpg"))));
+        wrath.setText(WRATH);
+        wrath.setVisible(false);
+        spells.add(new SpellContainer(WRATH, DURATION_WRATH, wrath));
+
     }
 
     @Override
     public void initialize(URL url, ResourceBundle bundleResource) {
+
+        //gridPane.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 10;");
 
         resource = (AppResource) bundleResource;
         win = new PopupWindow(bundleResource);
@@ -104,8 +114,17 @@ public class DotController extends AnchorPane implements Initializable {
                 Iterator<SpellContainer> spelIter = spells.iterator();
                 while (spelIter.hasNext()) {
                     SpellContainer spell = spelIter.next();
+                    if (event.getAbility().name().contains(spell.getName()) && isApplyEffect(event)) {
+                        spell.runSpellTimer();
+                        break;
+                    }
+                    if (event.getAbility().name().contains(spell.getName()) && isApplyEffect(event)) {
+                        spell.getLabel().setVisible(false);
+                        break;
+                    }
                     if (event.getAbility().name().contains(spell.getName()) && isAbilityActivate(event)) {
                         spell.runSpellTimer();
+                        break;
                     }
                     if (isCombatExit(event)) {
                         spell.getLabel().setVisible(false);
@@ -145,6 +164,14 @@ public class DotController extends AnchorPane implements Initializable {
         }
         return false;
     }
+
+    private boolean isApplyEffect(CombatEvent event) {
+        if (event.getLogdata().contains(APPLY_EFFECT)) {
+            return true;
+        }
+        return false;
+    }
+
 
     private boolean isCombatExit(CombatEvent event) {
         if (event.getLogdata().contains(COMBAT_EXIT)) {
