@@ -55,9 +55,9 @@ public class DotController extends AnchorPane implements Initializable {
     private final String CREEPING_TERROR = "Creeping Terror";
     private final String WRATH = "Wrath";
 
-    private final long DURATION_CRUSHING_DARKNESS = 8000L;
-    private final long DURATION_AFFLICTION = 21000L;
-    private final long DURATION_CREEPING_TERROR = 18000L;
+    private final long DURATION_CRUSHING_DARKNESS = 7000L;
+    private final long DURATION_AFFLICTION = 17000L;
+    private final long DURATION_CREEPING_TERROR = 17000L;
     private final long DURATION_WRATH = 30000L;
 
     private final String ABILITY_ACTIVATE = "AbilityActivate";
@@ -114,15 +114,15 @@ public class DotController extends AnchorPane implements Initializable {
                 Iterator<SpellContainer> spelIter = spells.iterator();
                 while (spelIter.hasNext()) {
                     SpellContainer spell = spelIter.next();
-                    if (event.getAbility().name().contains(spell.getName()) && isApplyEffect(event)) {
+                    if (event.getAbility().name().equals(spell.getName()) && isApplyEffect(event)) {
                         spell.runSpellTimer();
                         break;
                     }
-                    if (event.getAbility().name().contains(spell.getName()) && isApplyEffect(event)) {
-                        spell.getLabel().setVisible(false);
-                        break;
-                    }
-                    if (event.getAbility().name().contains(spell.getName()) && isAbilityActivate(event)) {
+//                    if (event.getAbility().name().equals(spell.getName()) && isRemoveEffect(event)) {
+//                        spell.getLabel().setVisible(false);
+//                        break;
+//                    }
+                    if (event.getAbility().name().equals(spell.getName()) && isAbilityActivate(event)) {
                         spell.runSpellTimer();
                         break;
                     }
@@ -266,7 +266,7 @@ public class DotController extends AnchorPane implements Initializable {
         }
 
         String formatTime(long duration) {
-            return String.format("%02d:%02d", duration/1000, duration/100);
+            return String.format("%02d:%1d", duration/1000, (duration/100)%10);
         }
 
         boolean isExpired() {
@@ -285,8 +285,8 @@ public class DotController extends AnchorPane implements Initializable {
                     label.setVisible(true);
                     while (durationleft > 0) {
                         try {
-                            Thread.sleep(20L);
-                            durationleft = durationleft - 20;
+                            Thread.sleep(100L);
+                            durationleft = duration + startTime - new Date().getTime();
                             updateFxApp();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -307,14 +307,18 @@ public class DotController extends AnchorPane implements Initializable {
 
         void updateFxApp() {
             if (Platform.isFxApplicationThread()) {
-                label.setText(formatTime(durationleft));
+                update();
             } else {
                 Platform.runLater(new Runnable() {
                     @Override public void run() {
-                        label.setText(formatTime(durationleft));
+                        updateFxApp();
                     }
                 });
             }
+        }
+
+        void update() {
+            label.setText(formatTime(durationleft));
         }
 
         @Override

@@ -46,10 +46,10 @@ public class Ability implements Combat.Ability {
                 throw new DoesNotExist();
             }
             if (items[3].contains("{")) {
-                name = items[3].substring(0, items[3].indexOf("{")-1);
+                name = items[3].substring(0, items[3].indexOf("{")-1).trim();
                 return;
             }
-            name = items[3];
+            name = items[3].trim();
         } catch (StringIndexOutOfBoundsException ex) {
             throw new DoesNotExist();
         } catch (ArrayIndexOutOfBoundsException ex) {
