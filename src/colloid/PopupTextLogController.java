@@ -262,11 +262,7 @@ public class PopupTextLogController extends AnchorPane implements Initializable 
     private void showFxMain() {
         if (frame != null) {
             frame.dispose();
-//            resource.getApp().getStage().close();
         }
-//        resource.getApp().getStage().close();
-//        resource.getApp().getStage().setOpacity(1f);
-//        resource.getApp().showMain();
     }
 
     private void runRecountApp() throws InvalidCombatlogPath {

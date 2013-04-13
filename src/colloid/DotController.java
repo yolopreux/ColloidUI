@@ -99,10 +99,6 @@ public class DotController extends AnchorPane implements Initializable {
         resource = (AppResource) bundleResource;
         win = new PopupWindow(bundleResource);
         initAbilities();
-        Iterator<SpellContainer> spelIter = spells.iterator();
-        while (spelIter.hasNext()) {
-            spelIter.next().runSpellTimer();
-        }
 
         recountApp.onUpdate(new Combat.EventHandler<CombatEvent>() {
             @Override
@@ -116,18 +112,17 @@ public class DotController extends AnchorPane implements Initializable {
                     SpellContainer spell = spelIter.next();
                     if (event.getAbility().name().equals(spell.getName()) && isApplyEffect(event)) {
                         spell.runSpellTimer();
-                        break;
                     }
-//                    if (event.getAbility().name().equals(spell.getName()) && isRemoveEffect(event)) {
-//                        spell.getLabel().setVisible(false);
-//                        break;
-//                    }
+                    if (event.getAbility().name().equals(spell.getName()) && isRemoveEffect(event)) {
+                        App.getLogger().info(event.getLogdata());
+                        spell.stopSpellTimer();
+                    }
                     if (event.getAbility().name().equals(spell.getName()) && isAbilityActivate(event)) {
+                        App.getLogger().info(event.getLogdata());
                         spell.runSpellTimer();
-                        break;
                     }
                     if (isCombatExit(event)) {
-                        spell.getLabel().setVisible(false);
+                        spell.stopSpellTimer();
                     }
                 }
             }
@@ -195,6 +190,7 @@ public class DotController extends AnchorPane implements Initializable {
         }
 
         public void runSpellTimer() {
+            App.getLogger().info(String.format("Run %s", spellTimer));
             if (spellTimer == null) {
                 spellTimer = new SpellTimer(this.name, this.duration, this.label);
             }
@@ -202,6 +198,14 @@ public class DotController extends AnchorPane implements Initializable {
                 spellTimer.stop();
             }
             spellTimer.run();
+        }
+
+        public void stopSpellTimer() {
+            App.getLogger().info(String.format("Stop %s", spellTimer));
+            if (spellTimer == null) {
+                return;
+            }
+            spellTimer.stop();
         }
 
         @Override
@@ -248,8 +252,19 @@ public class DotController extends AnchorPane implements Initializable {
             return label;
         }
 
+        @Override
+        public String toString() {
+            return String.format("SpellContainer [duration=%s, name=%s, spellTimer=%s]",
+                    duration, name, spellTimer);
+        }
     }
 
+    class CreepingTeerorInterrupt extends InterruptedException {
+    }
+    class CrushingDarknessInterrupt extends InterruptedException {
+    }
+    class AfflictionInterrupt extends InterruptedException {
+    }
     class SpellTimer {
 
         private final long duration;
@@ -258,6 +273,7 @@ public class DotController extends AnchorPane implements Initializable {
         private final String name;
         private final Label label;
         String abbilityTarget = null;
+        Thread thread;
 
         SpellTimer(String spellName, Long duration, Label spellLabel) {
             name = spellName;
@@ -278,7 +294,7 @@ public class DotController extends AnchorPane implements Initializable {
         }
 
         public void run() {
-            new Thread(new Runnable() {
+            thread = new Thread(new Runnable() {
                 @Override public void run() {
                     startTime = new Date().getTime();
                     durationleft = duration;
@@ -289,15 +305,20 @@ public class DotController extends AnchorPane implements Initializable {
                             durationleft = duration + startTime - new Date().getTime();
                             updateFxApp();
                         } catch (InterruptedException e) {
+                            //do nothing
                             e.printStackTrace();
                         }
                     }
                     label.setVisible(false);
                 }
-            }).start();
+            });
+            thread.start();
         }
 
         public void stop() {
+            if (!thread.isInterrupted()) {
+                thread.interrupt();
+            }
             durationleft = 0;
         }
 
@@ -364,14 +385,11 @@ public class DotController extends AnchorPane implements Initializable {
             return DotController.this;
         }
 
-    }
+        @Override
+        public String toString() {
+            return String.format("SpellTimer [duration=%s, durationleft=%s, startTime=%s, name=%s, abbilityTarget=%s]",
+                    duration, durationleft, startTime, name, abbilityTarget);
+        }
 
-    class CreepingTeerorInterrupt extends InterruptedException {
     }
-    class CrushingDarknessInterrupt extends InterruptedException {
-    }
-    class AfflictionInterrupt extends InterruptedException {
-    }
-
-
 }

@@ -19,3 +19,4 @@ _peer*
 .cache
 *.log
 *.lck
+helpers

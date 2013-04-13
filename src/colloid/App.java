@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.FileHandler;
@@ -25,16 +26,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 
 public class App extends Application {
 
     Properties props;
-    TextField logPathField = new TextField("");
-    Button logPathButton;
-    Button parseActButton;
-
     public static Logger logger;
 
     private Stage stage;
@@ -210,17 +208,20 @@ public class App extends Application {
         }
     }
 
-    public void showPopupTextLog() {
+    public PopupTextLogController showPopupTextLog() {
+        PopupTextLogController controller = null;
         try {
             PageLoader pageloader = new PageLoader("popupTextLog.fxml");
             Scene scene = new Scene(pageloader.page);
             scene.getStylesheets().add("uicontrol/greeg-theme/win7glass.css");
             pageloader.resource.set("scene", scene);
-            PopupTextLogController controller = (PopupTextLogController) pageloader.loader.getController();
+            controller = (PopupTextLogController) pageloader.loader.getController();
         } catch (Exception ex) {
             ex.printStackTrace();
             getLogger().log(Level.SEVERE, null, ex);
         }
+
+        return controller;
     }
 
     public void showDotTimer() {
