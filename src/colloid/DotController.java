@@ -61,6 +61,7 @@ public class DotController extends AnchorPane implements Initializable {
     private final long DURATION_WRATH = 30000L;
 
     private final String ABILITY_ACTIVATE = "AbilityActivate";
+    private final String ABILITY_CANCEL = "AbilityCancel";
     private final String REMOVE_EFFECT = "RemoveEffect";
     private final String APPLY_EFFECT = "ApplyEffect";
 
@@ -106,20 +107,23 @@ public class DotController extends AnchorPane implements Initializable {
                 if ((event.getAbility() == null) || (event.getAbility().name() == null)) {
                     return;
                 }
-
+                if (event.getEffect() == null || event.getEffect().getName() == null) {
+                    return;
+                }
                 Iterator<SpellContainer> spelIter = spells.iterator();
                 while (spelIter.hasNext()) {
                     SpellContainer spell = spelIter.next();
-                    if (event.getAbility().name().equals(spell.getName()) && isApplyEffect(event)) {
+                    if (isAbilityActivate(event, spell)) {
                         spell.runSpellTimer();
                     }
-                    if (event.getAbility().name().equals(spell.getName()) && isRemoveEffect(event)) {
-                        App.getLogger().info(event.getLogdata());
+                    if (isAbilityCancel(event, spell)) {
                         spell.stopSpellTimer();
                     }
-                    if (event.getAbility().name().equals(spell.getName()) && isAbilityActivate(event)) {
-                        App.getLogger().info(event.getLogdata());
+                    if (isApplyEffect(event, spell)) {
                         spell.runSpellTimer();
+                    }
+                    if (isRemoveEffect(event, spell)) {
+                        spell.stopSpellTimer();
                     }
                     if (isCombatExit(event)) {
                         spell.stopSpellTimer();
@@ -146,27 +150,39 @@ public class DotController extends AnchorPane implements Initializable {
         win.getFrame().dispose();
     }
 
-    private boolean isAbilityActivate(CombatEvent event) {
-        if (event.getLogdata().contains(ABILITY_ACTIVATE)) {
+    private boolean isAbilityActivate(CombatEvent event, SpellContainer spell) {
+        if (event.getAbility().name().contains(spell.getName())
+                && event.getEffect().getName().contains("Event")
+                && event.getEffect().getName().contains(ABILITY_ACTIVATE)) {
             return true;
         }
         return false;
     }
 
-    private boolean isRemoveEffect(CombatEvent event) {
-        if (event.getLogdata().contains(REMOVE_EFFECT)) {
+    private boolean isAbilityCancel(CombatEvent event, SpellContainer spell) {
+        if (event.getAbility().name().contains(spell.getName())
+                && event.getEffect().getName().contains("Event")
+                && event.getEffect().getName().contains(ABILITY_CANCEL)) {
             return true;
         }
         return false;
     }
 
-    private boolean isApplyEffect(CombatEvent event) {
-        if (event.getLogdata().contains(APPLY_EFFECT)) {
+    private boolean isApplyEffect(CombatEvent event, SpellContainer spell) {
+        if (event.getEffect().getName().contains(spell.getName())
+                && event.getEffect().getName().contains(APPLY_EFFECT)) {
             return true;
         }
         return false;
     }
 
+    private boolean isRemoveEffect(CombatEvent event, SpellContainer spell) {
+        if (event.getEffect().getName().contains(spell.getName())
+                && event.getEffect().getName().contains(REMOVE_EFFECT)) {
+            return true;
+        }
+        return false;
+    }
 
     private boolean isCombatExit(CombatEvent event) {
         if (event.getLogdata().contains(COMBAT_EXIT)) {
@@ -259,12 +275,6 @@ public class DotController extends AnchorPane implements Initializable {
         }
     }
 
-    class CreepingTeerorInterrupt extends InterruptedException {
-    }
-    class CrushingDarknessInterrupt extends InterruptedException {
-    }
-    class AfflictionInterrupt extends InterruptedException {
-    }
     class SpellTimer {
 
         private final long duration;
@@ -294,10 +304,10 @@ public class DotController extends AnchorPane implements Initializable {
         }
 
         public void run() {
+            durationleft = duration;
+            startTime = new Date().getTime();
             thread = new Thread(new Runnable() {
                 @Override public void run() {
-                    startTime = new Date().getTime();
-                    durationleft = duration;
                     label.setVisible(true);
                     while (durationleft > 0) {
                         try {

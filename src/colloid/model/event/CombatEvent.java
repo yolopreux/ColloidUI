@@ -27,7 +27,7 @@ public class CombatEvent extends EventObject implements Combat.Event {
     static final Pattern pattern = Pattern.compile(".*\\((\\d+)(.*)");
     protected Combat.Actor actor;
     protected Combat.Target target;
-    protected Combat.Effect effect;
+    protected Effect effect;
     protected Fight fight;
     protected Date timestamp;
     protected Ability ability;
@@ -61,6 +61,11 @@ public class CombatEvent extends EventObject implements Combat.Event {
             ability = new Ability(this);
         } catch (DoesNotExist ex) {
             ability = null;
+        }
+        try {
+            effect = new Effect(this);
+        } catch (DoesNotExist ex) {
+            effect = null;
         }
     }
 
@@ -100,14 +105,14 @@ public class CombatEvent extends EventObject implements Combat.Event {
     public void add(Combat.Actor actor, Combat.Target target, Combat.Effect effect) {
         this.actor = actor;
         this.target = target;
-        this.effect = effect;
+        this.effect = (Effect) effect;
     }
 
     @Override
     public void add(Combat.Actor actor, Combat.Effect effect) {
         this.actor = actor;
         this.target = null;
-        this.effect = effect;
+        this.effect = (Effect) effect;
     }
 
     public String info() {
@@ -188,5 +193,9 @@ public class CombatEvent extends EventObject implements Combat.Event {
 
     public Combat.Actor getActor() {
         return actor;
+    }
+
+    public Effect getEffect() {
+        return effect;
     }
 }

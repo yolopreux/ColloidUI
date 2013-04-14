@@ -90,6 +90,8 @@ public class MainController extends AnchorPane implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        //disable peer radio - p2p
+        isPeer.setDisable(true);
         if (recountApp.isRunning()) {
             parseActButton.setText("Stop");
         }
